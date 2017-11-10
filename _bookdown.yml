@@ -2,4 +2,6 @@ book_filename: "tidy_islr"
 language:
   ui:
     chapter_name: "Chapter "
+output_dir: docs
+repo: https://github.com/beaulucas/tidy_islr
 delete_merged_file: true
