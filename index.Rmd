@@ -1,0 +1,18 @@
+--- 
+title: "A Tidy Introduction To Statistical Learning"
+author: "Beau Lucas"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+biblio-style: apalike
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Preface {-}
+
+This book will serve as a source of notes and exercise solutions for *An Introduction to Statistical Learning*. My approach will be centered around the `tidyverse`.
