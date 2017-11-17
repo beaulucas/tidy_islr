@@ -1,0 +1,66 @@
+# Statistical Learning
+
+## What is Statistical Learning?
+
+Methods to estimate functions that connect inputs to outputs.
+
+If there exists a quantitative response variable $Y$ and $p$ different predictors ($X_1$, $X_2$, ..., $X_p$), we can write this relationship as:
+
+<center>$Y = f(X) + ε$</center>
+
+### Why Estimate *$f$*?
+
+#### Prediction
+
+We can predict Y using:
+
+<center>$\hat{Y} = \hat{f}(X)$</center>
+
+Accuracy of $Y$ is dependant on:
+
+  - *reducible error*
+    * $\hat{f}$ will never be perfect estimate of $f$, and model can always be potentially improved
+    * Even if $\hat{f} = f$, prediction would still have some error
+  - *irreducible error*
+    * Because $Y$ is also a function of random $ε$, there will alwayas be variability
+    * We cannot reduce the error introduced by $ε$
+
+#### Inference
+
+How does $Y$ respond to changes in $X_1, X_2, ..., X_p$?
+
+### How do we estimate *$f$*?
+
+  - Use *training data* to train method
+  - $x_ij$ is value of $j$th predictor for observation $i$, $y_i$ is value of response variable
+    * $i = 1, 2, ..., n$, $j = 1, 2, ..., p$
+  - Using training data, apply statistical learning method estimate unknown function $f$
+  - Most statistical learning methods can be characterized as either *parametric* or *non-parametric*
+  
+#### Parametric Methods
+
+Two-step model-based approach:
+
+  1. Make an assumption about functional form of $f$, such as "$f$ is linear in $X$"
+  2. Perform procedure that uses training data to train the model
+    * In case of linear model, this procedure estimates parameters $β_0, β_1, ..., β_p$
+    * Most common approach to fit linear model is *(ordinary) least squares*
+    
+This is *parametric*, as it reduces the problem of estimating $f$ down to one of estimating a set of parameters. Problems that can arise:
+  - Model will not match the true unknown form of $f$
+  - If model is made more *flexible*, which generally requires estimating a greater number of parameters, *overfitting* can occur
+    
+#### Non-parametric Methods
+
+Non-parametric methods do not make assumptions about the form of $f$. An advantage of this is that they have the potential to fit a wider range of possible shapes for $f$. A disadvantage is that, because there are no assumptions about the form of $f$, the problem of estimating $f$ is not reduced to a set number of parameters. This means more observations are needed compared to a parametric approach to estimate $f$ accurately.
+
+### The Trade-Off Between Prediction Accuracy and Model Interpretability
+
+Restrictive models are much more intepretable than flexible ones. Flexible approaches can be so complicated that it is hard to understand how predictors affect the response.
+
+If inference is the goal, simple and inflexible methods are easier to interpret. For prediction, accuracy is the biggest concern. However, flexible models are more prone to overfitting.
+
+### Supervised Versus Unsupervised Learning
+
+
+

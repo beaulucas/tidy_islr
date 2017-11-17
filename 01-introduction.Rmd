@@ -1,10 +1,24 @@
 # Introduction {#intro}
 
-You can label chapter and section titles using `{#label}` after them.
+## An Overview of Statistical Learning
+  
+  Statistical learning is focused on supervised and unsupervised modeling and prediction.
 
-Figures and tables with captions will be placed in `figure` and `table` environments, respectively.
+## Data Sets Used in Labs and Exercises
 
-```{r nice-fig, fig.cap='Here is a nice figure!', out.width='80%', fig.asp=.75, fig.align='center'}
-par(mar = c(4, 4, .1, .1))
-plot(pressure, type = 'b', pch = 19)
+All data sets used in this book can be found in `ISLR` and `MASS` packages, with some also being found in the base `R` distribution.
+
+We will utilize the `tidyverse` ecosystem to tackle the exercises and labs, as the `R` code found in the original textbook is outdated. 
+
+```{r required packages}
+require(ISLR)
+require(MASS)
+require(tidyverse)
 ```
+
+## Book Website
+
+The website and free PDF for the book can be found here:
+
+[www.statlearning.com](http://www-bcf.usc.edu/~gareth/ISL/)
+[Youtube - Statistical Learning](https://www.youtube.com/channel/UC4OWDcPB1peiBXDfCSZ3h-w)

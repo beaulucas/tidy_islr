@@ -32,8 +32,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
+<link rel="prev" href="intro.html">
 
-<link rel="next" href="intro.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -136,24 +136,84 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">A Tidy Introduction To Statistical Learning</h1>
-<h4 class="author"><em>Beau Lucas</em></h4>
-<h4 class="date"><em>2017-11-17</em></h4>
+<div id="statistical-learning" class="section level1">
+<h1><span class="header-section-number">Chapter 2</span> Statistical Learning</h1>
+<div id="what-is-statistical-learning" class="section level2">
+<h2><span class="header-section-number">2.1</span> What is Statistical Learning?</h2>
+<p>Methods to estimate functions that connect inputs to outputs.</p>
+<p>If there exists a quantitative response variable <span class="math inline">\(Y\)</span> and <span class="math inline">\(p\)</span> different predictors (<span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>, …, <span class="math inline">\(X_p\)</span>), we can write this relationship as:</p>
+<center>
+<span class="math inline">\(Y = f(X) + ε\)</span>
+</center>
+<div id="why-estimate-f" class="section level3">
+<h3><span class="header-section-number">2.1.1</span> Why Estimate <em><span class="math inline">\(f\)</span></em>?</h3>
+<div id="prediction" class="section level4">
+<h4><span class="header-section-number">2.1.1.1</span> Prediction</h4>
+<p>We can predict Y using:</p>
+<center>
+<span class="math inline">\(\hat{Y} = \hat{f}(X)\)</span>
+</center>
+<p>Accuracy of <span class="math inline">\(Y\)</span> is dependant on:</p>
+<ul>
+<li><em>reducible error</em>
+<ul>
+<li><span class="math inline">\(\hat{f}\)</span> will never be perfect estimate of <span class="math inline">\(f\)</span>, and model can always be potentially improved</li>
+<li>Even if <span class="math inline">\(\hat{f} = f\)</span>, prediction would still have some error</li>
+</ul></li>
+<li><em>irreducible error</em>
+<ul>
+<li>Because <span class="math inline">\(Y\)</span> is also a function of random <span class="math inline">\(ε\)</span>, there will alwayas be variability</li>
+<li>We cannot reduce the error introduced by <span class="math inline">\(ε\)</span></li>
+</ul></li>
+</ul>
 </div>
-<div id="preface" class="section level1 unnumbered">
-<h1>Preface</h1>
-<p>This book will serve as a source of notes and exercise solutions for <em>An Introduction to Statistical Learning</em>. My approach will be centered around the <code>tidyverse</code>. This is not a replacement for the book, which should be read front to back by all machine learning enthusiasts.</p>
-<p>Chapter names will line up, and certain subheadings will also match. Sometimes my notes will contain text lifted straight from the book without modification. This is not an attempt to plagiarize or claim their writing as my own. My goal is for this bookdown project to be a quick stop for machine learning enthusiasts to reference high-level ideas from ISLR in a modern media format.</p>
+<div id="inference" class="section level4">
+<h4><span class="header-section-number">2.1.1.2</span> Inference</h4>
+<p>How does <span class="math inline">\(Y\)</span> respond to changes in <span class="math inline">\(X_1, X_2, ..., X_p\)</span>?</p>
+</div>
+</div>
+<div id="how-do-we-estimate-f" class="section level3">
+<h3><span class="header-section-number">2.1.2</span> How do we estimate <em><span class="math inline">\(f\)</span></em>?</h3>
+<ul>
+<li>Use <em>training data</em> to train method</li>
+<li><span class="math inline">\(x_ij\)</span> is value of <span class="math inline">\(j\)</span>th predictor for observation <span class="math inline">\(i\)</span>, <span class="math inline">\(y_i\)</span> is value of response variable
+<ul>
+<li><span class="math inline">\(i = 1, 2, ..., n\)</span>, <span class="math inline">\(j = 1, 2, ..., p\)</span></li>
+</ul></li>
+<li>Using training data, apply statistical learning method estimate unknown function <span class="math inline">\(f\)</span></li>
+<li>Most statistical learning methods can be characterized as either <em>parametric</em> or <em>non-parametric</em></li>
+</ul>
+<div id="parametric-methods" class="section level4">
+<h4><span class="header-section-number">2.1.2.1</span> Parametric Methods</h4>
+<p>Two-step model-based approach:</p>
+<ol style="list-style-type: decimal">
+<li>Make an assumption about functional form of <span class="math inline">\(f\)</span>, such as “<span class="math inline">\(f\)</span> is linear in <span class="math inline">\(X\)</span>”</li>
+<li>Perform procedure that uses training data to train the model
+<ul>
+<li>In case of linear model, this procedure estimates parameters <span class="math inline">\(β_0, β_1, ..., β_p\)</span></li>
+<li>Most common approach to fit linear model is <em>(ordinary) least squares</em></li>
+</ul></li>
+</ol>
+<p>This is <em>parametric</em>, as it reduces the problem of estimating <span class="math inline">\(f\)</span> down to one of estimating a set of parameters. Problems that can arise: - Model will not match the true unknown form of <span class="math inline">\(f\)</span> - If model is made more <em>flexible</em>, which generally requires estimating a greater number of parameters, <em>overfitting</em> can occur</p>
+</div>
+<div id="non-parametric-methods" class="section level4">
+<h4><span class="header-section-number">2.1.2.2</span> Non-parametric Methods</h4>
+<p>Non-parametric methods do not make assumptions about the form of <span class="math inline">\(f\)</span>. An advantage of this is that they have the potential to fit a wider range of possible shapes for <span class="math inline">\(f\)</span>. A disadvantage is that, because there are no assumptions about the form of <span class="math inline">\(f\)</span>, the problem of estimating <span class="math inline">\(f\)</span> is not reduced to a set number of parameters. This means more observations are needed compared to a parametric approach to estimate <span class="math inline">\(f\)</span> accurately.</p>
+</div>
+</div>
+<div id="the-trade-off-between-prediction-accuracy-and-model-interpretability" class="section level3">
+<h3><span class="header-section-number">2.1.3</span> The Trade-Off Between Prediction Accuracy and Model Interpretability</h3>
 
+</div>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
+<a href="intro.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
-<a href="intro.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
