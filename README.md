@@ -2,3 +2,5 @@
 Approaching ISLR with the tidyverse.
 
 Repository created on November 7, 2017
+
+https://beaulucas.github.io/tidy_islr/
