@@ -1,5 +1,7 @@
 # Introduction {#intro}
 
+-----
+
 ## An Overview of Statistical Learning
   
   Statistical learning is focused on supervised and unsupervised modeling and prediction.

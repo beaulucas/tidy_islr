@@ -1,5 +1,7 @@
 # Statistical Learning
 
+-----
+
 ## What is Statistical Learning?
 
 Methods to estimate functions that connect inputs to outputs.
@@ -61,6 +63,47 @@ Restrictive models are much more intepretable than flexible ones. Flexible appro
 If inference is the goal, simple and inflexible methods are easier to interpret. For prediction, accuracy is the biggest concern. However, flexible models are more prone to overfitting.
 
 ### Supervised Versus Unsupervised Learning
+
+Most machine learning methods can be split into *supervised* or *unsupervised* categories. Most of this textbook involves supervised learning methods, in which a model that captures the relationship between predictors and response measurements is fitted. The goal is to accurately predict the response variables for future observations, or to understand the relationship between the predictors and response.
+
+Unsupervised learning takes place when we have a set of observations and a vector of measurements $x_i$, but no response $y_i$. We can examine the relationship between the variables or between the observations. A popular method of unsupervised learning is [cluster analysis](https://en.wikipedia.org/wiki/Cluster_analysis), in which observations are grouped into distinct groups based on their vector of measurements $x_i$. An example of this would be  a company segmenting survey respondents based on demographic data, in which the goal is to ascertain some idea about potential spending habits without possessing this data. 
+
+Clustering has some drawbacks. It works best when the groups are significantly distinct from each other. In reality, it is rare for data to exhibit this characteristic. There is often overlap between observations in different groups, and clustering will inevitably place a number of observations in the wrong groups. Further more, visualization of clusters breaks down as the dimensionality of data increases. Most data contains at least several, if not dozens, of variables.
+
+It is not always clear-cut whether a problem should be handled with supervised or unsupervised learning. There are some scenarios where only a subset of the observations have response measurements. This is a *semi-supervised learning* problem, in which a statistical learning method that can utilize all observations is needed.
+
+### Regression Versus Classification Problems
+
+Variables can be categorized as either *quantitative* or *qualitative*. Both qualitative and quantatitive predictors can be used to predict both types of response variables. The more important part of choosing an appropriate statistical learning method is the type of the response variable.
+
+-----
+
+## Assessing Model Accuracy
+
+Every data set is different and there is no one statistical learning method that works best for all data sets. It is important for any given data set to find the statistical learning method that produces the best results. This section presents some concepts that are part of that decision-making process.
+
+### Measuring the Quality of Fit
+
+We need to be able to quantify how well a model's predictions match the observed data. How close are the model's predicted response values to the true response values?
+
+In regression, [*mean squared error (MSE)*](https://en.wikipedia.org/wiki/Mean_squared_error) is the most commonly-used measure. A small MSE indicates the predicted responses are very close to the true ones. MSE used on training data is more accurately referred to as the *training MSE*.
+
+We are most concerned with the accuracy of the predictions when we apply our methods to **previously unseen data**. If you are trying to predict the value of a stock, your concern is how it performs in the future, not on known data from the past. Thus, the goal is then minimizing the *test MSE*, which measures the accuracy of a model on **observations that were not used to train the model**. Imagine a set of observations $(x_0, y_0)$ that were not used to train the statistical learning method.
+
+<center>$Ave(y_0 - \hat{f}(x_0))2$</center>
+
+The goal is to select the model that minimizes the test MSE shown above. How can we do this?
+
+Sometimes, there is an available test data set full of observations that were not used in training the model. The test MSE can be evaluated on these observations, and the learning method which produces the smallest TSE will be chosen. If no test observations are available, picking the method that minimizes the training MSE might seem to be a good idea. However, there is no guarantee that a model with the lowest training MSE also has the lowest test MSE. Models often work in minimizing the training MSE, and can end up with large test MSE.
+
+There is a tradeoff in model flexibility, training MSE, and test MSE. A model that is too flexible can closely match the training data, but perform poorly on the test data. There is a sweet spot to find between model flexibility, training MSE, and test MSE that varies for each unique data set.
+
+*Degrees of freedom* is a quantity that summarizes the flexibility of a curve, discused more fully in Chapter 7. The more inflexible a model is, the fewer degrees of freedom.
+
+As model flexibility increases, training MSE will inevitably decrease, but test MSE may plateau or even rise. A model with a small training MSE and large test MSE is *overfitting the data*, picking up patterns on the training data that don't exist in the test data. Since we expect the training MSE to almost always be lower than the test MSE, overfitting is a specific case when there exists a less flexible model with a smaller test MSE.
+
+### The Bias-Variance Trade-Off
+
 
 
 
