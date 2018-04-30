@@ -12,3 +12,7 @@ pre {
 pre code {
   white-space: inherit;
 }
+.vocab {
+    color: #b4384c;
+    text-align: right;
+}

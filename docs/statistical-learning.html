@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>A Tidy Introduction To Statistical Learning</title>
   <meta name="description" content="A Tidy Introduction To Statistical Learning">
-  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
 
   <meta property="og:title" content="A Tidy Introduction To Statistical Learning" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 <meta name="author" content="Beau Lucas">
 
 
-<meta name="date" content="2017-12-19">
+<meta name="date" content="2018-04-27">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -117,7 +117,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.1.4" data-path="statistical-learning.html"><a href="statistical-learning.html#supervised-versus-unsupervised-learning"><i class="fa fa-check"></i><b>2.1.4</b> Supervised Versus Unsupervised Learning</a></li>
 <li class="chapter" data-level="2.1.5" data-path="statistical-learning.html"><a href="statistical-learning.html#regression-versus-classification-problems"><i class="fa fa-check"></i><b>2.1.5</b> Regression Versus Classification Problems</a></li>
 </ul></li>
-<li class="chapter" data-level="2.2" data-path="statistical-learning.html"><a href="statistical-learning.html#assessing-model-accuracy"><i class="fa fa-check"></i><b>2.2</b> Assessing Model Accuracy</a></li>
+<li class="chapter" data-level="2.2" data-path="statistical-learning.html"><a href="statistical-learning.html#assessing-model-accuracy"><i class="fa fa-check"></i><b>2.2</b> Assessing Model Accuracy</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="statistical-learning.html"><a href="statistical-learning.html#measuring-the-quality-of-fit"><i class="fa fa-check"></i><b>2.2.1</b> Measuring the Quality of Fit</a></li>
+<li class="chapter" data-level="2.2.2" data-path="statistical-learning.html"><a href="statistical-learning.html#the-bias-variance-trade-off"><i class="fa fa-check"></i><b>2.2.2</b> The Bias-Variance Trade-Off</a></li>
+<li class="chapter" data-level="2.2.3" data-path="statistical-learning.html"><a href="statistical-learning.html#the-classification-setting"><i class="fa fa-check"></i><b>2.2.3</b> The Classification Setting</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="statistical-learning.html"><a href="statistical-learning.html#lab-introduction-to-r"><i class="fa fa-check"></i><b>2.3</b> Lab: Introduction to R</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/beaulucas/tidy_islr" target="blank">GitHub Repository</a></li>
@@ -198,7 +203,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Most common approach to fit linear model is <em>(ordinary) least squares</em></li>
 </ul></li>
 </ol>
-<p>This is <em>parametric</em>, as it reduces the problem of estimating <span class="math inline">\(f\)</span> down to one of estimating a set of parameters. Problems that can arise: - Model will not match the true unknown form of <span class="math inline">\(f\)</span> - If model is made more <em>flexible</em>, which generally requires estimating a greater number of parameters, <em>overfitting</em> can occur</p>
+<p>This is <em>parametric</em>, as it reduces the problem of estimating <span class="math inline">\(f\)</span> down to one of estimating a set of parameters. Problems that can arise:</p>
+<ul>
+<li>Model will not match the true unknown form of <span class="math inline">\(f\)</span></li>
+<li>If model is made more <em>flexible</em>, which generally requires estimating a greater number of parameters, <em>overfitting</em> can occur</li>
+</ul>
 </div>
 <div id="non-parametric-methods" class="section level4">
 <h4><span class="header-section-number">2.1.2.2</span> Non-parametric Methods</h4>
@@ -225,7 +234,137 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="assessing-model-accuracy" class="section level2">
 <h2><span class="header-section-number">2.2</span> Assessing Model Accuracy</h2>
+<p>Every data set is different and there is no one statistical learning method that works best for all data sets. It is important for any given data set to find the statistical learning method that produces the best results. This section presents some concepts that are part of that decision-making process.</p>
+<div id="measuring-the-quality-of-fit" class="section level3">
+<h3><span class="header-section-number">2.2.1</span> Measuring the Quality of Fit</h3>
+<p>We need to be able to quantify how well a model’s predictions match the observed data. How close are the model’s predicted response values to the true response values?</p>
+<p>In regression, <a href="https://en.wikipedia.org/wiki/Mean_squared_error"><em>mean squared error (MSE)</em></a> is the most commonly-used measure. A small MSE indicates the predicted responses are very close to the true ones. MSE used on training data is more accurately referred to as the <em>training MSE</em>.</p>
+<p>We are most concerned with the accuracy of the predictions when we apply our methods to <strong>previously unseen data</strong>. If you are trying to predict the value of a stock, your concern is how it performs in the future, not on known data from the past. Thus, the goal is then minimizing the <em>test MSE</em>, which measures the accuracy of a model on <strong>observations that were not used to train the model</strong>. Imagine a set of observations <span class="math inline">\((x_0, y_0)\)</span> that were not used to train the statistical learning method.</p>
+<center>
+<span class="math inline">\(Ave(y_0 - \hat{f}(x_0))2\)</span>
+</center>
+<p><br></p>
+<p>The goal is to select the model that minimizes the test MSE shown above. How can we do this?</p>
+<p>Sometimes, there is an available test data set full of observations that were not used in training the model. The test MSE can be evaluated on these observations, and the learning method which produces the smallest TSE will be chosen. If no test observations are available, picking the method that minimizes the training MSE might seem to be a good idea. However, there is no guarantee that a model with the lowest training MSE also has the lowest test MSE. Models often work in minimizing the training MSE, and can end up with large test MSE.</p>
+<p>There is a tradeoff in model flexibility, training MSE, and test MSE. A model that is too flexible can closely match the training data, but perform poorly on the test data. There is a sweet spot to find between model flexibility, training MSE, and test MSE that varies for each unique data set.</p>
+<p><em>Degrees of freedom</em> is a quantity that summarizes the flexibility of a curve, discused more fully in Chapter 7. The more inflexible a model is, the fewer degrees of freedom.</p>
+<p>As model flexibility increases, training MSE will inevitably decrease, but test MSE may plateau or even rise. A model with a small training MSE and large test MSE is <em>overfitting the data</em>, picking up patterns on the training data that don’t exist in the test data. Since we expect the training MSE to almost always be lower than the test MSE, overfitting is a specific case when there exists a less flexible model with a smaller test MSE.</p>
+</div>
+<div id="the-bias-variance-trade-off" class="section level3">
+<h3><span class="header-section-number">2.2.2</span> The Bias-Variance Trade-Off</h3>
+<p>The expected test MSE can be broken down into the sum of three quantities:</p>
+<ol style="list-style-type: decimal">
+<li>the <em>variance</em> of <span class="math inline">\(\hat{f}(x_0)\)</span></li>
+<li>the squared <em>bias</em> of <span class="math inline">\(\hat{f}(x_0)\)</span></li>
+<li>the variance of the error terms ε</li>
+</ol>
+<center>
+<span class="math inline">\(E(y_0 - \hat{f}(x_0)^2 = Var(\hat{f}(x_0)) + [Bias(\hat{f}(x_0))]^2+Var(ε)\)</span>
+</center>
+<p><br></p>
+<p>The formula above defines the <em>expected test MSE</em>, which can be thought of the average test MSE that would be obtained if we repeatedly estimated <span class="math inline">\(f\)</span> and tested each at <span class="math inline">\(x_0\)</span>. To minimize expected test MSE, we need to choose a statistical learning method that achieves both low variance and low bias. Since variance and squared bias are nonnegative, the expected test MSE can never be lower than <span class="math inline">\(Var(ε)\)</span>, the irreducible error.</p>
+<p><em>Variance</em> refers to how much <span class="math inline">\(\hat{f}\)</span> would change if repeatedly estimated with different training data sets. Methods with high variance can produce large changes in <span class="math inline">\(\hat{f}\)</span> through small changes in the training data. Generally, the more flexible a model it is, the higher the variance. Following the observations so closely can cause changes in just a single observation of the training data to result in significant changes to <span class="math inline">\(\hat{f}\)</span>. More inflexible models, such as linear regression, are less susceptible to the effects of changing a single observation.</p>
+<p><em>Bias</em> is the error introduced from approximating a complicated problem by a much simpler model. Fitting a linear regression to data that is not linear will always lead to high bias, no matter how many observations are in the training set. More flexible models tend to result in less bias.</p>
+<p>More flexible methods lead to higher variance and lower bias. The rate of change between the quantities determines at which point the test MSE is minimized. Bias tends to decrease at a faster rate in the beginning, causing the test MSE to decline. However, when flexibility reaches a certain point, variance will begin to increase faster than bias is decreasing, causing test MSE to rise.</p>
+<p>This relationship between bias, variance, and test MSE is known as the <em>bias-variance tradeoff</em>. Here is a good article on it: <a href="http://scott.fortmann-roe.com/docs/BiasVariance.html">Understanding the Bias-Variance Tradeoff</a></p>
+<p>In real-life scenarios where <span class="math inline">\(f\)</span> is unknown, we cannot explicitly compute the test MSE, bias, or variance. However, there are methods to estimate this, such as <em>cross-validation</em>, which will be discussed in Chapter 5.</p>
+</div>
+<div id="the-classification-setting" class="section level3">
+<h3><span class="header-section-number">2.2.3</span> The Classification Setting</h3>
+<p>For classification problems where <span class="math inline">\(y_i,...,y_n\)</span> are qualitative, we can quantify the accuracy of our estimate by using the <em>training error rate</em>, the proportion of mistakes that are made when applying our model <span class="math inline">\(\hat{f}\)</span> to the training observations.</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(1/n\sum_{i=1}^nI(y_i \neq \hat{y_i})\)</span>
+</p>
+<p class="vocab" style="text-align:right">
+<em>training error rate</em>
+</p>
+</div>
+<p>Breaking the formula above down.</p>
+<ul>
+<li><span class="math inline">\(\hat{y}_i\)</span> is the predicted class label for the <span class="math inline">\(i\)</span>th observation using <span class="math inline">\(\hat{f}\)</span></li>
+<li><span class="math inline">\(I(y_i \neq \hat{y_i})\)</span> is an <em>indicator variable</em> that equals 1 if <span class="math inline">\(y_i \neq \hat{y_i}\)</span>, and 0 if <span class="math inline">\(y_i = \hat{y_i}\)</span></li>
+<li>If <span class="math inline">\(I(y_i \neq \hat{y_i})\)</span> = 0, then the <span class="math inline">\(i\)</span>th observation was classified correctly</li>
+</ul>
+<p>Similar to our regression problems, we are more interested in the model’s performance on test observations not used in training. The formula below gives us the <em>test error rate</em> for a set of observations of the form <span class="math inline">\((x_0, y_0)\)</span>.</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(Ave(I(y_0 \neq \hat{y_0}))\)</span>
+</p>
+<p class="vocab" style="text-align:right">
+<em>test error rate</em>
+</p>
+</div>
+<p>A good classifier will minimize the above.</p>
+<div id="the-bayes-classifier" class="section level4">
+<h4><span class="header-section-number">2.2.3.1</span> The Bayes Classifier</h4>
+<p>The <em>test error rate</em> is minimized by the classifier that assigns each observation to the most likely class, given its predictor values. Our decision is then based on finding the value at which the formula below is largest.</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(Pr(Y = j|X = x_0)\)</span>
+</p>
+</div>
+<p>If the response values are binomial (let’s call them A and B) the classifier simplifies to:</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(Pr(Y = A|X = x_0) &gt; 0.5\:then\:A,\:else\:B\)</span>
+</p>
+</div>
+<p>The <em>Bayes decision boundary</em> is the point where the probabilities are equal for both groups. Points on either side of this line are assigned to the group predicted by the classifier. The <em>Bayes error rate</em> averaged over all possible values of <span class="math inline">\(X\)</span> is below.</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(1-E(max_jPr(Y = j|X))\)</span>
+</p>
+<p class="vocab" style="text-align:right">
+<em>Bayes error rate</em>
+</p>
+</div>
+<p>The <em>Bayes error rate</em> is often greater than zero, as observations between classes overlap in real-world data.</p>
+</div>
+<div id="k-nearest-neighbors" class="section level4">
+<h4><span class="header-section-number">2.2.3.2</span> K-Nearest Neighbors</h4>
+<p>Since the true conditional distribution of <span class="math inline">\(Y\)</span> given <span class="math inline">\(X\)</span> cannot be known in real data, the Bayes classifier is used as a “gold standard” to compare other models to. Many methods attempt to estimate this conditional distribution, and then classify an observation based on the estimated probability. A common method is <em>K-nearest neighbors (KNN)</em>. Given a positive integer <span class="math inline">\(K\)</span> and a test observation <span class="math inline">\(x_0\)</span>, KNN then does the following:</p>
+<ol style="list-style-type: decimal">
+<li>identifies the <span class="math inline">\(K\)</span> points in the training data that are closest to <span class="math inline">\(x_0\)</span>, represented by <span class="math inline">\(N_0\)</span></li>
+<li>estimates conditional probability for class <span class="math inline">\(j\)</span> as the fraction of the points in <span class="math inline">\(N_0\)</span> whose response values equal <span class="math inline">\(j\)</span>:</li>
+</ol>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(Pr(Y = j| X = x_0) = 1/K\sum_{i\in N_0}I(y_i = j)\)</span>
+</p>
+</div>
+<ol start="3" style="list-style-type: decimal">
+<li>applies Bayes rule and classifies test observation <span class="math inline">\(x_0\)</span> to class with largest probability</li>
+</ol>
+<p>KNN can be surprisingly robust to the optimal Bayes classifier. The choice in <span class="math inline">\(K\)</span> makes a huge difference. For example, a <span class="math inline">\(K\)</span> = 1 is highly flexible, classifying observations based off of the closest nearby training observation. <span class="math inline">\(K\)</span> = 100 would do the opposite, basing its classification off a large pool of training observations compared to the <span class="math inline">\(K\)</span> = 1 version. The higher <span class="math inline">\(K\)</span> value produces a more linear model. The trade-off between flexibility, training error rate, and test error rate applies to both classification and regression problems.</p>
+</div>
+</div>
+</div>
+<div id="lab-introduction-to-r" class="section level2">
+<h2><span class="header-section-number">2.3</span> Lab: Introduction to R</h2>
+<p>Finally we get to some <code>R</code> code. This chapter of ISLR introduces basic <code>R</code> syntax, and most of it is unchanged in my version. This should all be familiar to anyone who has used R before.</p>
+<p>We are going to be working with <code>tibbles</code> as our primary data structure throughout this book. Please read here: <a href="http://r4ds.had.co.nz/tibbles.html">tibbles</a></p>
+<div id="basic-commands" class="section level4">
+<h4><span class="header-section-number">2.3.0.1</span> Basic Commands</h4>
+<p>Skipping this.</p>
+</div>
+<div id="graphics-plotting" class="section level4">
+<h4><span class="header-section-number">2.3.0.2</span> Graphics (Plotting)</h4>
+<p>Here we begin to explore the “tidy” approach to R. We will abstain from base R plotting and use <code>ggplot2</code>, which is a more powerful tool. Let’s plot a scatterplot with some basic labels.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tbl_rnorm &lt;-<span class="st"> </span><span class="kw">tibble</span>(
+  <span class="dt">x1 =</span> <span class="kw">rnorm</span>(<span class="dv">100</span>),
+  <span class="dt">y1 =</span> <span class="kw">rnorm</span>(<span class="dv">100</span>)
+)
 
+<span class="kw">ggplot</span>(tbl_rnorm, <span class="kw">aes</span>(<span class="dt">x =</span> x1, <span class="dt">y =</span> y1)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;plot of x1 vs. y1&quot;</span>,
+       <span class="dt">x =</span> <span class="st">&quot;this is the x-axis&quot;</span>,
+       <span class="dt">y =</span> <span class="st">&quot;this is the y-axis&quot;</span>)</code></pre></div>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-1-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>Here is the plot.</p>
+
+</div>
 </div>
 </div>
             </section>
@@ -252,10 +391,11 @@ gitbook.start({
 "facebook": true,
 "twitter": true,
 "google": false,
+"linkedin": false,
 "weibo": false,
 "instapper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -279,9 +419,11 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(script.src))
-      script.src  = script.src.replace(/^https?:/, '');
+    var src = "";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

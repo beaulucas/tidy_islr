@@ -49,6 +49,7 @@ Two-step model-based approach:
     * Most common approach to fit linear model is *(ordinary) least squares*
     
 This is *parametric*, as it reduces the problem of estimating $f$ down to one of estimating a set of parameters. Problems that can arise:
+
   - Model will not match the true unknown form of $f$
   - If model is made more *flexible*, which generally requires estimating a greater number of parameters, *overfitting* can occur
     
@@ -70,7 +71,7 @@ Unsupervised learning takes place when we have a set of observations and a vecto
 
 Clustering has some drawbacks. It works best when the groups are significantly distinct from each other. In reality, it is rare for data to exhibit this characteristic. There is often overlap between observations in different groups, and clustering will inevitably place a number of observations in the wrong groups. Further more, visualization of clusters breaks down as the dimensionality of data increases. Most data contains at least several, if not dozens, of variables.
 
-It is not always clear-cut whether a problem should be handled with supervised or unsupervised learning. There are some scenarios where only a subset of the observations have response measurements. This is a *semi-supervised learning* problem, in which a statistical learning method that can utilize all observations is needed.
+It is not always clear-cut whether a problem should be handled with supervised or unsupervised learning. There are some scenarios where only a subset of the observations have response measurements. This is a *semi-supervised learning* problem, in which a statistical learning method that can utilize all observations is needed. 
 
 ### Regression Versus Classification Problems
 
@@ -90,7 +91,7 @@ In regression, [*mean squared error (MSE)*](https://en.wikipedia.org/wiki/Mean_s
 
 We are most concerned with the accuracy of the predictions when we apply our methods to **previously unseen data**. If you are trying to predict the value of a stock, your concern is how it performs in the future, not on known data from the past. Thus, the goal is then minimizing the *test MSE*, which measures the accuracy of a model on **observations that were not used to train the model**. Imagine a set of observations $(x_0, y_0)$ that were not used to train the statistical learning method.
 
-<center>$Ave(y_0 - \hat{f}(x_0))2$</center>
+<center>$Ave(y_0 - \hat{f}(x_0))2$</center><br>
 
 The goal is to select the model that minimizes the test MSE shown above. How can we do this?
 
@@ -105,5 +106,140 @@ As model flexibility increases, training MSE will inevitably decrease, but test 
 ### The Bias-Variance Trade-Off
 
 
+The expected test MSE can be broken down into the sum of three quantities:
 
+  1. the *variance* of $\hat{f}(x_0)$
+  2. the squared *bias* of  $\hat{f}(x_0)$
+  3. the variance of the error terms ε
+  
+<center>$E(y_0 - \hat{f}(x_0)^2 = Var(\hat{f}(x_0)) + [Bias(\hat{f}(x_0))]^2+Var(ε)$</center><br>
+
+The formula above defines the *expected test MSE*, which can be thought of the average test MSE that would be obtained if we repeatedly estimated $f$ and tested each at $x_0$. To minimize expected test MSE, we need to choose a statistical learning method that achieves both low variance and low bias. Since variance and squared bias are nonnegative, the expected test MSE can never be lower than $Var(ε)$, the irreducible error.
+
+*Variance* refers to how much $\hat{f}$ would change if repeatedly estimated with different training data sets. Methods with high variance can produce large changes in $\hat{f}$ through small changes in the training data. Generally, the more flexible a model it is, the higher the variance. Following the observations so closely can cause changes in just a single observation of the training data to result in significant changes to $\hat{f}$. More inflexible models, such as linear regression, are less susceptible to the effects of changing a single observation.
+
+*Bias* is the error introduced from approximating a complicated problem by a much simpler model. Fitting a linear regression to data that is not linear will always lead to high bias, no matter how many observations are in the training set. More flexible models tend to result in less bias.
+
+More flexible methods lead to higher variance and lower bias. The rate of change between the quantities determines at which point the test MSE is minimized. Bias tends to decrease at a faster rate in the beginning, causing the test MSE to decline. However, when flexibility reaches a certain point, variance will begin to increase faster than bias is decreasing, causing test MSE to rise.
+
+This relationship between bias, variance, and test MSE is known as the *bias-variance tradeoff*. Here is a good article on it: [Understanding the Bias-Variance Tradeoff](http://scott.fortmann-roe.com/docs/BiasVariance.html)
+
+In real-life scenarios where $f$ is unknown, we cannot explicitly compute the test MSE, bias, or variance. However, there are methods to estimate this, such as *cross-validation*, which will be discussed in Chapter 5.
+
+### The Classification Setting
+
+For classification problems where $y_i,...,y_n$ are qualitative, we can quantify the accuracy of our estimate by using the *training error rate*, the proportion of mistakes that are made when applying our model $\hat{f}$ to the training observations.
+
+<div>
+<p style="text-align:center">$1/n\sum_{i=1}^nI(y_i \neq \hat{y_i})$</p>
+<p class="vocab" style="text-align:right">*training error rate*</p>
+</div>
+
+Breaking the formula above down.
+
+  - $\hat{y}_i$ is the predicted class label for the $i$th observation using $\hat{f}$
+  - $I(y_i \neq \hat{y_i})$ is an *indicator variable* that equals 1 if $y_i \neq \hat{y_i}$, and 0 if $y_i = \hat{y_i}$
+  - If $I(y_i \neq \hat{y_i})$ = 0, then the $i$th observation was classified correctly
+
+Similar to our regression problems, we are more interested in the model's performance on test observations not used in training. The formula below gives us the *test error rate* for a set of observations of the form $(x_0, y_0)$.
+
+<div>
+<p style="text-align:center">$Ave(I(y_0 \neq \hat{y_0}))$</p>
+<p class="vocab" style="text-align:right">*test error rate*</p>
+</div>
+
+A good classifier will minimize the above.
+
+#### The Bayes Classifier
+
+The *test error rate* is minimized by the classifier that assigns each observation to the most likely class, given its predictor values. Our decision is then based on finding the value at which the formula below is largest.
+
+<div>
+<p style="text-align:center">$Pr(Y = j|X = x_0)$</p>
+</div>
+
+If the response values are binomial (let's call them A and B) the classifier simplifies to:
+
+<div>
+<p style="text-align:center">$Pr(Y = A|X = x_0) > 0.5\:then\:A,\:else\:B$</p>
+</div>
+
+The *Bayes decision boundary* is the point where the probabilities are equal for both groups. Points on either side of this line are assigned to the group predicted by the classifier. The *Bayes error rate* averaged over all possible values of $X$ is below. 
+
+<div>
+<p style="text-align:center">$1-E(max_jPr(Y = j|X))$</p>
+<p class="vocab" style="text-align:right">*Bayes error rate*</p>
+</div>
+
+The *Bayes error rate* is often greater than zero, as observations between classes overlap in real-world data.
+
+
+#### K-Nearest Neighbors
+
+Since the true conditional distribution of $Y$ given $X$ cannot be known in real data, the Bayes classifier is used as a "gold standard" to compare other models to. Many methods attempt to estimate this conditional distribution, and then classify an observation based on the estimated probability. A common method is *K-nearest neighbors (KNN)*. Given a positive integer $K$ and a test observation $x_0$, KNN then does the following:
+
+1. identifies the $K$ points in the training data that are closest to $x_0$, represented by $N_0$
+2. estimates conditional probability for class $j$ as the fraction of the points in $N_0$ whose response values equal $j$:
+
+<div>
+<p style="text-align:center">$Pr(Y = j| X = x_0) = 1/K\sum_{i\in N_0}I(y_i = j)$</p>
+</div>
+
+3. applies Bayes rule and classifies test observation $x_0$ to class with largest probability
+
+KNN can be surprisingly robust to the optimal Bayes classifier. The choice in $K$ makes a huge difference. For example, a $K$ = 1 is highly flexible, classifying observations based off of the closest nearby training observation. $K$ = 100 would do the opposite, basing its classification off a large pool of training observations compared to the $K$ = 1 version. The higher $K$ value produces a more linear model. The trade-off between flexibility, training error rate, and test error rate applies to both classification and regression problems.
+
+
+## Lab: Introduction to R
+
+Finally we get to some `R` code. This chapter of ISLR introduces basic `R` syntax, and most of it is unchanged in my version. This should all be familiar to anyone who has used R before.
+
+We are going to be working with `tibbles` as our primary data structure throughout this book. Please read here: [tibbles](http://r4ds.had.co.nz/tibbles.html)
+
+#### Basic Commands
+
+Skipping this.
+
+#### Graphics (Plotting)
+
+Here we begin to explore the "tidy" approach to R. We will abstain from base R plotting and use `ggplot2`, which is a more powerful tool. Let's plot a scatterplot with some basic labels.
+
+```{r}
+tbl_rnorm <- tibble(
+  x1 = rnorm(100),
+  y1 = rnorm(100)
+)
+
+ggplot(tbl_rnorm, aes(x = x1, y = y1)) + 
+  geom_point() + 
+  labs(title = "plot of x1 vs. y1",
+       x = "this is the x-axis",
+       y = "this is the y-axis")
+```
+
+#### Indexing data
+
+We will skip this.
+
+#### Loading data
+
+*ISLR* mentions insuring proper working directory before loading data. Dealing with working directories in R is a bad idea. Fortunately, it's easily avoidable through the use of RStudio *projects*, which keep all files used in analysis together and make your work more robust and reproducible. See the [RStudio Projects](http://r4ds.had.co.nz/workflow-projects.html) chapter in *r4ds* for more information.
+
+We will opt for the `readr` package instead of base R. Take a look at this subsection of *r4ds* for reasons why: 
+[*11.2.1 Compared to base R*](http://r4ds.had.co.nz/data-import.html)
+
+```{r}
+# generate tsv data to read in
+
+generic_company_tibble <- tibble(
+  x = rnorm(100, mean = 25),
+  y = rnorm(100, mean = 50),
+  z = sample(c("apple", "uber", "facebook", "twitter", "tesla", "google", "microsoft"), 1)
+)
+generic_company_tibble
+write_tsv("generic_company_tibble")
+```
+
+
+  
 

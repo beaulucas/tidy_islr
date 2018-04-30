@@ -124,7 +124,7 @@
   \postauthor{\par}
   \predate{\centering\large\emph}
   \postdate{\par}
-  \date{2017-12-19}
+  \date{2018-04-27}
 
 \usepackage{booktabs}
 \usepackage{amsthm}
@@ -315,9 +315,16 @@ Two-step model-based approach:
 
 This is \emph{parametric}, as it reduces the problem of estimating \(f\)
 down to one of estimating a set of parameters. Problems that can arise:
-- Model will not match the true unknown form of \(f\) - If model is made
-more \emph{flexible}, which generally requires estimating a greater
-number of parameters, \emph{overfitting} can occur
+
+\begin{itemize}
+\tightlist
+\item
+  Model will not match the true unknown form of \(f\)
+\item
+  If model is made more \emph{flexible}, which generally requires
+  estimating a greater number of parameters, \emph{overfitting} can
+  occur
+\end{itemize}
 
 \subsubsection{Non-parametric Methods}\label{non-parametric-methods}
 
@@ -388,6 +395,271 @@ of the response variable.
 \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
 
 \section{Assessing Model Accuracy}\label{assessing-model-accuracy}
+
+Every data set is different and there is no one statistical learning
+method that works best for all data sets. It is important for any given
+data set to find the statistical learning method that produces the best
+results. This section presents some concepts that are part of that
+decision-making process.
+
+\subsection{Measuring the Quality of
+Fit}\label{measuring-the-quality-of-fit}
+
+We need to be able to quantify how well a model's predictions match the
+observed data. How close are the model's predicted response values to
+the true response values?
+
+In regression,
+\href{https://en.wikipedia.org/wiki/Mean_squared_error}{\emph{mean
+squared error (MSE)}} is the most commonly-used measure. A small MSE
+indicates the predicted responses are very close to the true ones. MSE
+used on training data is more accurately referred to as the
+\emph{training MSE}.
+
+We are most concerned with the accuracy of the predictions when we apply
+our methods to \textbf{previously unseen data}. If you are trying to
+predict the value of a stock, your concern is how it performs in the
+future, not on known data from the past. Thus, the goal is then
+minimizing the \emph{test MSE}, which measures the accuracy of a model
+on \textbf{observations that were not used to train the model}. Imagine
+a set of observations \((x_0, y_0)\) that were not used to train the
+statistical learning method.
+
+\(Ave(y_0 - \hat{f}(x_0))2\)
+
+The goal is to select the model that minimizes the test MSE shown above.
+How can we do this?
+
+Sometimes, there is an available test data set full of observations that
+were not used in training the model. The test MSE can be evaluated on
+these observations, and the learning method which produces the smallest
+TSE will be chosen. If no test observations are available, picking the
+method that minimizes the training MSE might seem to be a good idea.
+However, there is no guarantee that a model with the lowest training MSE
+also has the lowest test MSE. Models often work in minimizing the
+training MSE, and can end up with large test MSE.
+
+There is a tradeoff in model flexibility, training MSE, and test MSE. A
+model that is too flexible can closely match the training data, but
+perform poorly on the test data. There is a sweet spot to find between
+model flexibility, training MSE, and test MSE that varies for each
+unique data set.
+
+\emph{Degrees of freedom} is a quantity that summarizes the flexibility
+of a curve, discused more fully in Chapter 7. The more inflexible a
+model is, the fewer degrees of freedom.
+
+As model flexibility increases, training MSE will inevitably decrease,
+but test MSE may plateau or even rise. A model with a small training MSE
+and large test MSE is \emph{overfitting the data}, picking up patterns
+on the training data that don't exist in the test data. Since we expect
+the training MSE to almost always be lower than the test MSE,
+overfitting is a specific case when there exists a less flexible model
+with a smaller test MSE.
+
+\subsection{The Bias-Variance
+Trade-Off}\label{the-bias-variance-trade-off}
+
+The expected test MSE can be broken down into the sum of three
+quantities:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  the \emph{variance} of \(\hat{f}(x_0)\)
+\item
+  the squared \emph{bias} of \(\hat{f}(x_0)\)
+\item
+  the variance of the error terms ε
+\end{enumerate}
+
+\(E(y_0 - \hat{f}(x_0)^2 = Var(\hat{f}(x_0)) + [Bias(\hat{f}(x_0))]^2+Var(ε)\)
+
+The formula above defines the \emph{expected test MSE}, which can be
+thought of the average test MSE that would be obtained if we repeatedly
+estimated \(f\) and tested each at \(x_0\). To minimize expected test
+MSE, we need to choose a statistical learning method that achieves both
+low variance and low bias. Since variance and squared bias are
+nonnegative, the expected test MSE can never be lower than \(Var(ε)\),
+the irreducible error.
+
+\emph{Variance} refers to how much \(\hat{f}\) would change if
+repeatedly estimated with different training data sets. Methods with
+high variance can produce large changes in \(\hat{f}\) through small
+changes in the training data. Generally, the more flexible a model it
+is, the higher the variance. Following the observations so closely can
+cause changes in just a single observation of the training data to
+result in significant changes to \(\hat{f}\). More inflexible models,
+such as linear regression, are less susceptible to the effects of
+changing a single observation.
+
+\emph{Bias} is the error introduced from approximating a complicated
+problem by a much simpler model. Fitting a linear regression to data
+that is not linear will always lead to high bias, no matter how many
+observations are in the training set. More flexible models tend to
+result in less bias.
+
+More flexible methods lead to higher variance and lower bias. The rate
+of change between the quantities determines at which point the test MSE
+is minimized. Bias tends to decrease at a faster rate in the beginning,
+causing the test MSE to decline. However, when flexibility reaches a
+certain point, variance will begin to increase faster than bias is
+decreasing, causing test MSE to rise.
+
+This relationship between bias, variance, and test MSE is known as the
+\emph{bias-variance tradeoff}. Here is a good article on it:
+\href{http://scott.fortmann-roe.com/docs/BiasVariance.html}{Understanding
+the Bias-Variance Tradeoff}
+
+In real-life scenarios where \(f\) is unknown, we cannot explicitly
+compute the test MSE, bias, or variance. However, there are methods to
+estimate this, such as \emph{cross-validation}, which will be discussed
+in Chapter 5.
+
+\subsection{The Classification
+Setting}\label{the-classification-setting}
+
+For classification problems where \(y_i,...,y_n\) are qualitative, we
+can quantify the accuracy of our estimate by using the \emph{training
+error rate}, the proportion of mistakes that are made when applying our
+model \(\hat{f}\) to the training observations.
+
+\(1/n\sum_{i=1}^nI(y_i \neq \hat{y_i})\)
+
+\emph{training error rate}
+
+Breaking the formula above down.
+
+\begin{itemize}
+\tightlist
+\item
+  \(\hat{y}_i\) is the predicted class label for the \(i\)th observation
+  using \(\hat{f}\)
+\item
+  \(I(y_i \neq \hat{y_i})\) is an \emph{indicator variable} that equals
+  1 if \(y_i \neq \hat{y_i}\), and 0 if \(y_i = \hat{y_i}\)
+\item
+  If \(I(y_i \neq \hat{y_i})\) = 0, then the \(i\)th observation was
+  classified correctly
+\end{itemize}
+
+Similar to our regression problems, we are more interested in the
+model's performance on test observations not used in training. The
+formula below gives us the \emph{test error rate} for a set of
+observations of the form \((x_0, y_0)\).
+
+\(Ave(I(y_0 \neq \hat{y_0}))\)
+
+\emph{test error rate}
+
+A good classifier will minimize the above.
+
+\subsubsection{The Bayes Classifier}\label{the-bayes-classifier}
+
+The \emph{test error rate} is minimized by the classifier that assigns
+each observation to the most likely class, given its predictor values.
+Our decision is then based on finding the value at which the formula
+below is largest.
+
+\(Pr(Y = j|X = x_0)\)
+
+If the response values are binomial (let's call them A and B) the
+classifier simplifies to:
+
+\(Pr(Y = A|X = x_0) > 0.5\:then\:A,\:else\:B\)
+
+The \emph{Bayes decision boundary} is the point where the probabilities
+are equal for both groups. Points on either side of this line are
+assigned to the group predicted by the classifier. The \emph{Bayes error
+rate} averaged over all possible values of \(X\) is below.
+
+\(1-E(max_jPr(Y = j|X))\)
+
+\emph{Bayes error rate}
+
+The \emph{Bayes error rate} is often greater than zero, as observations
+between classes overlap in real-world data.
+
+\subsubsection{K-Nearest Neighbors}\label{k-nearest-neighbors}
+
+Since the true conditional distribution of \(Y\) given \(X\) cannot be
+known in real data, the Bayes classifier is used as a ``gold standard''
+to compare other models to. Many methods attempt to estimate this
+conditional distribution, and then classify an observation based on the
+estimated probability. A common method is \emph{K-nearest neighbors
+(KNN)}. Given a positive integer \(K\) and a test observation \(x_0\),
+KNN then does the following:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  identifies the \(K\) points in the training data that are closest to
+  \(x_0\), represented by \(N_0\)
+\item
+  estimates conditional probability for class \(j\) as the fraction of
+  the points in \(N_0\) whose response values equal \(j\):
+\end{enumerate}
+
+\(Pr(Y = j| X = x_0) = 1/K\sum_{i\in N_0}I(y_i = j)\)
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  applies Bayes rule and classifies test observation \(x_0\) to class
+  with largest probability
+\end{enumerate}
+
+KNN can be surprisingly robust to the optimal Bayes classifier. The
+choice in \(K\) makes a huge difference. For example, a \(K\) = 1 is
+highly flexible, classifying observations based off of the closest
+nearby training observation. \(K\) = 100 would do the opposite, basing
+its classification off a large pool of training observations compared to
+the \(K\) = 1 version. The higher \(K\) value produces a more linear
+model. The trade-off between flexibility, training error rate, and test
+error rate applies to both classification and regression problems.
+
+\section{Lab: Introduction to R}\label{lab-introduction-to-r}
+
+Finally we get to some \texttt{R} code. This chapter of ISLR introduces
+basic \texttt{R} syntax, and most of it is unchanged in my version. This
+should all be familiar to anyone who has used R before.
+
+We are going to be working with \texttt{tibbles} as our primary data
+structure throughout this book. Please read here:
+\href{http://r4ds.had.co.nz/tibbles.html}{tibbles}
+
+\subsubsection{Basic Commands}\label{basic-commands}
+
+Skipping this.
+
+\subsubsection{Graphics (Plotting)}\label{graphics-plotting}
+
+Here we begin to explore the ``tidy'' approach to R. We will abstain
+from base R plotting and use \texttt{ggplot2}, which is a more powerful
+tool. Let's plot a scatterplot with some basic labels.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tbl_rnorm <-}\StringTok{ }\KeywordTok{tibble}\NormalTok{(}
+  \DataTypeTok{x1 =} \KeywordTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{),}
+  \DataTypeTok{y1 =} \KeywordTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{)}
+\NormalTok{)}
+
+\KeywordTok{ggplot}\NormalTok{(tbl_rnorm, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x1, }\DataTypeTok{y =}\NormalTok{ y1)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title =} \StringTok{"plot of x1 vs. y1"}\NormalTok{,}
+       \DataTypeTok{x =} \StringTok{"this is the x-axis"}\NormalTok{,}
+       \DataTypeTok{y =} \StringTok{"this is the y-axis"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{tidy_islr_files/figure-latex/unnamed-chunk-1-1} \end{center}
+
+Here is the plot.
 
 
 \end{document}
