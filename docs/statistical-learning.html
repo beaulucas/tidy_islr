@@ -25,7 +25,7 @@
 <meta name="author" content="Beau Lucas">
 
 
-<meta name="date" content="2018-04-27">
+<meta name="date" content="2018-06-04">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -33,7 +33,7 @@
   
   
 <link rel="prev" href="intro.html">
-
+<link rel="next" href="linear-regression.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -123,6 +123,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.2.3" data-path="statistical-learning.html"><a href="statistical-learning.html#the-classification-setting"><i class="fa fa-check"></i><b>2.2.3</b> The Classification Setting</a></li>
 </ul></li>
 <li class="chapter" data-level="2.3" data-path="statistical-learning.html"><a href="statistical-learning.html#lab-introduction-to-r"><i class="fa fa-check"></i><b>2.3</b> Lab: Introduction to R</a></li>
+<li class="chapter" data-level="2.4" data-path="statistical-learning.html"><a href="statistical-learning.html#exercises"><i class="fa fa-check"></i><b>2.4</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>3</b> Linear Regression</a><ul>
+<li class="chapter" data-level="3.1" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression"><i class="fa fa-check"></i><b>3.1</b> Simple Linear Regression</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/beaulucas/tidy_islr" target="blank">GitHub Repository</a></li>
@@ -337,6 +341,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>applies Bayes rule and classifies test observation <span class="math inline">\(x_0\)</span> to class with largest probability</li>
 </ol>
 <p>KNN can be surprisingly robust to the optimal Bayes classifier. The choice in <span class="math inline">\(K\)</span> makes a huge difference. For example, a <span class="math inline">\(K\)</span> = 1 is highly flexible, classifying observations based off of the closest nearby training observation. <span class="math inline">\(K\)</span> = 100 would do the opposite, basing its classification off a large pool of training observations compared to the <span class="math inline">\(K\)</span> = 1 version. The higher <span class="math inline">\(K\)</span> value produces a more linear model. The trade-off between flexibility, training error rate, and test error rate applies to both classification and regression problems.</p>
+<hr />
 </div>
 </div>
 </div>
@@ -362,9 +367,317 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
        <span class="dt">x =</span> <span class="st">&quot;this is the x-axis&quot;</span>,
        <span class="dt">y =</span> <span class="st">&quot;this is the y-axis&quot;</span>)</code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-1-1.png" width="576" style="display: block; margin: auto;" /></p>
-<p>Here is the plot.</p>
-
 </div>
+<div id="indexing-data" class="section level4">
+<h4><span class="header-section-number">2.3.0.3</span> Indexing data</h4>
+<p>We will skip this.</p>
+</div>
+<div id="loading-data" class="section level4">
+<h4><span class="header-section-number">2.3.0.4</span> Loading data</h4>
+<p><em>ISLR</em> mentions insuring proper working directory before loading data. Dealing with working directories in R is a bad idea. Fortunately, it’s easily avoidable through the use of RStudio <em>projects</em>, which keep all files used in analysis together and make your work more robust and reproducible. See the <a href="http://r4ds.had.co.nz/workflow-projects.html">RStudio Projects</a> chapter in <em>r4ds</em> for more information.</p>
+<p>We will opt for the <code>readr</code> (part of the <code>tidyverse</code>) package instead of base R. Take a look at this subsection of <em>r4ds</em> for reasons why: <a href="http://r4ds.had.co.nz/data-import.html"><em>11.2.1 Compared to base R</em></a></p>
+<p>Below is a reproducible example in which we create a tibble, save it as a .txt file, and then read it in with <code>write_tsv()</code>. The set of <code>read_*</code> functions in <code>readr</code> will be the standrad way to read local files into R. If you are using RStudio projects, there is no need to worry about working directories.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># generate dummy data to read in</span>
+generic_company_tibble &lt;-<span class="st"> </span><span class="kw">tibble</span>(
+  <span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dv">100</span>, <span class="dt">mean =</span> <span class="dv">25</span>),
+  <span class="dt">y =</span> <span class="kw">rnorm</span>(<span class="dv">100</span>, <span class="dt">mean =</span> <span class="dv">50</span>),
+  <span class="dt">z =</span> <span class="kw">sample</span>(<span class="kw">c</span>(<span class="st">&quot;apple&quot;</span>, <span class="st">&quot;uber&quot;</span>, <span class="st">&quot;facebook&quot;</span>, <span class="st">&quot;twitter&quot;</span>, <span class="st">&quot;tesla&quot;</span>, <span class="st">&quot;google&quot;</span>, <span class="st">&quot;microsoft&quot;</span>), <span class="dv">1</span>)
+)
+
+tmp &lt;-<span class="st"> </span><span class="kw">tempfile</span>()
+<span class="kw">write_tsv</span>(generic_company_tibble, tmp)
+company_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(tmp)</code></pre></div>
+<p><code>readr</code> provides a nice summary of the imported tibble. Calling the tibble by name will also give a breakdown of column names, data types, and number of observations.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">company_data</code></pre></div>
+<pre><code>## # A tibble: 100 x 3
+##       x     y z    
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;
+## 1  25.2  50.3 apple
+## 2  26.8  46.8 apple
+## 3  25.8  47.3 apple
+## 4  25.3  50.6 apple
+## 5  25.2  49.5 apple
+## 6  24.4  51.8 apple
+## # ... with 94 more rows</code></pre>
+</div>
+<div id="additional-graphical-and-numerical-summaries" class="section level4">
+<h4><span class="header-section-number">2.3.0.5</span> Additional Graphical and Numerical Summaries</h4>
+<p>ISLR mentions the <code>attach()</code> function, which allows R to reference column names of dataframes without specifying the dataframe. <code>attach</code> can lead to confusion and errors when working on a project with multiple sources of data. This is a bad practice, and should always be avoided.</p>
+<p>The book then goes into some explanation of <code>plot()</code>, which we will not be using.</p>
+<hr />
+</div>
+</div>
+<div id="exercises" class="section level2">
+<h2><span class="header-section-number">2.4</span> Exercises</h2>
+<ol style="list-style-type: decimal">
+<li>For each of parts (a) through (d), indicate whether we would generally expect the performance of a flexible statistical learning method to be better or worse than an inflexible method.
+<ol style="list-style-type: lower-alpha">
+<li>The sample size n is extremely large, and the number of predictors p is small
+<ul>
+<li><strong>(better)</strong> given large sample size, a flexible model would be able to capture a trend without being influenced too heavily by a small number of observations.</li>
+</ul></li>
+<li>The number of predictors p is extremely large, and the number of observations n is small.
+<ul>
+<li><strong>(worse)</strong> given the small sample size, an inflexible model would do better at not overfitting to a small number of observations (capturing patterns in the training data that dont really exist)</li>
+</ul></li>
+<li>The relationship between the predictors and response is highly non-linear.
+<ul>
+<li><strong>(better)</strong> highly flexible methods are highly non-linear and can produce better fits on non-linear data compared to inflexible methods such as linear regression</li>
+</ul></li>
+<li>The variance of the error terms, i.e. σ2 = Var(ε), is extremely high.
+<ul>
+<li><strong>(worse)</strong> given the high variance in the data, an inflexible method would overfit to the noise</li>
+</ul></li>
+</ol></li>
+<li>Explain whether each scenario is a classification or regression problem, and indicate whether we are most interested in inference or prediction. Finally, provide n and p.</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>We collect a set of data on the top 500 firms in the US. For each firm we record profit, number of employees, industry and the CEO salary. We are interested in understanding which factors affect CEO salary. - <strong>(regression; inference)</strong> This is a regression problem with both qualitative and quantitative predictors. Inference is the main goal, as the company probably wants a model that is human-readable in order to understand what determines a CEO’s salary. - <code>n = 500, p = 3</code></li>
+<li>We are considering launching a new product and wish to know whether it will be a success or a failure. We collect data on 20 similar products that were previously launched. For each product we have recorded whether it was a success or failure, price charged for the product, marketing budget, competition price, and ten other variables. - <strong>(classification; prediction)</strong> The goal is to classify whether a product will be a success or failure. Prediction is the goal, as they want to accurately determine if their product will succeed or fail. - <code>n = 20, p = 4</code></li>
+<li>We are interested in predicting the % change in the USD/Euro exchange rate in relation to the weekly changes in the world stock markets. Hence we collect weekly data for all of 2012. For each week we record the % change in the USD/Euro, the % change in the US market, the % change in the British market, and the % change in the German market. - <strong>(regression; prediction)</strong> The goal is to predict the % change of the exchange rate.</li>
+</ol>
+<ol start="3" style="list-style-type: decimal">
+<li>We now revisit the bias-variance decomposition</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>Provide a sketch of typical (squared) bias, variance, training error, test error, and Bayes (or irreducible) error curves, on a single plot, as we go from less flexible statistical learning methods towards more flexible approaches. The x-axis should represent the amount of flexibility in the method, and the y-axis should represent the values for each curve. There should be five curves. Make sure to label each one.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bias_variance &lt;-<span class="st"> </span><span class="kw">tibble</span>(
+  <span class="dt">flexibility =</span> <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>),
+  <span class="dt">bias =</span> <span class="kw">c</span>(<span class="dv">300</span>,<span class="dv">200</span>,<span class="dv">150</span>,<span class="dv">100</span>,<span class="dv">50</span>),
+  <span class="dt">variance =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">25</span>,<span class="dv">125</span>,<span class="dv">250</span>,<span class="dv">500</span>),
+  <span class="dt">train_error =</span> <span class="kw">c</span>(<span class="dv">350</span>,<span class="dv">250</span>,<span class="dv">200</span>, <span class="dv">125</span>, <span class="dv">50</span>),
+  <span class="dt">irreducible_error =</span> <span class="dv">100</span>,
+  <span class="dt">test_error =</span> variance <span class="op">+</span><span class="st"> </span>bias <span class="op">+</span><span class="st"> </span>irreducible_error) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">gather</span>(<span class="st">`</span><span class="dt">bias</span><span class="st">`</span>, <span class="st">`</span><span class="dt">variance</span><span class="st">`</span>, <span class="st">`</span><span class="dt">train_error</span><span class="st">`</span>, <span class="st">`</span><span class="dt">irreducible_error</span><span class="st">`</span>, <span class="st">`</span><span class="dt">test_error</span><span class="st">`</span>,
+         <span class="dt">key =</span> <span class="st">&quot;measurement&quot;</span>, <span class="dt">value =</span> <span class="st">&quot;value&quot;</span>)
+
+<span class="kw">ggplot</span>(bias_variance, <span class="kw">aes</span>(<span class="dt">x =</span> flexibility, <span class="dt">y =</span> value, <span class="dt">colour =</span> measurement)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">se =</span> <span class="ot">FALSE</span>, <span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="dt">formula =</span> y <span class="op">~</span><span class="st"> </span><span class="kw">poly</span>(x,<span class="dv">3</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_minimal</span>()</code></pre></div>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-4-1.png" width="576" style="display: block; margin: auto;" /></p>
+<ol start="4" style="list-style-type: decimal">
+<li>You will now think of some real-life applications for statistical learning.
+<ol style="list-style-type: lower-alpha">
+<li>Describe three real-life applications in which classification might be useful. Describe the response, as well as the predictors. Is the goal of each application inference or prediction? Explain your answer.
+<ol style="list-style-type: decimal">
+<li>predicting diabetes.
+<ul>
+<li>response: future diabetes</li>
+<li>predictors: health and body measurements of patient</li>
+<li>goal: prediction, model complexity and human understanding is not important</li>
+</ul></li>
+<li>demographics that determine future education level
+<ul>
+<li>response: education level</li>
+<li>predictors: demographic data</li>
+<li>goal: inference, prediction is important here too but researchers would probably want to understand and share which factors determine the response in order to raise awareness</li>
+</ul></li>
+<li>faulty parts in manufacturing
+<ul>
+<li>response: whether or not part is faulty</li>
+<li>predictors: various tests on part</li>
+<li>goal: prediction, it is most important to have an accurate model, especially if faulty parts can lead to deaths</li>
+</ul></li>
+</ol></li>
+<li>Describe three real-life applications in which regression might be useful. Describe the response, as well as the predictors. Is the goal of each application inference or prediction? Explain your answer.
+<ol style="list-style-type: decimal">
+<li>number of riders on public transit over time
+<ul>
+<li>response: how many riders are expected to use public transit</li>
+<li>predictors: current transit usage data, local population data, etc.</li>
+<li>goal: prediction, it is important to prepare for growth in transit usage so governments have enough time to make necessary changes</li>
+</ul></li>
+<li>demand for product
+<ul>
+<li>response: how many units to expect to be sold</li>
+<li>predictors: current demand data, revenue growth, business expansion, changing in market trends, economy health</li>
+<li>goal: prediction, figure out in X amount of time demand for product in order to upsize/downsize to appropriate level</li>
+</ul></li>
+<li>determine future salary
+<ul>
+<li>response: future expeceted salary</li>
+<li>predictors: employment history, education, geolocation, etc.</li>
+<li>goal: inference, researchers might want to know the most important factors that lead to higher salaries rather than a model that is too complex to understand</li>
+</ul></li>
+</ol></li>
+</ol></li>
+<li>What are the advantages and disadvantages of a very flexible (versus a less flexible) approach for regression or classification? Under what circumstances might a more flexible approach be preferred to a less flexible approach? When might a less flexible approach be preferred?</li>
+</ol>
+<ul>
+<li>Very flexible approach allows you to fit a more flexible function to the data. The advantage is that you have the potential to accurately predict data even as it moves away from linearity. The disadvantage are potential overfitting to the training data, increasing variance (individual observations affect the model to higher degree than non-flexible counterpart), and higher computational costs (as well as less human-readable explanations)</li>
+<li>When a more flexible approach is preferred: data that is non-linear, large sample size, prediction more important than inference</li>
+<li>When a less flexible approach is preferred: data that is more linear, smaller sample size, inference more important than prediction</li>
+</ul>
+<ol start="6" style="list-style-type: decimal">
+<li>Describe the differences between a parametric and a non-parametric statistical learning approach. What are the advantages of a parametric approach to regression or classification (as opposed to a nonparametric approach)? What are its disadvantages?</li>
+</ol>
+<ul>
+<li>A parametric approach assumes a form of <span class="math inline">\(f\)</span> and has to estimate an often known number of parameters (for example, linear regression simply requires estimating <span class="math inline">\(p+1\)</span> coefficients)</li>
+<li>A non-parametric approach makes no assumptions about the true form of <span class="math inline">\(f\)</span>. They simply want to get as close as possible to <span class="math inline">\(f\)</span>. This allows them to take on a larger variety of shapes, and accomodate a larger variety of patterns.</li>
+<li>Advantages of a parametric approach are that they take less observations to generate (the problem is reduced to applying a known form to <span class="math inline">\(f\)</span>, such as linear regression), are less inclined to overfit, and generally less computationally intensive.</li>
+<li>Disadvantages of a parametric approach making assumptions about the form of <span class="math inline">\(f\)</span>, which may not match the real form and could lead to a model that doesn’t fit the data well</li>
+</ul>
+<ol start="7" style="list-style-type: decimal">
+<li>The table below provides a training data set containing six observa- tions, three predictors, and one qualitative response variable.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">training_set &lt;-<span class="st"> </span><span class="kw">tibble</span>(
+  <span class="dt">x1 =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>),
+  <span class="dt">x2 =</span> <span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>),
+  <span class="dt">x3 =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">1</span>),
+  <span class="dt">y =</span> <span class="kw">c</span>(<span class="st">&quot;red&quot;</span>,<span class="st">&quot;red&quot;</span>,<span class="st">&quot;red&quot;</span>,<span class="st">&quot;green&quot;</span>,<span class="st">&quot;green&quot;</span>,<span class="st">&quot;red&quot;</span>))
+
+<span class="kw">kable</span>(training_set)</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="right">x1</th>
+<th align="right">x2</th>
+<th align="right">x3</th>
+<th align="left">y</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">0</td>
+<td align="left">red</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">red</td>
+</tr>
+<tr class="odd">
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="left">red</td>
+</tr>
+<tr class="even">
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="left">green</td>
+</tr>
+<tr class="odd">
+<td align="right">-1</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">green</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">red</td>
+</tr>
+</tbody>
+</table>
+<p>Suppose we wish to use this data set to make a prediction for <span class="math inline">\(Y\)</span> when <span class="math inline">\(X1 = X2 = X3 = 0\)</span> using K-nearest neighbors.</p>
+<ol style="list-style-type: lower-alpha">
+<li>Compute the Euclidean distance between each observation and the test point, <span class="math inline">\(X1 = X2 = X3 = 0\)</span>.</li>
+</ol>
+<p>The Euclidean Distance for three dimensions can be written as:</p>
+<center>
+<span class="math inline">\(d = \sqrt {\left( {x_1 - x_2 } \right)^2 + \left( {y_1 - y_2 } \right)^2 + \left( {z_1 - z_2 } \right)^2 }\)</span>
+</center>
+<p><br></p>
+<p>Let’s write a function that can handle this in R, then use the <code>rowwise()</code> feature of dplyr to apply it across the rows of our tibble.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">euc_dist &lt;-<span class="st"> </span><span class="cf">function</span>(x1, x2) <span class="kw">sqrt</span>(<span class="kw">sum</span>((x1 <span class="op">-</span><span class="st"> </span>x2) <span class="op">^</span><span class="st"> </span><span class="dv">2</span>))
+training_set &lt;-<span class="st"> </span>training_set <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">distance =</span> <span class="kw">euc_dist</span>(<span class="kw">c</span>(x1,x2,x3), <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>))) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>()
+
+<span class="kw">kable</span>(training_set)</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="right">x1</th>
+<th align="right">x2</th>
+<th align="right">x3</th>
+<th align="left">y</th>
+<th align="right">distance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">0</td>
+<td align="left">red</td>
+<td align="right">3.000000</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">red</td>
+<td align="right">2.000000</td>
+</tr>
+<tr class="odd">
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="left">red</td>
+<td align="right">3.162278</td>
+</tr>
+<tr class="even">
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="left">green</td>
+<td align="right">2.236068</td>
+</tr>
+<tr class="odd">
+<td align="right">-1</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">green</td>
+<td align="right">1.414214</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">red</td>
+<td align="right">1.732051</td>
+</tr>
+</tbody>
+</table>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>What is our prediction with K = 1? Why?</li>
+</ol>
+<p>Let’s find the <code>y</code> value of the single closest (<code>k = 1</code>) training observation.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">training_set <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(distance <span class="op">==</span><span class="st"> </span><span class="kw">min</span>(distance)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(y) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">pull</span>()</code></pre></div>
+<pre><code>## [1] &quot;green&quot;</code></pre>
+<p>Since the closest observation in the training data is <code>green</code>, <code>K = 1</code> classifies our test observation as <code>green</code>.</p>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>What is our prediction with K = 3? Why?</li>
+</ol>
+<p>First we find the three closest values. Then we measure the breakdown of <code>y</code> responses in this group of three observations. We find that two observations have value of <code>red</code>, and one has <code>green</code>. Given <code>red</code> has the highest probability of the two <code>y</code> values, we assign the training observation as <code>red</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">training_set <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">top_n</span>(<span class="dv">3</span>, <span class="op">-</span>distance) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(y) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">prop =</span> <span class="kw">n</span>()<span class="op">/</span><span class="kw">max</span>(n)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(prop <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(prop)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">pull</span>(y)</code></pre></div>
+<pre><code>## [1] &quot;red&quot;</code></pre>
+<ol start="4" style="list-style-type: lower-alpha">
+<li>If Bayes decision boundary is highly non-linear, then do we expect the best value of <span class="math inline">\(K\)</span> to be large or small? Why?
+<ul>
+<li>We expect the value of <span class="math inline">\(K\)</span> to decline as the decision boundary grows more non-linear. A smaller value of <span class="math inline">\(K\)</span> is more suspectible to small changes between observations, which is the type of pattern highly non-linear decision boundary would depict.</li>
+</ul></li>
+</ol>
+<p>The R exercises are pretty basic after this. I am going to skip them for now.</p>
+
 </div>
 </div>
             </section>
@@ -372,8 +685,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           </div>
         </div>
       </div>
-<a href="intro.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="linear-regression.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
