@@ -24,7 +24,7 @@ Accuracy of $Y$ is dependant on:
     * $\hat{f}$ will never be perfect estimate of $f$, and model can always be potentially improved
     * Even if $\hat{f} = f$, prediction would still have some error
   - *irreducible error*
-    * Because $Y$ is also a function of random $ε$, there will alwayas be variability
+    * Because $Y$ is also a function of random $ε$, there will always be variability
     * We cannot reduce the error introduced by $ε$
 
 #### Inference

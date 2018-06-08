@@ -52,4 +52,60 @@ Minimizing the RSS (proof can be found [here](https://en.m.wikipedia.org/wiki/Si
 <p class="vocab" style="text-align:right">*least squares coefficient estimates (simple linear regression)*</p>
 </div>
 
+### Assessing the Accuracy of the Coefficient Estimate
 
+Remember  that the true function for $f$ contains a random error term $\epsilon$. This means the linear relationship can be written as
+
+<div>
+<p style="text-align:center">$Y = \beta_0 + \beta_1X + \epsilon$</p>
+</div>
+<p class="vocab" style="text-align:right">*population regression line*</p>
+</div>
+
+$\beta_0$ is the intercept term (value of $Y$ when $X = 0$). $\beta_1$ is the slope (how much does $Y$ change with one-unit change of $X$). $\epsilon$ is the error term that captures everything our model doesn't (unknown variables, measurement error, unknown true relationship).
+
+The population regression line captures the best linear approximation to the true relationship between $X$ and $Y$. In real data, we often don't know the true relationship and have to rely on a set of observations. Using the observations to estimate the coefficients via least squares produces the *least squares line*. Let's simulate this with some sample data.
+
+```{r}
+
+# f(x), or Y = 20 + 4x + error
+
+sim_linear <- tibble(
+  b0 = 2,
+  b1 = 2,
+  x = 1:100 + rnorm(100, sd = 15),
+  err = rnorm(100, sd = 50),
+  sim_y = b0 + b1 * x,
+  true_y = b0 + b1*x + err
+)
+
+sim_linear
+
+
+resample(sim_linear)
+# generate 10 training sets
+
+y <- tibble()
+for (i in 1:10) {
+x <- sample_frac(sim_linear, 0.10) %>% mutate(iter_set = i)
+y <- y %>% bind_rows(x)
+}
+
+by_iter <- y %>%
+  group_by(iter_set) %>%
+  nest()
+lm_model <- function(df) {
+  lm(true_y ~ x, data = df)
+}
+by_iter <- by_iter %>%
+  mutate(model = map(data, lm_model),
+         preds = map2(data, model, add_predictions))
+preds <- unnest(by_iter, preds)
+preds
+
+ggplot(sim_linear, aes(x = x, y = true_y)) +
+  geom_point() +
+  geom_line(aes(y = sim_y), colour = "red") +
+  geom_line(data = preds, aes(x = x, y = pred, colour = iter_set, group = iter_set))
+  theme_minimal()
+```
