@@ -124,7 +124,11 @@
   \postauthor{\par}
   \predate{\centering\large\emph}
   \postdate{\par}
+<<<<<<< HEAD
   \date{2018-06-04}
+=======
+  \date{2018-06-07}
+>>>>>>> 960e9283f278d7ac27c2b244a84dd2db55c5539e
 
 \usepackage{booktabs}
 \usepackage{amsthm}
@@ -719,6 +723,7 @@ types, and number of observations.
 
 \begin{verbatim}
 ## # A tibble: 100 x 3
+<<<<<<< HEAD
 ##       x     y z    
 ##   <dbl> <dbl> <chr>
 ## 1  26.4  50.7 tesla
@@ -727,6 +732,16 @@ types, and number of observations.
 ## 4  24.3  49.2 tesla
 ## 5  23.6  50.7 tesla
 ## 6  26.0  49.5 tesla
+=======
+##       x     y z      
+##   <dbl> <dbl> <chr>  
+## 1  26.3  49.7 twitter
+## 2  24.7  50.2 twitter
+## 3  26.1  49.1 twitter
+## 4  24.2  50.0 twitter
+## 5  25.4  52.2 twitter
+## 6  23.2  50.1 twitter
+>>>>>>> 960e9283f278d7ac27c2b244a84dd2db55c5539e
 ## # ... with 94 more rows
 \end{verbatim}
 
@@ -1238,6 +1253,53 @@ It can be written as below:
 \(Y \approx \beta_0 + \beta_1X\)
 
 \emph{simple linear regression}
+<<<<<<< HEAD
+=======
+
+\(\beta_0\) and \(\beta_1\) represent the unknown \emph{intercept} and
+\emph{slope} terms and are together known as the \emph{coefficients}. We
+will use our training data to estimate these parameters and thus
+estimate the response \(Y\) based on the value of \(X = x\):
+
+\(\hat y = \hat\beta_0 + \hat\beta_1x\)
+
+\subsection{Estimating the
+Coefficients}\label{estimating-the-coefficients}
+
+We need to use data to estimate these coefficients.
+
+\((x_1,y_1), (x_2,y_2),..., (x_n,y_n)\)
+
+These represent the training observations, in this case pairs of \(X\)
+and \(Y\) measurements. The goal is to use these measurements to
+estimate \(\beta_0\) and \(\beta_1\) such that the linear model fits our
+data as close as possible. Measuring \emph{closeness} can be tackled a
+number of ways, but
+\href{https://en.wikipedia.org/wiki/Least_squares}{least squares} is the
+most popular.
+
+If we let \(\hat y_i = \hat\beta_0 + \hat\beta_1x_i\) be the prediction
+of \(Y\) at observation \(X_i\), then \(e_i = y_i - \hat y_i\)
+represents the \(i\)th \emph{residual}, the difference between the
+observed value \(y_i\) and the predicted value \(\hat y_i\). Now we can
+define the \emph{residual sum of squares (RSS)} as
+
+\(RSS = e_1^2 + e_2^2 + ... + e_n^2\)
+
+\emph{residual sum of squares}
+
+or more explicitly as
+
+\(RSS = (y_1 - \hat\beta_0 - \hat\beta_1x_2)^2 + (y_2 - \hat\beta_0 - \hat\beta_1x_2)^2 + ... + (y_n - \hat\beta_0 - \hat\beta_1x_n)^2\)
+
+Minimizing the RSS (proof can be found
+\href{https://en.m.wikipedia.org/wiki/Simple_linear_regression\#Derivation_of_simple_regression_estimators}{here})
+using \(\beta_0\) and \(\beta_1\) produces:
+
+\(\frac{\displaystyle \sum_{i=1}^{n}(x_i-\bar x)(y_i - \bar x)}{\displaystyle\sum_{i=1}^{n}(x_i - \bar x)^2}\)
+
+\emph{least squares coefficient estimates (simple linear regression)}
+>>>>>>> 960e9283f278d7ac27c2b244a84dd2db55c5539e
 
 
 \end{document}

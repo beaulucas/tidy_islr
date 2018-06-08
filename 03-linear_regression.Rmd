@@ -15,4 +15,101 @@ It can be written as below:
 <p class="vocab" style="text-align:right">*simple linear regression*</p>
 </div>
 
+<<<<<<< HEAD
 $\beta_0$ and $\beta_1$ represent the *intercept* and *slope* terms and are together known as the *coefficients*.
+=======
+$\beta_0$ and $\beta_1$ represent the unknown *intercept* and *slope* terms and are together known as the *coefficients*. We will use our training data to estimate these parameters and thus estimate the response $Y$ based on the value of $X = x$:
+
+<div>
+<p style="text-align:center">$\hat y = \hat\beta_0 + \hat\beta_1x$</p>
+</div>
+
+
+### Estimating the Coefficients
+
+We need to use data to estimate these coefficients.
+
+<div>
+<p style="text-align:center">$(x_1,y_1), (x_2,y_2),..., (x_n,y_n)$</p>
+</div>
+
+These represent the training observations, in this case pairs of $X$ and $Y$ measurements. The goal is to use these measurements to estimate $\beta_0$ and $\beta_1$ such that the linear model fits our data as close as possible. Measuring *closeness* can be tackled a number of ways, but [least squares](https://en.wikipedia.org/wiki/Least_squares) is the most popular.
+
+If we let $\hat y_i = \hat\beta_0 + \hat\beta_1x_i$ be the prediction of $Y$ at observation $X_i$, then $e_i = y_i - \hat y_i$ represents the $i$th *residual*, the difference between the observed value $y_i$ and the predicted value $\hat y_i$. Now we can define the *residual sum of squares (RSS)* as 
+
+<div>
+<p style="text-align:center">$RSS = e_1^2 + e_2^2 + ... + e_n^2$</p>
+<p class="vocab" style="text-align:right">*residual sum of squares*</p>
+</div>
+
+or more explicitly as
+
+<div>
+<p style="text-align:center">$RSS = (y_1 - \hat\beta_0 - \hat\beta_1x_2)^2 + (y_2 - \hat\beta_0 - \hat\beta_1x_2)^2 + ... + (y_n - \hat\beta_0 - \hat\beta_1x_n)^2$</p>
+</div>
+
+Minimizing the RSS (proof can be found [here](https://en.m.wikipedia.org/wiki/Simple_linear_regression#Derivation_of_simple_regression_estimators)) using $\beta_0$ and $\beta_1$ produces:
+
+<div>
+<p style="text-align:center">$\frac{\displaystyle \sum_{i=1}^{n}(x_i-\bar x)(y_i - \bar x)}{\displaystyle\sum_{i=1}^{n}(x_i - \bar x)^2}$</p>
+<p class="vocab" style="text-align:right">*least squares coefficient estimates (simple linear regression)*</p>
+</div>
+
+### Assessing the Accuracy of the Coefficient Estimate
+
+Remember  that the true function for $f$ contains a random error term $\epsilon$. This means the linear relationship can be written as
+
+<div>
+<p style="text-align:center">$Y = \beta_0 + \beta_1X + \epsilon$</p>
+</div>
+<p class="vocab" style="text-align:right">*population regression line*</p>
+</div>
+
+$\beta_0$ is the intercept term (value of $Y$ when $X = 0$). $\beta_1$ is the slope (how much does $Y$ change with one-unit change of $X$). $\epsilon$ is the error term that captures everything our model doesn't (unknown variables, measurement error, unknown true relationship).
+
+The population regression line captures the best linear approximation to the true relationship between $X$ and $Y$. In real data, we often don't know the true relationship and have to rely on a set of observations. Using the observations to estimate the coefficients via least squares produces the *least squares line*. Let's simulate this with some sample data.
+
+```{r}
+
+# f(x), or Y = 20 + 4x + error
+
+sim_linear <- tibble(
+  b0 = 2,
+  b1 = 2,
+  x = 1:100 + rnorm(100, sd = 15),
+  err = rnorm(100, sd = 50),
+  sim_y = b0 + b1 * x,
+  true_y = b0 + b1*x + err
+)
+
+sim_linear
+
+
+resample(sim_linear)
+# generate 10 training sets
+
+y <- tibble()
+for (i in 1:10) {
+x <- sample_frac(sim_linear, 0.10) %>% mutate(iter_set = i)
+y <- y %>% bind_rows(x)
+}
+
+by_iter <- y %>%
+  group_by(iter_set) %>%
+  nest()
+lm_model <- function(df) {
+  lm(true_y ~ x, data = df)
+}
+by_iter <- by_iter %>%
+  mutate(model = map(data, lm_model),
+         preds = map2(data, model, add_predictions))
+preds <- unnest(by_iter, preds)
+preds
+
+ggplot(sim_linear, aes(x = x, y = true_y)) +
+  geom_point() +
+  geom_line(aes(y = sim_y), colour = "red") +
+  geom_line(data = preds, aes(x = x, y = pred, colour = iter_set, group = iter_set))
+  theme_minimal()
+```
+>>>>>>> 960e9283f278d7ac27c2b244a84dd2db55c5539e

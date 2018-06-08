@@ -25,7 +25,11 @@
 <meta name="author" content="Beau Lucas">
 
 
+<<<<<<< HEAD
 <meta name="date" content="2018-06-04">
+=======
+<meta name="date" content="2018-06-07">
+>>>>>>> 960e9283f278d7ac27c2b244a84dd2db55c5539e
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -126,7 +130,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.4" data-path="statistical-learning.html"><a href="statistical-learning.html#exercises"><i class="fa fa-check"></i><b>2.4</b> Exercises</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>3</b> Linear Regression</a><ul>
+<<<<<<< HEAD
 <li class="chapter" data-level="3.1" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression"><i class="fa fa-check"></i><b>3.1</b> Simple Linear Regression</a></li>
+=======
+<li class="chapter" data-level="3.1" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression"><i class="fa fa-check"></i><b>3.1</b> Simple Linear Regression</a><ul>
+<li class="chapter" data-level="3.1.1" data-path="linear-regression.html"><a href="linear-regression.html#estimating-the-coefficients"><i class="fa fa-check"></i><b>3.1.1</b> Estimating the Coefficients</a></li>
+</ul></li>
+>>>>>>> 960e9283f278d7ac27c2b244a84dd2db55c5539e
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/beaulucas/tidy_islr" target="blank">GitHub Repository</a></li>
@@ -164,9 +174,55 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <em>simple linear regression</em>
 </p>
 </div>
+<<<<<<< HEAD
 
 </div>
 </div>
+=======
+<p><span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> represent the unknown <em>intercept</em> and <em>slope</em> terms and are together known as the <em>coefficients</em>. We will use our training data to estimate these parameters and thus estimate the response <span class="math inline">\(Y\)</span> based on the value of <span class="math inline">\(X = x\)</span>:</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(\hat y = \hat\beta_0 + \hat\beta_1x\)</span>
+</p>
+</div>
+<div id="estimating-the-coefficients" class="section level3">
+<h3><span class="header-section-number">3.1.1</span> Estimating the Coefficients</h3>
+<p>We need to use data to estimate these coefficients.</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\((x_1,y_1), (x_2,y_2),..., (x_n,y_n)\)</span>
+</p>
+</div>
+<p>These represent the training observations, in this case pairs of <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> measurements. The goal is to use these measurements to estimate <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> such that the linear model fits our data as close as possible. Measuring <em>closeness</em> can be tackled a number of ways, but <a href="https://en.wikipedia.org/wiki/Least_squares">least squares</a> is the most popular.</p>
+<p>If we let <span class="math inline">\(\hat y_i = \hat\beta_0 + \hat\beta_1x_i\)</span> be the prediction of <span class="math inline">\(Y\)</span> at observation <span class="math inline">\(X_i\)</span>, then <span class="math inline">\(e_i = y_i - \hat y_i\)</span> represents the <span class="math inline">\(i\)</span>th <em>residual</em>, the difference between the observed value <span class="math inline">\(y_i\)</span> and the predicted value <span class="math inline">\(\hat y_i\)</span>. Now we can define the <em>residual sum of squares (RSS)</em> as</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(RSS = e_1^2 + e_2^2 + ... + e_n^2\)</span>
+</p>
+<p class="vocab" style="text-align:right">
+<em>residual sum of squares</em>
+</p>
+</div>
+<p>or more explicitly as</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(RSS = (y_1 - \hat\beta_0 - \hat\beta_1x_2)^2 + (y_2 - \hat\beta_0 - \hat\beta_1x_2)^2 + ... + (y_n - \hat\beta_0 - \hat\beta_1x_n)^2\)</span>
+</p>
+</div>
+<p>Minimizing the RSS (proof can be found <a href="https://en.m.wikipedia.org/wiki/Simple_linear_regression#Derivation_of_simple_regression_estimators">here</a>) using <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> produces:</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(\frac{\displaystyle \sum_{i=1}^{n}(x_i-\bar x)(y_i - \bar x)}{\displaystyle\sum_{i=1}^{n}(x_i - \bar x)^2}\)</span>
+</p>
+<p class="vocab" style="text-align:right">
+<em>least squares coefficient estimates (simple linear regression)</em>
+</p>
+</div>
+
+</div>
+</div>
+</div>
+>>>>>>> 960e9283f278d7ac27c2b244a84dd2db55c5539e
             </section>
 
           </div>
