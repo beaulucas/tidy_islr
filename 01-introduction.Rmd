@@ -16,6 +16,8 @@ We will utilize the `tidyverse` ecosystem to tackle the exercises and labs, as t
 require(ISLR)
 require(MASS)
 require(tidyverse)
+require(knitr)
+require(kableExtra)
 ```
 
 ## Book Website
@@ -23,4 +25,7 @@ require(tidyverse)
 The website and free PDF for the book can be found here:
 
 [www.statlearning.com](http://www-bcf.usc.edu/~gareth/ISL/)
+
+And here are the YouTube lectures an R labs:
+
 [Youtube - Statistical Learning](https://www.youtube.com/channel/UC4OWDcPB1peiBXDfCSZ3h-w)

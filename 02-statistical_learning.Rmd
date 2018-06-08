@@ -189,6 +189,7 @@ Since the true conditional distribution of $Y$ given $X$ cannot be known in real
 
 KNN can be surprisingly robust to the optimal Bayes classifier. The choice in $K$ makes a huge difference. For example, a $K$ = 1 is highly flexible, classifying observations based off of the closest nearby training observation. $K$ = 100 would do the opposite, basing its classification off a large pool of training observations compared to the $K$ = 1 version. The higher $K$ value produces a more linear model. The trade-off between flexibility, training error rate, and test error rate applies to both classification and regression problems.
 
+-----
 
 ## Lab: Introduction to R
 
@@ -225,21 +226,179 @@ We will skip this.
 
 *ISLR* mentions insuring proper working directory before loading data. Dealing with working directories in R is a bad idea. Fortunately, it's easily avoidable through the use of RStudio *projects*, which keep all files used in analysis together and make your work more robust and reproducible. See the [RStudio Projects](http://r4ds.had.co.nz/workflow-projects.html) chapter in *r4ds* for more information.
 
-We will opt for the `readr` package instead of base R. Take a look at this subsection of *r4ds* for reasons why: 
+We will opt for the `readr` (part of the `tidyverse`) package instead of base R. Take a look at this subsection of *r4ds* for reasons why: 
 [*11.2.1 Compared to base R*](http://r4ds.had.co.nz/data-import.html)
 
-```{r}
-# generate tsv data to read in
+Below is a reproducible example in which we create a tibble, save it as a .txt file, and then read it in with `write_tsv()`. The set of `read_*` functions in `readr` will be the standrad way to read local files into R. If you are using RStudio projects, there is no need to worry about working directories.
 
+```{r}
+# generate dummy data to read in
 generic_company_tibble <- tibble(
   x = rnorm(100, mean = 25),
   y = rnorm(100, mean = 50),
   z = sample(c("apple", "uber", "facebook", "twitter", "tesla", "google", "microsoft"), 1)
 )
-generic_company_tibble
-write_tsv("generic_company_tibble")
+
+tmp <- tempfile()
+write_tsv(generic_company_tibble, tmp)
+company_data <- read_tsv(tmp)
 ```
 
+`readr` provides a nice summary of the imported tibble. Calling the tibble by name will also give a breakdown of column names, data types, and number of observations.
 
+```{r}
+company_data
+```
+
+#### Additional Graphical and Numerical Summaries
+
+ISLR mentions the `attach()` function, which allows R to reference column names of dataframes without specifying the dataframe. `attach` can lead to confusion and errors when working on a project with multiple sources of data. This is a bad practice, and should always be avoided.
+
+The book then goes into some explanation of `plot()`, which we will not be using.
+
+-----
+
+## Exercises
+
+1. For each of parts (a) through (d), indicate whether we would generally expect the performance of a flexible statistical learning method to be better or worse than an inflexible method.
+    (a) The sample size n is extremely large, and the number of predictors p is small
+        - **(better)** given large sample size, a flexible model would be able to capture a trend without being influenced too heavily by a small number of observations.
+    (b) The number of predictors p is extremely large, and the number of observations n is small.
+        - **(worse)** given the small sample size, an inflexible model would do better at not overfitting to a small number of observations (capturing patterns in the training data that dont really exist)
+    (c) The relationship between the predictors and response is highly non-linear.
+        - **(better)** highly flexible methods are highly non-linear and can produce better fits on non-linear data compared to inflexible methods such as linear regression
+    (d) The variance of the error terms, i.e. σ2 = Var(ε), is extremely high.
+        - **(worse)** given the high variance in the data, an inflexible method would overfit to the noise
+
+
+2. Explain whether each scenario is a classification or regression problem, and indicate whether we are most interested in inference or prediction. Finally, provide n and p.
+  (a) We collect a set of data on the top 500 firms in the US. For each firm we record profit, number of employees, industry and the CEO salary. We are interested in understanding which factors affect CEO salary.
+        - **(regression; inference)** This is a regression problem with both qualitative and quantitative predictors. Inference is the main goal, as the company probably wants a model that is human-readable in order to understand what determines a CEO's salary.
+            - `n = 500, p = 3`
+  (b) We are considering launching a new product and wish to know whether it will be a success or a failure. We collect data on 20 similar products that were previously launched. For each product we have recorded whether it was a success or failure, price charged for the product, marketing budget, competition price, and ten other variables.
+        -  **(classification; prediction)** The goal is to classify whether a product will be a success or failure. Prediction is the goal, as they want to accurately determine if their product will succeed or fail.
+            - `n = 20, p = 4`
+  (c) We are interested in predicting the % change in the USD/Euro exchange rate in relation to the weekly changes in the world stock markets. Hence we collect weekly data for all of 2012. For each week we record the % change in the USD/Euro, the % change in the US market, the % change in the British market, and the % change in the German market.
+        - **(regression; prediction)** The goal is to predict the % change of the exchange rate.
+
+3. We now revisit the bias-variance decomposition
+  (a) Provide a sketch of typical (squared) bias, variance, training error, test error, and Bayes (or irreducible) error curves, on a single plot, as we go from less flexible statistical learning methods towards more flexible approaches. The x-axis should represent the amount of flexibility in the method, and the y-axis should represent the values for each curve. There should be five curves. Make sure to label each one.
+    
+```{r}
+bias_variance <- tibble(
+  flexibility = c(1:5),
+  bias = c(300,200,150,100,50),
+  variance = c(0,25,125,250,500),
+  train_error = c(350,250,200, 125, 50),
+  irreducible_error = 100,
+  test_error = variance + bias + irreducible_error) %>%
+  gather(`bias`, `variance`, `train_error`, `irreducible_error`, `test_error`,
+         key = "measurement", value = "value")
+
+ggplot(bias_variance, aes(x = flexibility, y = value, colour = measurement)) +
+  geom_smooth(se = FALSE, method = "lm", formula = y ~ poly(x,3)) +
+  theme_minimal()
+```
+
+4. You will now think of some real-life applications for statistical learning.
+    (a) Describe three real-life applications in which classification might be useful. Describe the response, as well as the predictors. Is the goal of each application inference or prediction? Explain your answer.
+        1. predicting diabetes.
+            - response: future diabetes
+            - predictors: health and body measurements of patient
+            - goal: prediction, model complexity and human understanding is not important
+        2. demographics that determine future education level
+            - response: education level
+            - predictors: demographic data
+            - goal: inference, prediction is important here too but researchers would probably want to understand and share which factors determine the response in order to raise awareness
+        3. faulty parts in manufacturing
+            - response: whether or not part is faulty
+            - predictors: various tests on part 
+            - goal: prediction, it is most important to have an accurate model, especially if faulty parts can lead to deaths
+    (b) Describe three real-life applications in which regression might be useful. Describe the response, as well as the predictors. Is the goal of each application inference or prediction? Explain your answer.
+        1. number of riders on public transit over time
+            - response: how many riders are expected to use public transit
+            - predictors: current transit usage data, local population data, etc.
+            - goal: prediction, it is important to prepare for growth in transit usage so governments have enough time to make necessary changes
+        2. demand for product
+            - response: how many units to expect to be sold
+            - predictors: current demand data, revenue growth, business expansion, changing in market trends, economy health
+            - goal: prediction, figure out in X amount of time demand for product in order to upsize/downsize to appropriate level
+        3. determine future salary 
+            - response: future expeceted salary
+            - predictors: employment history, education, geolocation, etc.
+            - goal: inference, researchers might want to know the most important factors that lead to higher salaries rather than a model that is too complex to understand
+            
+5. What are the advantages and disadvantages of a very flexible (versus a less flexible) approach for regression or classification? Under what circumstances might a more flexible approach be preferred to a less flexible approach? When might a less flexible approach be preferred?
+  - Very flexible approach allows you to fit a more flexible function to the data. The advantage is that you have the potential to accurately predict data even as it moves away from linearity. The disadvantage are potential overfitting to the training data, increasing variance (individual observations affect the model to higher degree than non-flexible counterpart), and higher computational costs (as well as less human-readable explanations)
+  - When a more flexible approach is preferred: data that is non-linear, large sample size, prediction more important than inference
+  - When a less flexible approach is preferred: data that is more linear, smaller sample size, inference more important than prediction
   
+6. Describe the differences between a parametric and a non-parametric statistical learning approach. What are the advantages of a parametric approach to regression or classification (as opposed to a nonparametric approach)? What are its disadvantages?
+  - A parametric approach assumes a form of $f$ and has to estimate an often known number of parameters (for example, linear regression simply requires estimating $p+1$ coefficients)
+  - A non-parametric approach makes no assumptions about the true form of $f$. They simply want to get as close as possible to $f$. This allows them to take on a larger variety of shapes, and accomodate a larger variety of patterns.
+  - Advantages of a parametric approach are that they take less observations to generate (the problem is reduced to applying a known form to $f$, such as linear regression), are less inclined to overfit, and generally less computationally intensive.
+  - Disadvantages of a parametric approach making assumptions about the form of $f$, which may not match the real form and could lead to a model that doesn't fit the data well
 
+7. The table below provides a training data set containing six observa- tions, three predictors, and one qualitative response variable.
+
+```{r}
+training_set <- tibble(
+  x1 = c(0,2,0,0,-1,1),
+  x2 = c(3,0,1,1,0,1),
+  x3 = c(0,0,3,2,1,1),
+  y = c("red","red","red","green","green","red"))
+
+kable(training_set)
+```
+
+Suppose we wish to use this data set to make a prediction for $Y$ when $X1 = X2 = X3 = 0$ using K-nearest neighbors.
+
+  (a) Compute the Euclidean distance between each observation and the test point, $X1 = X2 = X3 = 0$.
+  
+  The Euclidean Distance for three dimensions can be written as:
+    
+<center>$d = \sqrt {\left( {x_1 - x_2 } \right)^2 + \left( {y_1 - y_2 } \right)^2 + \left( {z_1 - z_2 } \right)^2 }$</center><br>
+
+  Let's write a function that can handle this in R, then use the `rowwise()` feature of dplyr to apply it across the rows of our tibble.
+
+```{r}
+euc_dist <- function(x1, x2) sqrt(sum((x1 - x2) ^ 2))
+training_set <- training_set %>%
+  rowwise() %>%
+  mutate(distance = euc_dist(c(x1,x2,x3), c(0,0,0))) %>%
+  ungroup()
+
+kable(training_set)
+```
+
+  (b) What is our prediction with K = 1? Why?
+  
+Let's find the `y` value of the single closest (`k = 1`) training observation.
+
+```{r}
+training_set %>% 
+  filter(distance == min(distance)) %>%
+  select(y) %>%
+  pull()
+```
+
+Since the closest observation in the training data is `green`, `K = 1` classifies our test observation as `green`.
+
+  (c) What is our prediction with K = 3? Why?
+  
+First we find the three closest values. Then we measure the breakdown of `y` responses in this group of three observations. We find that two observations have value of `red`, and one has `green`. Given `red` has the highest probability of the two `y` values, we assign the training observation as `red`.
+
+```{r}
+training_set %>%
+  top_n(3, -distance) %>%
+  mutate(n = n()) %>%
+  group_by(y) %>%
+  summarise(prop = n()/max(n)) %>%
+  filter(prop == max(prop)) %>%
+  pull(y)
+```
+
+  (d) If Bayes decision boundary is highly non-linear, then do we expect the best value of $K$ to be large or small? Why?
+    - We expect the value of $K$ to decline as the decision boundary grows more non-linear. A smaller value of $K$ is more suspectible to small changes between observations, which is the type of pattern highly non-linear decision boundary would depict.
+
+The R exercises are pretty basic after this. I am going to skip them for now.

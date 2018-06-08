@@ -1,0 +1,18 @@
+# Linear Regression
+
+-----
+
+Linear regression is a simple yet very powerful approach in statistical learning. It is important to have a strong understanding of it before moving on to more complex learning methods.
+
+## Simple Linear Regression
+
+Simple linear regression is predicting a quantitative response $Y$ based off a single predcitor $X$.
+
+It can be written as below:
+
+<div>
+<p style="text-align:center">$Y \approx \beta_0 + \beta_1X$</p>
+<p class="vocab" style="text-align:right">*simple linear regression*</p>
+</div>
+
+$\beta_0$ and $\beta_1$ represent the *intercept* and *slope* terms and are together known as the *coefficients*.

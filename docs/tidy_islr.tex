@@ -124,7 +124,7 @@
   \postauthor{\par}
   \predate{\centering\large\emph}
   \postdate{\par}
-  \date{2018-04-27}
+  \date{2018-06-04}
 
 \usepackage{booktabs}
 \usepackage{amsthm}
@@ -198,6 +198,8 @@ outdated.
 \KeywordTok{require}\NormalTok{(ISLR)}
 \KeywordTok{require}\NormalTok{(MASS)}
 \KeywordTok{require}\NormalTok{(tidyverse)}
+\KeywordTok{require}\NormalTok{(knitr)}
+\KeywordTok{require}\NormalTok{(kableExtra)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -206,6 +208,9 @@ outdated.
 The website and free PDF for the book can be found here:
 
 \href{http://www-bcf.usc.edu/~gareth/ISL/}{www.statlearning.com}
+
+And here are the YouTube lectures an R labs:
+
 \href{https://www.youtube.com/channel/UC4OWDcPB1peiBXDfCSZ3h-w}{Youtube
 - Statistical Learning}
 
@@ -622,6 +627,8 @@ the \(K\) = 1 version. The higher \(K\) value produces a more linear
 model. The trade-off between flexibility, training error rate, and test
 error rate applies to both classification and regression problems.
 
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
 \section{Lab: Introduction to R}\label{lab-introduction-to-r}
 
 Finally we get to some \texttt{R} code. This chapter of ISLR introduces
@@ -659,7 +666,578 @@ tool. Let's plot a scatterplot with some basic labels.
 
 \begin{center}\includegraphics{tidy_islr_files/figure-latex/unnamed-chunk-1-1} \end{center}
 
-Here is the plot.
+\subsubsection{Indexing data}\label{indexing-data}
+
+We will skip this.
+
+\subsubsection{Loading data}\label{loading-data}
+
+\emph{ISLR} mentions insuring proper working directory before loading
+data. Dealing with working directories in R is a bad idea. Fortunately,
+it's easily avoidable through the use of RStudio \emph{projects}, which
+keep all files used in analysis together and make your work more robust
+and reproducible. See the
+\href{http://r4ds.had.co.nz/workflow-projects.html}{RStudio Projects}
+chapter in \emph{r4ds} for more information.
+
+We will opt for the \texttt{readr} (part of the \texttt{tidyverse})
+package instead of base R. Take a look at this subsection of \emph{r4ds}
+for reasons why:
+\href{http://r4ds.had.co.nz/data-import.html}{\emph{11.2.1 Compared to
+base R}}
+
+Below is a reproducible example in which we create a tibble, save it as
+a .txt file, and then read it in with \texttt{write\_tsv()}. The set of
+\texttt{read\_*} functions in \texttt{readr} will be the standrad way to
+read local files into R. If you are using RStudio projects, there is no
+need to worry about working directories.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# generate dummy data to read in}
+\NormalTok{generic_company_tibble <-}\StringTok{ }\KeywordTok{tibble}\NormalTok{(}
+  \DataTypeTok{x =} \KeywordTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{, }\DataTypeTok{mean =} \DecValTok{25}\NormalTok{),}
+  \DataTypeTok{y =} \KeywordTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{, }\DataTypeTok{mean =} \DecValTok{50}\NormalTok{),}
+  \DataTypeTok{z =} \KeywordTok{sample}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"apple"}\NormalTok{, }\StringTok{"uber"}\NormalTok{, }\StringTok{"facebook"}\NormalTok{, }\StringTok{"twitter"}\NormalTok{, }\StringTok{"tesla"}\NormalTok{, }\StringTok{"google"}\NormalTok{, }\StringTok{"microsoft"}\NormalTok{), }\DecValTok{1}\NormalTok{)}
+\NormalTok{)}
+
+\NormalTok{tmp <-}\StringTok{ }\KeywordTok{tempfile}\NormalTok{()}
+\KeywordTok{write_tsv}\NormalTok{(generic_company_tibble, tmp)}
+\NormalTok{company_data <-}\StringTok{ }\KeywordTok{read_tsv}\NormalTok{(tmp)}
+\end{Highlighting}
+\end{Shaded}
+
+\texttt{readr} provides a nice summary of the imported tibble. Calling
+the tibble by name will also give a breakdown of column names, data
+types, and number of observations.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{company_data}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 100 x 3
+##       x     y z    
+##   <dbl> <dbl> <chr>
+## 1  26.4  50.7 tesla
+## 2  24.1  49.9 tesla
+## 3  25.9  50.2 tesla
+## 4  24.3  49.2 tesla
+## 5  23.6  50.7 tesla
+## 6  26.0  49.5 tesla
+## # ... with 94 more rows
+\end{verbatim}
+
+\subsubsection{Additional Graphical and Numerical
+Summaries}\label{additional-graphical-and-numerical-summaries}
+
+ISLR mentions the \texttt{attach()} function, which allows R to
+reference column names of dataframes without specifying the dataframe.
+\texttt{attach} can lead to confusion and errors when working on a
+project with multiple sources of data. This is a bad practice, and
+should always be avoided.
+
+The book then goes into some explanation of \texttt{plot()}, which we
+will not be using.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Exercises}\label{exercises}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  For each of parts (a) through (d), indicate whether we would generally
+  expect the performance of a flexible statistical learning method to be
+  better or worse than an inflexible method.
+
+  \begin{enumerate}
+  \def\labelenumii{(\alph{enumii})}
+  \tightlist
+  \item
+    The sample size n is extremely large, and the number of predictors p
+    is small
+
+    \begin{itemize}
+    \tightlist
+    \item
+      \textbf{(better)} given large sample size, a flexible model would
+      be able to capture a trend without being influenced too heavily by
+      a small number of observations.
+    \end{itemize}
+  \item
+    The number of predictors p is extremely large, and the number of
+    observations n is small.
+
+    \begin{itemize}
+    \tightlist
+    \item
+      \textbf{(worse)} given the small sample size, an inflexible model
+      would do better at not overfitting to a small number of
+      observations (capturing patterns in the training data that dont
+      really exist)
+    \end{itemize}
+  \item
+    The relationship between the predictors and response is highly
+    non-linear.
+
+    \begin{itemize}
+    \tightlist
+    \item
+      \textbf{(better)} highly flexible methods are highly non-linear
+      and can produce better fits on non-linear data compared to
+      inflexible methods such as linear regression
+    \end{itemize}
+  \item
+    The variance of the error terms, i.e.~σ2 = Var(ε), is extremely
+    high.
+
+    \begin{itemize}
+    \tightlist
+    \item
+      \textbf{(worse)} given the high variance in the data, an
+      inflexible method would overfit to the noise
+    \end{itemize}
+  \end{enumerate}
+\item
+  Explain whether each scenario is a classification or regression
+  problem, and indicate whether we are most interested in inference or
+  prediction. Finally, provide n and p.
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\tightlist
+\item
+  We collect a set of data on the top 500 firms in the US. For each firm
+  we record profit, number of employees, industry and the CEO salary. We
+  are interested in understanding which factors affect CEO salary. -
+  \textbf{(regression; inference)} This is a regression problem with
+  both qualitative and quantitative predictors. Inference is the main
+  goal, as the company probably wants a model that is human-readable in
+  order to understand what determines a CEO's salary. -
+  \texttt{n\ =\ 500,\ p\ =\ 3}
+\item
+  We are considering launching a new product and wish to know whether it
+  will be a success or a failure. We collect data on 20 similar products
+  that were previously launched. For each product we have recorded
+  whether it was a success or failure, price charged for the product,
+  marketing budget, competition price, and ten other variables. -
+  \textbf{(classification; prediction)} The goal is to classify whether
+  a product will be a success or failure. Prediction is the goal, as
+  they want to accurately determine if their product will succeed or
+  fail. - \texttt{n\ =\ 20,\ p\ =\ 4}
+\item
+  We are interested in predicting the \% change in the USD/Euro exchange
+  rate in relation to the weekly changes in the world stock markets.
+  Hence we collect weekly data for all of 2012. For each week we record
+  the \% change in the USD/Euro, the \% change in the US market, the \%
+  change in the British market, and the \% change in the German market.
+  - \textbf{(regression; prediction)} The goal is to predict the \%
+  change of the exchange rate.
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  We now revisit the bias-variance decomposition
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\tightlist
+\item
+  Provide a sketch of typical (squared) bias, variance, training error,
+  test error, and Bayes (or irreducible) error curves, on a single plot,
+  as we go from less flexible statistical learning methods towards more
+  flexible approaches. The x-axis should represent the amount of
+  flexibility in the method, and the y-axis should represent the values
+  for each curve. There should be five curves. Make sure to label each
+  one.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{bias_variance <-}\StringTok{ }\KeywordTok{tibble}\NormalTok{(}
+  \DataTypeTok{flexibility =} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{5}\NormalTok{),}
+  \DataTypeTok{bias =} \KeywordTok{c}\NormalTok{(}\DecValTok{300}\NormalTok{,}\DecValTok{200}\NormalTok{,}\DecValTok{150}\NormalTok{,}\DecValTok{100}\NormalTok{,}\DecValTok{50}\NormalTok{),}
+  \DataTypeTok{variance =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{25}\NormalTok{,}\DecValTok{125}\NormalTok{,}\DecValTok{250}\NormalTok{,}\DecValTok{500}\NormalTok{),}
+  \DataTypeTok{train_error =} \KeywordTok{c}\NormalTok{(}\DecValTok{350}\NormalTok{,}\DecValTok{250}\NormalTok{,}\DecValTok{200}\NormalTok{, }\DecValTok{125}\NormalTok{, }\DecValTok{50}\NormalTok{),}
+  \DataTypeTok{irreducible_error =} \DecValTok{100}\NormalTok{,}
+  \DataTypeTok{test_error =}\NormalTok{ variance }\OperatorTok{+}\StringTok{ }\NormalTok{bias }\OperatorTok{+}\StringTok{ }\NormalTok{irreducible_error) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gather}\NormalTok{(}\StringTok{`}\DataTypeTok{bias}\StringTok{`}\NormalTok{, }\StringTok{`}\DataTypeTok{variance}\StringTok{`}\NormalTok{, }\StringTok{`}\DataTypeTok{train_error}\StringTok{`}\NormalTok{, }\StringTok{`}\DataTypeTok{irreducible_error}\StringTok{`}\NormalTok{, }\StringTok{`}\DataTypeTok{test_error}\StringTok{`}\NormalTok{,}
+         \DataTypeTok{key =} \StringTok{"measurement"}\NormalTok{, }\DataTypeTok{value =} \StringTok{"value"}\NormalTok{)}
+
+\KeywordTok{ggplot}\NormalTok{(bias_variance, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ flexibility, }\DataTypeTok{y =}\NormalTok{ value, }\DataTypeTok{colour =}\NormalTok{ measurement)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_smooth}\NormalTok{(}\DataTypeTok{se =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{method =} \StringTok{"lm"}\NormalTok{, }\DataTypeTok{formula =}\NormalTok{ y }\OperatorTok{~}\StringTok{ }\KeywordTok{poly}\NormalTok{(x,}\DecValTok{3}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{tidy_islr_files/figure-latex/unnamed-chunk-4-1} \end{center}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  You will now think of some real-life applications for statistical
+  learning.
+
+  \begin{enumerate}
+  \def\labelenumii{(\alph{enumii})}
+  \tightlist
+  \item
+    Describe three real-life applications in which classification might
+    be useful. Describe the response, as well as the predictors. Is the
+    goal of each application inference or prediction? Explain your
+    answer.
+
+    \begin{enumerate}
+    \def\labelenumiii{\arabic{enumiii}.}
+    \tightlist
+    \item
+      predicting diabetes.
+
+      \begin{itemize}
+      \tightlist
+      \item
+        response: future diabetes
+      \item
+        predictors: health and body measurements of patient
+      \item
+        goal: prediction, model complexity and human understanding is
+        not important
+      \end{itemize}
+    \item
+      demographics that determine future education level
+
+      \begin{itemize}
+      \tightlist
+      \item
+        response: education level
+      \item
+        predictors: demographic data
+      \item
+        goal: inference, prediction is important here too but
+        researchers would probably want to understand and share which
+        factors determine the response in order to raise awareness
+      \end{itemize}
+    \item
+      faulty parts in manufacturing
+
+      \begin{itemize}
+      \tightlist
+      \item
+        response: whether or not part is faulty
+      \item
+        predictors: various tests on part
+      \item
+        goal: prediction, it is most important to have an accurate
+        model, especially if faulty parts can lead to deaths
+      \end{itemize}
+    \end{enumerate}
+  \item
+    Describe three real-life applications in which regression might be
+    useful. Describe the response, as well as the predictors. Is the
+    goal of each application inference or prediction? Explain your
+    answer.
+
+    \begin{enumerate}
+    \def\labelenumiii{\arabic{enumiii}.}
+    \tightlist
+    \item
+      number of riders on public transit over time
+
+      \begin{itemize}
+      \tightlist
+      \item
+        response: how many riders are expected to use public transit
+      \item
+        predictors: current transit usage data, local population data,
+        etc.
+      \item
+        goal: prediction, it is important to prepare for growth in
+        transit usage so governments have enough time to make necessary
+        changes
+      \end{itemize}
+    \item
+      demand for product
+
+      \begin{itemize}
+      \tightlist
+      \item
+        response: how many units to expect to be sold
+      \item
+        predictors: current demand data, revenue growth, business
+        expansion, changing in market trends, economy health
+      \item
+        goal: prediction, figure out in X amount of time demand for
+        product in order to upsize/downsize to appropriate level
+      \end{itemize}
+    \item
+      determine future salary
+
+      \begin{itemize}
+      \tightlist
+      \item
+        response: future expeceted salary
+      \item
+        predictors: employment history, education, geolocation, etc.
+      \item
+        goal: inference, researchers might want to know the most
+        important factors that lead to higher salaries rather than a
+        model that is too complex to understand
+      \end{itemize}
+    \end{enumerate}
+  \end{enumerate}
+\item
+  What are the advantages and disadvantages of a very flexible (versus a
+  less flexible) approach for regression or classification? Under what
+  circumstances might a more flexible approach be preferred to a less
+  flexible approach? When might a less flexible approach be preferred?
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  Very flexible approach allows you to fit a more flexible function to
+  the data. The advantage is that you have the potential to accurately
+  predict data even as it moves away from linearity. The disadvantage
+  are potential overfitting to the training data, increasing variance
+  (individual observations affect the model to higher degree than
+  non-flexible counterpart), and higher computational costs (as well as
+  less human-readable explanations)
+\item
+  When a more flexible approach is preferred: data that is non-linear,
+  large sample size, prediction more important than inference
+\item
+  When a less flexible approach is preferred: data that is more linear,
+  smaller sample size, inference more important than prediction
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{5}
+\tightlist
+\item
+  Describe the differences between a parametric and a non-parametric
+  statistical learning approach. What are the advantages of a parametric
+  approach to regression or classification (as opposed to a
+  nonparametric approach)? What are its disadvantages?
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  A parametric approach assumes a form of \(f\) and has to estimate an
+  often known number of parameters (for example, linear regression
+  simply requires estimating \(p+1\) coefficients)
+\item
+  A non-parametric approach makes no assumptions about the true form of
+  \(f\). They simply want to get as close as possible to \(f\). This
+  allows them to take on a larger variety of shapes, and accomodate a
+  larger variety of patterns.
+\item
+  Advantages of a parametric approach are that they take less
+  observations to generate (the problem is reduced to applying a known
+  form to \(f\), such as linear regression), are less inclined to
+  overfit, and generally less computationally intensive.
+\item
+  Disadvantages of a parametric approach making assumptions about the
+  form of \(f\), which may not match the real form and could lead to a
+  model that doesn't fit the data well
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{6}
+\tightlist
+\item
+  The table below provides a training data set containing six observa-
+  tions, three predictors, and one qualitative response variable.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{training_set <-}\StringTok{ }\KeywordTok{tibble}\NormalTok{(}
+  \DataTypeTok{x1 =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\OperatorTok{-}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{),}
+  \DataTypeTok{x2 =} \KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{),}
+  \DataTypeTok{x3 =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{),}
+  \DataTypeTok{y =} \KeywordTok{c}\NormalTok{(}\StringTok{"red"}\NormalTok{,}\StringTok{"red"}\NormalTok{,}\StringTok{"red"}\NormalTok{,}\StringTok{"green"}\NormalTok{,}\StringTok{"green"}\NormalTok{,}\StringTok{"red"}\NormalTok{))}
+
+\KeywordTok{kable}\NormalTok{(training_set)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{tabular}{r|r|r|l}
+\hline
+x1 & x2 & x3 & y\\
+\hline
+0 & 3 & 0 & red\\
+\hline
+2 & 0 & 0 & red\\
+\hline
+0 & 1 & 3 & red\\
+\hline
+0 & 1 & 2 & green\\
+\hline
+-1 & 0 & 1 & green\\
+\hline
+1 & 1 & 1 & red\\
+\hline
+\end{tabular}
+
+Suppose we wish to use this data set to make a prediction for \(Y\) when
+\(X1 = X2 = X3 = 0\) using K-nearest neighbors.
+
+\begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\tightlist
+\item
+  Compute the Euclidean distance between each observation and the test
+  point, \(X1 = X2 = X3 = 0\).
+\end{enumerate}
+
+The Euclidean Distance for three dimensions can be written as:
+
+\(d = \sqrt {\left( {x_1 - x_2 } \right)^2 + \left( {y_1 - y_2 } \right)^2 + \left( {z_1 - z_2 } \right)^2 }\)
+
+Let's write a function that can handle this in R, then use the
+\texttt{rowwise()} feature of dplyr to apply it across the rows of our
+tibble.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{euc_dist <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x1, x2) }\KeywordTok{sqrt}\NormalTok{(}\KeywordTok{sum}\NormalTok{((x1 }\OperatorTok{-}\StringTok{ }\NormalTok{x2) }\OperatorTok{^}\StringTok{ }\DecValTok{2}\NormalTok{))}
+\NormalTok{training_set <-}\StringTok{ }\NormalTok{training_set }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{rowwise}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{distance =} \KeywordTok{euc_dist}\NormalTok{(}\KeywordTok{c}\NormalTok{(x1,x2,x3), }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{))) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{ungroup}\NormalTok{()}
+
+\KeywordTok{kable}\NormalTok{(training_set)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{tabular}{r|r|r|l|r}
+\hline
+x1 & x2 & x3 & y & distance\\
+\hline
+0 & 3 & 0 & red & 3.000000\\
+\hline
+2 & 0 & 0 & red & 2.000000\\
+\hline
+0 & 1 & 3 & red & 3.162278\\
+\hline
+0 & 1 & 2 & green & 2.236068\\
+\hline
+-1 & 0 & 1 & green & 1.414214\\
+\hline
+1 & 1 & 1 & red & 1.732051\\
+\hline
+\end{tabular}
+
+\begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  What is our prediction with K = 1? Why?
+\end{enumerate}
+
+Let's find the \texttt{y} value of the single closest (\texttt{k\ =\ 1})
+training observation.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{training_set }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{filter}\NormalTok{(distance }\OperatorTok{==}\StringTok{ }\KeywordTok{min}\NormalTok{(distance)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(y) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{pull}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "green"
+\end{verbatim}
+
+Since the closest observation in the training data is \texttt{green},
+\texttt{K\ =\ 1} classifies our test observation as \texttt{green}.
+
+\begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  What is our prediction with K = 3? Why?
+\end{enumerate}
+
+First we find the three closest values. Then we measure the breakdown of
+\texttt{y} responses in this group of three observations. We find that
+two observations have value of \texttt{red}, and one has \texttt{green}.
+Given \texttt{red} has the highest probability of the two \texttt{y}
+values, we assign the training observation as \texttt{red}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{training_set }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{top_n}\NormalTok{(}\DecValTok{3}\NormalTok{, }\OperatorTok{-}\NormalTok{distance) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{n =} \KeywordTok{n}\NormalTok{()) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(y) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{prop =} \KeywordTok{n}\NormalTok{()}\OperatorTok{/}\KeywordTok{max}\NormalTok{(n)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(prop }\OperatorTok{==}\StringTok{ }\KeywordTok{max}\NormalTok{(prop)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{pull}\NormalTok{(y)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "red"
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  If Bayes decision boundary is highly non-linear, then do we expect the
+  best value of \(K\) to be large or small? Why?
+
+  \begin{itemize}
+  \tightlist
+  \item
+    We expect the value of \(K\) to decline as the decision boundary
+    grows more non-linear. A smaller value of \(K\) is more suspectible
+    to small changes between observations, which is the type of pattern
+    highly non-linear decision boundary would depict.
+  \end{itemize}
+\end{enumerate}
+
+The R exercises are pretty basic after this. I am going to skip them for
+now.
+
+\chapter{Linear Regression}\label{linear-regression}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+Linear regression is a simple yet very powerful approach in statistical
+learning. It is important to have a strong understanding of it before
+moving on to more complex learning methods.
+
+\section{Simple Linear Regression}\label{simple-linear-regression}
+
+Simple linear regression is predicting a quantitative response \(Y\)
+based off a single predcitor \(X\).
+
+It can be written as below:
+
+\(Y \approx \beta_0 + \beta_1X\)
+
+\emph{simple linear regression}
 
 
 \end{document}
