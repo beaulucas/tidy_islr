@@ -25,7 +25,11 @@
 <meta name="author" content="Beau Lucas">
 
 
-<meta name="date" content="2018-06-20">
+<<<<<<< HEAD
+<meta name="date" content="2018-06-04">
+=======
+<meta name="date" content="2018-06-07">
+>>>>>>> 960e9283f278d7ac27c2b244a84dd2db55c5539e
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -126,10 +130,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.4" data-path="statistical-learning.html"><a href="statistical-learning.html#exercises"><i class="fa fa-check"></i><b>2.4</b> Exercises</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>3</b> Linear Regression</a><ul>
+<<<<<<< HEAD
+<li class="chapter" data-level="3.1" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression"><i class="fa fa-check"></i><b>3.1</b> Simple Linear Regression</a></li>
+=======
 <li class="chapter" data-level="3.1" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression"><i class="fa fa-check"></i><b>3.1</b> Simple Linear Regression</a><ul>
 <li class="chapter" data-level="3.1.1" data-path="linear-regression.html"><a href="linear-regression.html#estimating-the-coefficients"><i class="fa fa-check"></i><b>3.1.1</b> Estimating the Coefficients</a></li>
-<li class="chapter" data-level="3.1.2" data-path="linear-regression.html"><a href="linear-regression.html#assessing-the-accuracy-of-the-coefficient-estimate"><i class="fa fa-check"></i><b>3.1.2</b> Assessing the Accuracy of the Coefficient Estimate</a></li>
 </ul></li>
+>>>>>>> 960e9283f278d7ac27c2b244a84dd2db55c5539e
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/beaulucas/tidy_islr" target="blank">GitHub Repository</a></li>
@@ -178,7 +185,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li><em>irreducible error</em>
 <ul>
-<li>Because <span class="math inline">\(Y\)</span> is also a function of random <span class="math inline">\(ε\)</span>, there will always be variability</li>
+<li>Because <span class="math inline">\(Y\)</span> is also a function of random <span class="math inline">\(ε\)</span>, there will alwayas be variability</li>
 <li>We cannot reduce the error introduced by <span class="math inline">\(ε\)</span></li>
 </ul></li>
 </ul>
@@ -395,12 +402,21 @@ company_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(tmp)
 <pre><code>## # A tibble: 100 x 3
 ##       x     y z    
 ##   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;
-## 1  25.4  50.6 tesla
-## 2  24.6  49.3 tesla
-## 3  25.5  50.9 tesla
-## 4  26.1  47.9 tesla
-## 5  24.8  49.8 tesla
-## 6  24.1  51.3 tesla
+<<<<<<< HEAD
+## 1  25.2  50.3 apple
+## 2  26.8  46.8 apple
+## 3  25.8  47.3 apple
+## 4  25.3  50.6 apple
+## 5  25.2  49.5 apple
+## 6  24.4  51.8 apple
+=======
+## 1  23.7  50.1 apple
+## 2  25.8  50.2 apple
+## 3  25.0  48.8 apple
+## 4  25.6  49.9 apple
+## 5  24.1  50.8 apple
+## 6  23.8  50.3 apple
+>>>>>>> 960e9283f278d7ac27c2b244a84dd2db55c5539e
 ## # ... with 94 more rows</code></pre>
 </div>
 <div id="additional-graphical-and-numerical-summaries" class="section level4">
@@ -533,105 +549,49 @@ company_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(tmp)
 <span class="kw">kable</span>(training_set)</code></pre></div>
 <table>
 <thead>
-<tr>
-<th style="text-align:right;">
-x1
-</th>
-<th style="text-align:right;">
-x2
-</th>
-<th style="text-align:right;">
-x3
-</th>
-<th style="text-align:left;">
-y
-</th>
+<tr class="header">
+<th align="right">x1</th>
+<th align="right">x2</th>
+<th align="right">x3</th>
+<th align="left">y</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:left;">
-red
-</td>
+<tr class="odd">
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">0</td>
+<td align="left">red</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:left;">
-red
-</td>
+<tr class="even">
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">red</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-red
-</td>
+<tr class="odd">
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="left">red</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-green
-</td>
+<tr class="even">
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="left">green</td>
 </tr>
-<tr>
-<td style="text-align:right;">
--1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-green
-</td>
+<tr class="odd">
+<td align="right">-1</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">green</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-red
-</td>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">red</td>
 </tr>
 </tbody>
 </table>
@@ -654,126 +614,56 @@ training_set &lt;-<span class="st"> </span>training_set <span class="op">%&gt;%<
 <span class="kw">kable</span>(training_set)</code></pre></div>
 <table>
 <thead>
-<tr>
-<th style="text-align:right;">
-x1
-</th>
-<th style="text-align:right;">
-x2
-</th>
-<th style="text-align:right;">
-x3
-</th>
-<th style="text-align:left;">
-y
-</th>
-<th style="text-align:right;">
-distance
-</th>
+<tr class="header">
+<th align="right">x1</th>
+<th align="right">x2</th>
+<th align="right">x3</th>
+<th align="left">y</th>
+<th align="right">distance</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:left;">
-red
-</td>
-<td style="text-align:right;">
-3.000000
-</td>
+<tr class="odd">
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">0</td>
+<td align="left">red</td>
+<td align="right">3.000000</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:left;">
-red
-</td>
-<td style="text-align:right;">
-2.000000
-</td>
+<tr class="even">
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">red</td>
+<td align="right">2.000000</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:left;">
-red
-</td>
-<td style="text-align:right;">
-3.162278
-</td>
+<tr class="odd">
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="left">red</td>
+<td align="right">3.162278</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:left;">
-green
-</td>
-<td style="text-align:right;">
-2.236068
-</td>
+<tr class="even">
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="left">green</td>
+<td align="right">2.236068</td>
 </tr>
-<tr>
-<td style="text-align:right;">
--1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-green
-</td>
-<td style="text-align:right;">
-1.414214
-</td>
+<tr class="odd">
+<td align="right">-1</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">green</td>
+<td align="right">1.414214</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-red
-</td>
-<td style="text-align:right;">
-1.732051
-</td>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">red</td>
+<td align="right">1.732051</td>
 </tr>
 </tbody>
 </table>

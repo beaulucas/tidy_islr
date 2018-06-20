@@ -1,3 +1,8 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 # Linear Regression
 
 -----
@@ -15,9 +20,7 @@ It can be written as below:
 <p class="vocab" style="text-align:right">*simple linear regression*</p>
 </div>
 
-<<<<<<< HEAD
 $\beta_0$ and $\beta_1$ represent the *intercept* and *slope* terms and are together known as the *coefficients*.
-=======
 $\beta_0$ and $\beta_1$ represent the unknown *intercept* and *slope* terms and are together known as the *coefficients*. We will use our training data to estimate these parameters and thus estimate the response $Y$ based on the value of $X = x$:
 
 <div>
@@ -67,33 +70,32 @@ Remember  that the true function for $f$ contains a random error term $\epsilon$
 
 $\beta_0$ is the intercept term (value of $Y$ when $X = 0$). $\beta_1$ is the slope (how much does $Y$ change with one-unit change of $X$). $\epsilon$ is the error term that captures everything our model doesn't (unknown variables, measurement error, unknown true relationship).
 
-The population regression line captures the best linear approximation to the true relationship between $X$ and $Y$. In real data, we often don't know the true relationship and have to rely on a set of observations. Using the observations to estimate the coefficients via least squares produces the *least squares line*. Let's simulate this with some sample data.
+The population regression line captures the best linear approximation to the true relationship between $X$ and $Y$. In real data, we often don't know the true relationship and have to rely on a set of observations. Using the observations to estimate the coefficients via least squares produces the *least squares line*. Let's simulate and visualize this relationship:
+
+  - simulate `n = 200` observations
+  - compare the population regression line (`sim_y`) to a number of possible least squares lines (generated from 10 different training sets of the data)
 
 ```{r}
 
-# f(x), or Y = 20 + 4x + error
+# f(x), or Y = 2 + 2x + error
 
 sim_linear <- tibble(
   b0 = 2,
   b1 = 2,
-  x = 1:100 + rnorm(100, sd = 15),
-  err = rnorm(100, sd = 50),
+  x = 1:100 + rnorm(n = 200, mean = 100, sd = 15),
+  err = rnorm(200, sd = 50),
   sim_y = b0 + b1 * x,
   true_y = b0 + b1*x + err
 )
 
-sim_linear
-
-
-resample(sim_linear)
 # generate 10 training sets
-
 y <- tibble()
 for (i in 1:10) {
-x <- sample_frac(sim_linear, 0.10) %>% mutate(iter_set = i)
+x <- sample_frac(sim_linear, 0.1) %>% mutate(iter_set = i)
 y <- y %>% bind_rows(x)
 }
 
+# apply linear model to each sample
 by_iter <- y %>%
   group_by(iter_set) %>%
   nest()
@@ -103,13 +105,73 @@ lm_model <- function(df) {
 by_iter <- by_iter %>%
   mutate(model = map(data, lm_model),
          preds = map2(data, model, add_predictions))
-preds <- unnest(by_iter, preds)
-preds
 
-ggplot(sim_linear, aes(x = x, y = true_y)) +
-  geom_point() +
-  geom_line(aes(y = sim_y), colour = "red") +
-  geom_line(data = preds, aes(x = x, y = pred, colour = iter_set, group = iter_set))
-  theme_minimal()
+# extract predictions
+preds <- unnest(by_iter, preds)
+
+sim_linear
+ggplot(data = sim_linear, aes(x = x, y = true_y)) +
+  geom_point(alpha = 1/3) +
+  geom_line(data = preds, aes(x = x, y = pred, colour = iter_set, group = iter_set), linetype = "F1", size = .75) +
+  geom_line(aes(y = sim_y), colour = "red", size = 1.5) +
+  theme_minimal() +
+  theme(legend.position = "none", panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(), axis.line = element_line(colour = "grey92")) +
+  labs(title = "Each least squares line provides a reasonable estimate",
+       y = "y")
 ```
->>>>>>> 960e9283f278d7ac27c2b244a84dd2db55c5539e
+
+The chart above demonstrates the population regression line (red) surrounded by ten different estimates of the least squares line. Notice how every least squares line (shades of blue) is different. This is because each one is generated from a random sample pulled from the simulated data. For a real-world comparison, the simulated data would be the entire population data which is often impossible to obtain. The observations used to generate the least squares line would be the sample data we have access to. In the same way a sample mean can provide a reasonable estimate of the population mean, fitting a least squares line can provide a reasonable estimate of the population regression line.
+
+This comparison of linear regression to estimating population means touches on the topic of bias. An estimate of $\mu$ using the the sample mean $\hat\mu$ is unbiased. On average, the sample mean will not systemically over or underestimtae $\mu$. If we were to take a large enough estimates of $\mu$, each produced by a particular set of observations, then this average would exactly equal $\mu$. This concept applies to our estimates of $\beta_0, \beta_1$ as well. 
+
+A question that can be asked is how close on average the sample mean $\hat\mu$ is to $\mu$. We can compute the *standard error* of $\hat\mu$ to answer this.
+
+<div>
+<p style="text-align:center">$Var(\hat\mu) = SE(\hat\mu)^2 = \sigma^2/n$</p>
+<p class="vocab" style="text-align:right">*standard error*</p>
+</div>
+
+This formula measures the average amount that $\hat\mu$ differs from $\mu$. As the number of observations $n$ increases, the standard error decreases.
+
+We can also use this to calculate how close $\hat\beta_0, \hat\beta_1$ are to $\beta_0, \beta_1$.
+
+<div>
+<p style="text-align:center">$SE(\hat\beta_0)^2= \sigma^2 \left[1/n + \frac{\displaystyle \bar x^2}{\displaystyle\sum_{i=1}^{n}(x_i - \bar x)^2} \right]$</p>
+</div>
+
+<div>
+<p style="text-align:center">$SE(\hat\beta_1)^2=\frac{\displaystyle \sigma^2}{\displaystyle\sum_{i=1}^{n}(x_i - \bar x)^2}$</p>
+</div>
+
+where $\sigma^2 = Var(\epsilon)$. For this to work, the assumption has to be made that the error terms $\epsilon_i$ are uncorrelated and all share a common variance. This is often not the case, but it doesn't mean the formula can't be used for a decent approximation. $\sigma^2$ is not known, but can be estimated from training observations. This estimate is the *residual standard error* and is given by formula $RSE = \sqrt{RSS/(n-2}$.
+
+What can we use these standard error formulas for? A useful technique is to calculate *confidence intervals* from the standard error. If we wanted to compute a 95% confidence interval for $\beta_0,\beta_1$, it would take the form below.
+
+<div>
+<p style="text-align:center">$\hat\beta_1 \pm 2 * SE(\hat\beta_1)$</p>
+</div>
+</div>
+
+<div>
+<p style="text-align:center">$\hat\beta_0 \pm 2 * SE(\hat\beta_0)$</p>
+</div>
+</div>
+
+Standard errors can also be used to perform hypotheses tests.
+
+<p style="text-align:center">$H_0$: There is no relationship between $X$ and $Y$, or $\beta_1 = 0$</p>
+<p class="vocab" style="text-align:right">*null hypothesis*</p>
+</div>
+
+<p style="text-align:center">$H_0$: There exists a relationship between $X$ and $Y$, or $\beta_1 \neq 0$</p>
+<p class="vocab" style="text-align:right">*alternative hypothesis*</p>
+</div>
+
+To test the null hypothesis, we need to test whether $\hat\beta_1$ is far enough away from zero to conclude that is it non-zero. How far enough from zero is determined by the value of $\hat\beta_1$  as well as $SE(\hat\beta_1)$. We can compute a *t-statistic*
+
+<p style="text-align:center">$t = (\beta_1 - 0)/SE(\hat\beta_1)$</p>
+<p class="vocab" style="text-align:right">*t-statistic*</p>
+</div>
+
+

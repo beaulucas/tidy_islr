@@ -25,7 +25,11 @@
 <meta name="author" content="Beau Lucas">
 
 
-<meta name="date" content="2018-06-20">
+<<<<<<< HEAD
+<meta name="date" content="2018-06-04">
+=======
+<meta name="date" content="2018-06-07">
+>>>>>>> 960e9283f278d7ac27c2b244a84dd2db55c5539e
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -126,10 +130,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.4" data-path="statistical-learning.html"><a href="statistical-learning.html#exercises"><i class="fa fa-check"></i><b>2.4</b> Exercises</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>3</b> Linear Regression</a><ul>
+<<<<<<< HEAD
+<li class="chapter" data-level="3.1" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression"><i class="fa fa-check"></i><b>3.1</b> Simple Linear Regression</a></li>
+=======
 <li class="chapter" data-level="3.1" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression"><i class="fa fa-check"></i><b>3.1</b> Simple Linear Regression</a><ul>
 <li class="chapter" data-level="3.1.1" data-path="linear-regression.html"><a href="linear-regression.html#estimating-the-coefficients"><i class="fa fa-check"></i><b>3.1.1</b> Estimating the Coefficients</a></li>
-<li class="chapter" data-level="3.1.2" data-path="linear-regression.html"><a href="linear-regression.html#assessing-the-accuracy-of-the-coefficient-estimate"><i class="fa fa-check"></i><b>3.1.2</b> Assessing the Accuracy of the Coefficient Estimate</a></li>
 </ul></li>
+>>>>>>> 960e9283f278d7ac27c2b244a84dd2db55c5539e
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/beaulucas/tidy_islr" target="blank">GitHub Repository</a></li>
@@ -167,7 +174,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <em>simple linear regression</em>
 </p>
 </div>
-<p><span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> represent the <em>intercept</em> and <em>slope</em> terms and are together known as the <em>coefficients</em>. <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> represent the unknown <em>intercept</em> and <em>slope</em> terms and are together known as the <em>coefficients</em>. We will use our training data to estimate these parameters and thus estimate the response <span class="math inline">\(Y\)</span> based on the value of <span class="math inline">\(X = x\)</span>:</p>
+<<<<<<< HEAD
+
+</div>
+</div>
+=======
+<p><span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> represent the unknown <em>intercept</em> and <em>slope</em> terms and are together known as the <em>coefficients</em>. We will use our training data to estimate these parameters and thus estimate the response <span class="math inline">\(Y\)</span> based on the value of <span class="math inline">\(X = x\)</span>:</p>
 <div>
 <p style="text-align:center">
 <span class="math inline">\(\hat y = \hat\beta_0 + \hat\beta_1x\)</span>
@@ -206,142 +218,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <em>least squares coefficient estimates (simple linear regression)</em>
 </p>
 </div>
-</div>
-<div id="assessing-the-accuracy-of-the-coefficient-estimate" class="section level3">
-<h3><span class="header-section-number">3.1.2</span> Assessing the Accuracy of the Coefficient Estimate</h3>
-<p>Remember that the true function for <span class="math inline">\(f\)</span> contains a random error term <span class="math inline">\(\epsilon\)</span>. This means the linear relationship can be written as</p>
-<div>
-<p style="text-align:center">
-<span class="math inline">\(Y = \beta_0 + \beta_1X + \epsilon\)</span>
-</p>
-</div>
-<p class="vocab" style="text-align:right">
-<em>population regression line</em>
-</p>
-</div>
-<p><span class="math inline">\(\beta_0\)</span> is the intercept term (value of <span class="math inline">\(Y\)</span> when <span class="math inline">\(X = 0\)</span>). <span class="math inline">\(\beta_1\)</span> is the slope (how much does <span class="math inline">\(Y\)</span> change with one-unit change of <span class="math inline">\(X\)</span>). <span class="math inline">\(\epsilon\)</span> is the error term that captures everything our model doesn’t (unknown variables, measurement error, unknown true relationship).</p>
-<p>The population regression line captures the best linear approximation to the true relationship between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>. In real data, we often don’t know the true relationship and have to rely on a set of observations. Using the observations to estimate the coefficients via least squares produces the <em>least squares line</em>. Let’s simulate and visualize this relationship:</p>
-<ul>
-<li>simulate <code>n = 200</code> observations</li>
-<li>compare the population regression line (<code>sim_y</code>) to a number of possible least squares lines (generated from 10 different training sets of the data)</li>
-</ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># f(x), or Y = 2 + 2x + error</span>
-
-sim_linear &lt;-<span class="st"> </span><span class="kw">tibble</span>(
-  <span class="dt">b0 =</span> <span class="dv">2</span>,
-  <span class="dt">b1 =</span> <span class="dv">2</span>,
-  <span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">100</span> <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="dt">n =</span> <span class="dv">200</span>, <span class="dt">mean =</span> <span class="dv">100</span>, <span class="dt">sd =</span> <span class="dv">15</span>),
-  <span class="dt">err =</span> <span class="kw">rnorm</span>(<span class="dv">200</span>, <span class="dt">sd =</span> <span class="dv">50</span>),
-  <span class="dt">sim_y =</span> b0 <span class="op">+</span><span class="st"> </span>b1 <span class="op">*</span><span class="st"> </span>x,
-  <span class="dt">true_y =</span> b0 <span class="op">+</span><span class="st"> </span>b1<span class="op">*</span>x <span class="op">+</span><span class="st"> </span>err
-)
-
-<span class="co"># generate 10 training sets</span>
-y &lt;-<span class="st"> </span><span class="kw">tibble</span>()
-<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>) {
-x &lt;-<span class="st"> </span><span class="kw">sample_frac</span>(sim_linear, <span class="fl">0.1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">iter_set =</span> i)
-y &lt;-<span class="st"> </span>y <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">bind_rows</span>(x)
-}
-
-<span class="co"># apply linear model to each sample</span>
-by_iter &lt;-<span class="st"> </span>y <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">group_by</span>(iter_set) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">nest</span>()
-lm_model &lt;-<span class="st"> </span><span class="cf">function</span>(df) {
-  <span class="kw">lm</span>(true_y <span class="op">~</span><span class="st"> </span>x, <span class="dt">data =</span> df)
-}
-by_iter &lt;-<span class="st"> </span>by_iter <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">model =</span> <span class="kw">map</span>(data, lm_model),
-         <span class="dt">preds =</span> <span class="kw">map2</span>(data, model, add_predictions))
-
-<span class="co"># extract predictions</span>
-preds &lt;-<span class="st"> </span><span class="kw">unnest</span>(by_iter, preds)
-
-sim_linear</code></pre></div>
-<pre><code>## # A tibble: 200 x 6
-##      b0    b1     x    err sim_y true_y
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-## 1     2     2  94.5  52.3   191.   243.
-## 2     2     2 108.   69.4   219.   288.
-## 3     2     2  81.2  15.9   164.   180.
-## 4     2     2 121.  -28.6   245.   216.
-## 5     2     2 121.    4.55  244.   249.
-## 6     2     2  98.5   8.11  199.   207.
-## # ... with 194 more rows</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> sim_linear, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> true_y)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> preds, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> pred, <span class="dt">colour =</span> iter_set, <span class="dt">group =</span> iter_set), <span class="dt">linetype =</span> <span class="st">&quot;F1&quot;</span>, <span class="dt">size =</span> .<span class="dv">75</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> sim_y), <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span>
-<span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>, <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),
-        <span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), <span class="dt">axis.line =</span> <span class="kw">element_line</span>(<span class="dt">colour =</span> <span class="st">&quot;grey92&quot;</span>)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Each least squares line provides a reasonable estimate&quot;</span>,
-       <span class="dt">y =</span> <span class="st">&quot;y&quot;</span>)</code></pre></div>
-<p><img src="tidy_islr_files/figure-html/unnamed-chunk-9-1.png" width="576" style="display: block; margin: auto;" /></p>
-<p>The chart above demonstrates the population regression line (red) surrounded by ten different estimates of the least squares line. Notice how every least squares line (shades of blue) is different. This is because each one is generated from a random sample pulled from the simulated data. For a real-world comparison, the simulated data would be the entire population data which is often impossible to obtain. The observations used to generate the least squares line would be the sample data we have access to. In the same way a sample mean can provide a reasonable estimate of the population mean, fitting a least squares line can provide a reasonable estimate of the population regression line.</p>
-<p>This comparison of linear regression to estimating population means touches on the topic of bias. An estimate of <span class="math inline">\(\mu\)</span> using the the sample mean <span class="math inline">\(\hat\mu\)</span> is unbiased. On average, the sample mean will not systemically over or underestimtae <span class="math inline">\(\mu\)</span>. If we were to take a large enough estimates of <span class="math inline">\(\mu\)</span>, each produced by a particular set of observations, then this average would exactly equal <span class="math inline">\(\mu\)</span>. This concept applies to our estimates of <span class="math inline">\(\beta_0, \beta_1\)</span> as well.</p>
-<p>A question that can be asked is how close on average the sample mean <span class="math inline">\(\hat\mu\)</span> is to <span class="math inline">\(\mu\)</span>. We can compute the <em>standard error</em> of <span class="math inline">\(\hat\mu\)</span> to answer this.</p>
-<div>
-<p style="text-align:center">
-<span class="math inline">\(Var(\hat\mu) = SE(\hat\mu)^2 = \sigma^2/n\)</span>
-</p>
-<p class="vocab" style="text-align:right">
-<em>standard error</em>
-</p>
-</div>
-<p>This formula measures the average amount that <span class="math inline">\(\hat\mu\)</span> differs from <span class="math inline">\(\mu\)</span>. As the number of observations <span class="math inline">\(n\)</span> increases, the standard error decreases.</p>
-<p>We can also use this to calculate how close <span class="math inline">\(\hat\beta_0, \hat\beta_1\)</span> are to <span class="math inline">\(\beta_0, \beta_1\)</span>.</p>
-<div>
-<p style="text-align:center">
-<span class="math inline">\(SE(\hat\beta_0)^2= \sigma^2 \left[1/n + \frac{\displaystyle \bar x^2}{\displaystyle\sum_{i=1}^{n}(x_i - \bar x)^2} \right]\)</span>
-</p>
-</div>
-<div>
-<p style="text-align:center">
-<span class="math inline">\(SE(\hat\beta_1)^2=\frac{\displaystyle \sigma^2}{\displaystyle\sum_{i=1}^{n}(x_i - \bar x)^2}\)</span>
-</p>
-</div>
-<p>where <span class="math inline">\(\sigma^2 = Var(\epsilon)\)</span>. For this to work, the assumption has to be made that the error terms <span class="math inline">\(\epsilon_i\)</span> are uncorrelated and all share a common variance. This is often not the case, but it doesn’t mean the formula can’t be used for a decent approximation. <span class="math inline">\(\sigma^2\)</span> is not known, but can be estimated from training observations. This estimate is the <em>residual standard error</em> and is given by formula <span class="math inline">\(RSE = \sqrt{RSS/(n-2}\)</span>.</p>
-<p>What can we use these standard error formulas for? A useful technique is to calculate <em>confidence intervals</em> from the standard error. If we wanted to compute a 95% confidence interval for <span class="math inline">\(\beta_0,\beta_1\)</span>, it would take the form below.</p>
-<div>
-<p style="text-align:center">
-<span class="math inline">\(\hat\beta_1 \pm 2 * SE(\hat\beta_1)\)</span>
-</p>
-</div>
-</div>
-<div>
-<p style="text-align:center">
-<span class="math inline">\(\hat\beta_0 \pm 2 * SE(\hat\beta_0)\)</span>
-</p>
-</div>
-</div>
-<p>Standard errors can also be used to perform hypotheses tests.</p>
-<p style="text-align:center">
-<span class="math inline">\(H_0\)</span>: There is no relationship between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, or <span class="math inline">\(\beta_1 = 0\)</span>
-</p>
-<p class="vocab" style="text-align:right">
-<em>null hypothesis</em>
-</p>
-</div>
-<p style="text-align:center">
-<span class="math inline">\(H_0\)</span>: There exists a relationship between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, or <span class="math inline">\(\beta_1 \neq 0\)</span>
-</p>
-<p class="vocab" style="text-align:right">
-<em>alternative hypothesis</em>
-</p>
-</div>
-<p>To test the null hypothesis, we need to test whether <span class="math inline">\(\hat\beta_1\)</span> is far enough away from zero to conclude that is it non-zero. How far enough from zero is determined by the value of <span class="math inline">\(\hat\beta_1\)</span> as well as <span class="math inline">\(SE(\hat\beta_1)\)</span>. We can compute a <em>t-statistic</em></p>
-<p style="text-align:center">
-<span class="math inline">\(t = (\beta_1 - 0)/SE(\hat\beta_1)\)</span>
-</p>
-<p class="vocab" style="text-align:right">
-<em>t-statistic</em>
-</p>
-</div>
 
 </div>
 </div>
 </div>
+>>>>>>> 960e9283f278d7ac27c2b244a84dd2db55c5539e
             </section>
 
           </div>

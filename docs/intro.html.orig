@@ -25,15 +25,19 @@
 <meta name="author" content="Beau Lucas">
 
 
-<meta name="date" content="2018-06-20">
+<<<<<<< HEAD
+<meta name="date" content="2018-06-04">
+=======
+<meta name="date" content="2018-06-07">
+>>>>>>> 960e9283f278d7ac27c2b244a84dd2db55c5539e
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-
-<link rel="next" href="intro.html">
+<link rel="prev" href="index.html">
+<link rel="next" href="statistical-learning.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -126,10 +130,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.4" data-path="statistical-learning.html"><a href="statistical-learning.html#exercises"><i class="fa fa-check"></i><b>2.4</b> Exercises</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>3</b> Linear Regression</a><ul>
+<<<<<<< HEAD
+<li class="chapter" data-level="3.1" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression"><i class="fa fa-check"></i><b>3.1</b> Simple Linear Regression</a></li>
+=======
 <li class="chapter" data-level="3.1" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression"><i class="fa fa-check"></i><b>3.1</b> Simple Linear Regression</a><ul>
 <li class="chapter" data-level="3.1.1" data-path="linear-regression.html"><a href="linear-regression.html#estimating-the-coefficients"><i class="fa fa-check"></i><b>3.1.1</b> Estimating the Coefficients</a></li>
-<li class="chapter" data-level="3.1.2" data-path="linear-regression.html"><a href="linear-regression.html#assessing-the-accuracy-of-the-coefficient-estimate"><i class="fa fa-check"></i><b>3.1.2</b> Assessing the Accuracy of the Coefficient Estimate</a></li>
 </ul></li>
+>>>>>>> 960e9283f278d7ac27c2b244a84dd2db55c5539e
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/beaulucas/tidy_islr" target="blank">GitHub Repository</a></li>
@@ -151,24 +158,39 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">A Tidy Introduction To Statistical Learning</h1>
-<h4 class="author"><em>Beau Lucas</em></h4>
-<h4 class="date"><em>2018-06-20</em></h4>
+<div id="intro" class="section level1">
+<h1><span class="header-section-number">Chapter 1</span> Introduction</h1>
+<hr />
+<div id="an-overview-of-statistical-learning" class="section level2">
+<h2><span class="header-section-number">1.1</span> An Overview of Statistical Learning</h2>
+<p>Statistical learning is focused on supervised and unsupervised modeling and prediction.</p>
 </div>
-<div id="preface" class="section level1 unnumbered">
-<h1>Preface</h1>
-<p>This book will serve as a source of notes and exercise solutions for <em>An Introduction to Statistical Learning</em>. My approach will be centered around the <code>tidyverse</code>. This is not a replacement for the book, which should be read front to back by all machine learning enthusiasts.</p>
-<p>Chapter names will line up, and certain subheadings will also match. Sometimes my notes will contain text lifted straight from the book without modification. This is not an attempt to plagiarize or claim their writing as my own. My goal is for this bookdown project to be a quick stop for machine learning enthusiasts to reference high-level ideas from ISLR in a modern media format.</p>
+<div id="data-sets-used-in-labs-and-exercises" class="section level2">
+<h2><span class="header-section-number">1.2</span> Data Sets Used in Labs and Exercises</h2>
+<p>All data sets used in this book can be found in <code>ISLR</code> and <code>MASS</code> packages, with some also being found in the base <code>R</code> distribution.</p>
+<p>We will utilize the <code>tidyverse</code> ecosystem to tackle the exercises and labs, as the <code>R</code> code found in the original textbook is outdated.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">require</span>(ISLR)
+<span class="kw">require</span>(MASS)
+<span class="kw">require</span>(tidyverse)
+<span class="kw">require</span>(knitr)
+<span class="kw">require</span>(kableExtra)</code></pre></div>
+</div>
+<div id="book-website" class="section level2">
+<h2><span class="header-section-number">1.3</span> Book Website</h2>
+<p>The website and free PDF for the book can be found here:</p>
+<p><a href="http://www-bcf.usc.edu/~gareth/ISL/">www.statlearning.com</a></p>
+<p>And here are the YouTube lectures an R labs:</p>
+<p><a href="https://www.youtube.com/channel/UC4OWDcPB1peiBXDfCSZ3h-w">Youtube - Statistical Learning</a></p>
 
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-<a href="intro.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="statistical-learning.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

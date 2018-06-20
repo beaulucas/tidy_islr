@@ -18,6 +18,7 @@ require(MASS)
 require(tidyverse)
 require(knitr)
 require(kableExtra)
+require(modelr)
 ```
 
 ## Book Website

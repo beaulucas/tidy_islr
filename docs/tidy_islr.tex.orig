@@ -124,7 +124,11 @@
   \postauthor{\par}
   \predate{\centering\large\emph}
   \postdate{\par}
-  \date{2018-06-20}
+<<<<<<< HEAD
+  \date{2018-06-04}
+=======
+  \date{2018-06-07}
+>>>>>>> 960e9283f278d7ac27c2b244a84dd2db55c5539e
 
 \usepackage{booktabs}
 \usepackage{amsthm}
@@ -200,7 +204,6 @@ outdated.
 \KeywordTok{require}\NormalTok{(tidyverse)}
 \KeywordTok{require}\NormalTok{(knitr)}
 \KeywordTok{require}\NormalTok{(kableExtra)}
-\KeywordTok{require}\NormalTok{(modelr)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -260,7 +263,7 @@ Accuracy of \(Y\) is dependant on:
   \begin{itemize}
   \tightlist
   \item
-    Because \(Y\) is also a function of random \(ε\), there will always
+    Because \(Y\) is also a function of random \(ε\), there will alwayas
     be variability
   \item
     We cannot reduce the error introduced by \(ε\)
@@ -720,14 +723,25 @@ types, and number of observations.
 
 \begin{verbatim}
 ## # A tibble: 100 x 3
+<<<<<<< HEAD
 ##       x     y z    
 ##   <dbl> <dbl> <chr>
-## 1  24.8  51.6 tesla
-## 2  25.5  50.6 tesla
-## 3  25.5  52.7 tesla
-## 4  25.3  48.2 tesla
-## 5  25.3  49.2 tesla
-## 6  26.0  51.2 tesla
+## 1  26.4  50.7 tesla
+## 2  24.1  49.9 tesla
+## 3  25.9  50.2 tesla
+## 4  24.3  49.2 tesla
+## 5  23.6  50.7 tesla
+## 6  26.0  49.5 tesla
+=======
+##       x     y z      
+##   <dbl> <dbl> <chr>  
+## 1  26.3  49.7 twitter
+## 2  24.7  50.2 twitter
+## 3  26.1  49.1 twitter
+## 4  24.2  50.0 twitter
+## 5  25.4  52.2 twitter
+## 6  23.2  50.1 twitter
+>>>>>>> 960e9283f278d7ac27c2b244a84dd2db55c5539e
 ## # ... with 94 more rows
 \end{verbatim}
 
@@ -1076,61 +1090,23 @@ will not be using.
 \end{Highlighting}
 \end{Shaded}
 
-x1
-
-x2
-
-x3
-
-y
-
-0
-
-3
-
-0
-
-red
-
-2
-
-0
-
-0
-
-red
-
-0
-
-1
-
-3
-
-red
-
-0
-
-1
-
-2
-
-green
-
--1
-
-0
-
-1
-
-green
-
-1
-
-1
-
-1
-
-red
+\begin{tabular}{r|r|r|l}
+\hline
+x1 & x2 & x3 & y\\
+\hline
+0 & 3 & 0 & red\\
+\hline
+2 & 0 & 0 & red\\
+\hline
+0 & 1 & 3 & red\\
+\hline
+0 & 1 & 2 & green\\
+\hline
+-1 & 0 & 1 & green\\
+\hline
+1 & 1 & 1 & red\\
+\hline
+\end{tabular}
 
 Suppose we wish to use this data set to make a prediction for \(Y\) when
 \(X1 = X2 = X3 = 0\) using K-nearest neighbors.
@@ -1163,75 +1139,23 @@ tibble.
 \end{Highlighting}
 \end{Shaded}
 
-x1
-
-x2
-
-x3
-
-y
-
-distance
-
-0
-
-3
-
-0
-
-red
-
-3.000000
-
-2
-
-0
-
-0
-
-red
-
-2.000000
-
-0
-
-1
-
-3
-
-red
-
-3.162278
-
-0
-
-1
-
-2
-
-green
-
-2.236068
-
--1
-
-0
-
-1
-
-green
-
-1.414214
-
-1
-
-1
-
-1
-
-red
-
-1.732051
+\begin{tabular}{r|r|r|l|r}
+\hline
+x1 & x2 & x3 & y & distance\\
+\hline
+0 & 3 & 0 & red & 3.000000\\
+\hline
+2 & 0 & 0 & red & 2.000000\\
+\hline
+0 & 1 & 3 & red & 3.162278\\
+\hline
+0 & 1 & 2 & green & 2.236068\\
+\hline
+-1 & 0 & 1 & green & 1.414214\\
+\hline
+1 & 1 & 1 & red & 1.732051\\
+\hline
+\end{tabular}
 
 \begin{enumerate}
 \def\labelenumi{(\alph{enumi})}
@@ -1329,9 +1253,9 @@ It can be written as below:
 \(Y \approx \beta_0 + \beta_1X\)
 
 \emph{simple linear regression}
+<<<<<<< HEAD
+=======
 
-\(\beta_0\) and \(\beta_1\) represent the \emph{intercept} and
-\emph{slope} terms and are together known as the \emph{coefficients}.
 \(\beta_0\) and \(\beta_1\) represent the unknown \emph{intercept} and
 \emph{slope} terms and are together known as the \emph{coefficients}. We
 will use our training data to estimate these parameters and thus
@@ -1375,182 +1299,7 @@ using \(\beta_0\) and \(\beta_1\) produces:
 \(\frac{\displaystyle \sum_{i=1}^{n}(x_i-\bar x)(y_i - \bar x)}{\displaystyle\sum_{i=1}^{n}(x_i - \bar x)^2}\)
 
 \emph{least squares coefficient estimates (simple linear regression)}
-
-\subsection{Assessing the Accuracy of the Coefficient
-Estimate}\label{assessing-the-accuracy-of-the-coefficient-estimate}
-
-Remember that the true function for \(f\) contains a random error term
-\(\epsilon\). This means the linear relationship can be written as
-
-\(Y = \beta_0 + \beta_1X + \epsilon\)
-
-\emph{population regression line}
-
-\(\beta_0\) is the intercept term (value of \(Y\) when \(X = 0\)).
-\(\beta_1\) is the slope (how much does \(Y\) change with one-unit
-change of \(X\)). \(\epsilon\) is the error term that captures
-everything our model doesn't (unknown variables, measurement error,
-unknown true relationship).
-
-The population regression line captures the best linear approximation to
-the true relationship between \(X\) and \(Y\). In real data, we often
-don't know the true relationship and have to rely on a set of
-observations. Using the observations to estimate the coefficients via
-least squares produces the \emph{least squares line}. Let's simulate and
-visualize this relationship:
-
-\begin{itemize}
-\tightlist
-\item
-  simulate \texttt{n\ =\ 200} observations
-\item
-  compare the population regression line (\texttt{sim\_y}) to a number
-  of possible least squares lines (generated from 10 different training
-  sets of the data)
-\end{itemize}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# f(x), or Y = 2 + 2x + error}
-
-\NormalTok{sim_linear <-}\StringTok{ }\KeywordTok{tibble}\NormalTok{(}
-  \DataTypeTok{b0 =} \DecValTok{2}\NormalTok{,}
-  \DataTypeTok{b1 =} \DecValTok{2}\NormalTok{,}
-  \DataTypeTok{x =} \DecValTok{1}\OperatorTok{:}\DecValTok{100} \OperatorTok{+}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(}\DataTypeTok{n =} \DecValTok{200}\NormalTok{, }\DataTypeTok{mean =} \DecValTok{100}\NormalTok{, }\DataTypeTok{sd =} \DecValTok{15}\NormalTok{),}
-  \DataTypeTok{err =} \KeywordTok{rnorm}\NormalTok{(}\DecValTok{200}\NormalTok{, }\DataTypeTok{sd =} \DecValTok{50}\NormalTok{),}
-  \DataTypeTok{sim_y =}\NormalTok{ b0 }\OperatorTok{+}\StringTok{ }\NormalTok{b1 }\OperatorTok{*}\StringTok{ }\NormalTok{x,}
-  \DataTypeTok{true_y =}\NormalTok{ b0 }\OperatorTok{+}\StringTok{ }\NormalTok{b1}\OperatorTok{*}\NormalTok{x }\OperatorTok{+}\StringTok{ }\NormalTok{err}
-\NormalTok{)}
-
-\CommentTok{# generate 10 training sets}
-\NormalTok{y <-}\StringTok{ }\KeywordTok{tibble}\NormalTok{()}
-\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{) \{}
-\NormalTok{x <-}\StringTok{ }\KeywordTok{sample_frac}\NormalTok{(sim_linear, }\FloatTok{0.1}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{iter_set =}\NormalTok{ i)}
-\NormalTok{y <-}\StringTok{ }\NormalTok{y }\OperatorTok{%>%}\StringTok{ }\KeywordTok{bind_rows}\NormalTok{(x)}
-\NormalTok{\}}
-
-\CommentTok{# apply linear model to each sample}
-\NormalTok{by_iter <-}\StringTok{ }\NormalTok{y }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{group_by}\NormalTok{(iter_set) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{nest}\NormalTok{()}
-\NormalTok{lm_model <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(df) \{}
-  \KeywordTok{lm}\NormalTok{(true_y }\OperatorTok{~}\StringTok{ }\NormalTok{x, }\DataTypeTok{data =}\NormalTok{ df)}
-\NormalTok{\}}
-\NormalTok{by_iter <-}\StringTok{ }\NormalTok{by_iter }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{model =} \KeywordTok{map}\NormalTok{(data, lm_model),}
-         \DataTypeTok{preds =} \KeywordTok{map2}\NormalTok{(data, model, add_predictions))}
-
-\CommentTok{# extract predictions}
-\NormalTok{preds <-}\StringTok{ }\KeywordTok{unnest}\NormalTok{(by_iter, preds)}
-
-\NormalTok{sim_linear}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## # A tibble: 200 x 6
-##      b0    b1     x      err sim_y true_y
-##   <dbl> <dbl> <dbl>    <dbl> <dbl>  <dbl>
-## 1     2     2 119.  -104.     240.   136.
-## 2     2     2 109.  -110.     220.   110.
-## 3     2     2  96.6   10.6    195.   206.
-## 4     2     2  90.5    5.02   183.   188.
-## 5     2     2 112.     0.889  225.   226.
-## 6     2     2 110.   -30.7    223.   192.
-## # ... with 194 more rows
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ sim_linear, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{y =}\NormalTok{ true_y)) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{alpha =} \DecValTok{1}\OperatorTok{/}\DecValTok{3}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ preds, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{y =}\NormalTok{ pred, }\DataTypeTok{colour =}\NormalTok{ iter_set, }\DataTypeTok{group =}\NormalTok{ iter_set), }\DataTypeTok{linetype =} \StringTok{"F1"}\NormalTok{, }\DataTypeTok{size =}\NormalTok{ .}\DecValTok{75}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ sim_y), }\DataTypeTok{colour =} \StringTok{"red"}\NormalTok{, }\DataTypeTok{size =} \FloatTok{1.5}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{theme_minimal}\NormalTok{() }\OperatorTok{+}
-\StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position =} \StringTok{"none"}\NormalTok{, }\DataTypeTok{panel.grid.minor =} \KeywordTok{element_blank}\NormalTok{(),}
-        \DataTypeTok{panel.grid.major =} \KeywordTok{element_blank}\NormalTok{(), }\DataTypeTok{axis.line =} \KeywordTok{element_line}\NormalTok{(}\DataTypeTok{colour =} \StringTok{"grey92"}\NormalTok{)) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title =} \StringTok{"Each least squares line provides a reasonable estimate"}\NormalTok{,}
-       \DataTypeTok{y =} \StringTok{"y"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{center}\includegraphics{tidy_islr_files/figure-latex/unnamed-chunk-9-1} \end{center}
-
-The chart above demonstrates the population regression line (red)
-surrounded by ten different estimates of the least squares line. Notice
-how every least squares line (shades of blue) is different. This is
-because each one is generated from a random sample pulled from the
-simulated data. For a real-world comparison, the simulated data would be
-the entire population data which is often impossible to obtain. The
-observations used to generate the least squares line would be the sample
-data we have access to. In the same way a sample mean can provide a
-reasonable estimate of the population mean, fitting a least squares line
-can provide a reasonable estimate of the population regression line.
-
-This comparison of linear regression to estimating population means
-touches on the topic of bias. An estimate of \(\mu\) using the the
-sample mean \(\hat\mu\) is unbiased. On average, the sample mean will
-not systemically over or underestimtae \(\mu\). If we were to take a
-large enough estimates of \(\mu\), each produced by a particular set of
-observations, then this average would exactly equal \(\mu\). This
-concept applies to our estimates of \(\beta_0, \beta_1\) as well.
-
-A question that can be asked is how close on average the sample mean
-\(\hat\mu\) is to \(\mu\). We can compute the \emph{standard error} of
-\(\hat\mu\) to answer this.
-
-\(Var(\hat\mu) = SE(\hat\mu)^2 = \sigma^2/n\)
-
-\emph{standard error}
-
-This formula measures the average amount that \(\hat\mu\) differs from
-\(\mu\). As the number of observations \(n\) increases, the standard
-error decreases.
-
-We can also use this to calculate how close \(\hat\beta_0, \hat\beta_1\)
-are to \(\beta_0, \beta_1\).
-
-\(SE(\hat\beta_0)^2= \sigma^2 \left[1/n + \frac{\displaystyle \bar x^2}{\displaystyle\sum_{i=1}^{n}(x_i - \bar x)^2} \right]\)
-
-\(SE(\hat\beta_1)^2=\frac{\displaystyle \sigma^2}{\displaystyle\sum_{i=1}^{n}(x_i - \bar x)^2}\)
-
-where \(\sigma^2 = Var(\epsilon)\). For this to work, the assumption has
-to be made that the error terms \(\epsilon_i\) are uncorrelated and all
-share a common variance. This is often not the case, but it doesn't mean
-the formula can't be used for a decent approximation. \(\sigma^2\) is
-not known, but can be estimated from training observations. This
-estimate is the \emph{residual standard error} and is given by formula
-\(RSE = \sqrt{RSS/(n-2}\).
-
-What can we use these standard error formulas for? A useful technique is
-to calculate \emph{confidence intervals} from the standard error. If we
-wanted to compute a 95\% confidence interval for \(\beta_0,\beta_1\), it
-would take the form below.
-
-\(\hat\beta_1 \pm 2 * SE(\hat\beta_1)\)
-
-\(\hat\beta_0 \pm 2 * SE(\hat\beta_0)\)
-
-Standard errors can also be used to perform hypotheses tests.
-
-\(H_0\): There is no relationship between \(X\) and \(Y\), or
-\(\beta_1 = 0\)
-
-\emph{null hypothesis}
-
-\(H_0\): There exists a relationship between \(X\) and \(Y\), or
-\(\beta_1 \neq 0\)
-
-\emph{alternative hypothesis}
-
-To test the null hypothesis, we need to test whether \(\hat\beta_1\) is
-far enough away from zero to conclude that is it non-zero. How far
-enough from zero is determined by the value of \(\hat\beta_1\) as well
-as \(SE(\hat\beta_1)\). We can compute a \emph{t-statistic}
-
-\(t = (\beta_1 - 0)/SE(\hat\beta_1)\)
-
-\emph{t-statistic}
+>>>>>>> 960e9283f278d7ac27c2b244a84dd2db55c5539e
 
 
 \end{document}
