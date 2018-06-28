@@ -25,7 +25,7 @@
 <meta name="author" content="Beau Lucas">
 
 
-<meta name="date" content="2018-06-20">
+<meta name="date" content="2018-06-26">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -257,18 +257,7 @@ by_iter &lt;-<span class="st"> </span>by_iter <span class="op">%&gt;%</span>
 <span class="co"># extract predictions</span>
 preds &lt;-<span class="st"> </span><span class="kw">unnest</span>(by_iter, preds)
 
-sim_linear</code></pre></div>
-<pre><code>## # A tibble: 200 x 6
-##      b0    b1     x    err sim_y true_y
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-## 1     2     2  94.5  52.3   191.   243.
-## 2     2     2 108.   69.4   219.   288.
-## 3     2     2  81.2  15.9   164.   180.
-## 4     2     2 121.  -28.6   245.   216.
-## 5     2     2 121.    4.55  244.   249.
-## 6     2     2  98.5   8.11  199.   207.
-## # ... with 194 more rows</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> sim_linear, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> true_y)) <span class="op">+</span>
+<span class="kw">ggplot</span>(<span class="dt">data =</span> sim_linear, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> true_y)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> preds, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> pred, <span class="dt">colour =</span> iter_set, <span class="dt">group =</span> iter_set), <span class="dt">linetype =</span> <span class="st">&quot;F1&quot;</span>, <span class="dt">size =</span> .<span class="dv">75</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> sim_y), <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span>
@@ -279,7 +268,7 @@ sim_linear</code></pre></div>
        <span class="dt">y =</span> <span class="st">&quot;y&quot;</span>)</code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-9-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>The chart above demonstrates the population regression line (red) surrounded by ten different estimates of the least squares line. Notice how every least squares line (shades of blue) is different. This is because each one is generated from a random sample pulled from the simulated data. For a real-world comparison, the simulated data would be the entire population data which is often impossible to obtain. The observations used to generate the least squares line would be the sample data we have access to. In the same way a sample mean can provide a reasonable estimate of the population mean, fitting a least squares line can provide a reasonable estimate of the population regression line.</p>
-<p>This comparison of linear regression to estimating population means touches on the topic of bias. An estimate of <span class="math inline">\(\mu\)</span> using the the sample mean <span class="math inline">\(\hat\mu\)</span> is unbiased. On average, the sample mean will not systemically over or underestimtae <span class="math inline">\(\mu\)</span>. If we were to take a large enough estimates of <span class="math inline">\(\mu\)</span>, each produced by a particular set of observations, then this average would exactly equal <span class="math inline">\(\mu\)</span>. This concept applies to our estimates of <span class="math inline">\(\beta_0, \beta_1\)</span> as well.</p>
+<p>This comparison of linear regression to estimating population means touches on the topic of bias. An estimate of <span class="math inline">\(\mu\)</span> using the the sample mean <span class="math inline">\(\hat\mu\)</span> is unbiased. On average, the sample mean will not systemically over or underestimate <span class="math inline">\(\mu\)</span>. If we were to take a large enough estimates of <span class="math inline">\(\mu\)</span>, each produced by a particular set of observations, then this average would exactly equal <span class="math inline">\(\mu\)</span>. This concept applies to our estimates of <span class="math inline">\(\beta_0, \beta_1\)</span> as well.</p>
 <p>A question that can be asked is how close on average the sample mean <span class="math inline">\(\hat\mu\)</span> is to <span class="math inline">\(\mu\)</span>. We can compute the <em>standard error</em> of <span class="math inline">\(\hat\mu\)</span> to answer this.</p>
 <div>
 <p style="text-align:center">
@@ -316,6 +305,7 @@ sim_linear</code></pre></div>
 </div>
 </div>
 <p>Standard errors can also be used to perform hypotheses tests.</p>
+<div>
 <p style="text-align:center">
 <span class="math inline">\(H_0\)</span>: There is no relationship between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, or <span class="math inline">\(\beta_1 = 0\)</span>
 </p>
@@ -323,6 +313,7 @@ sim_linear</code></pre></div>
 <em>null hypothesis</em>
 </p>
 </div>
+<div>
 <p style="text-align:center">
 <span class="math inline">\(H_0\)</span>: There exists a relationship between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, or <span class="math inline">\(\beta_1 \neq 0\)</span>
 </p>
@@ -330,7 +321,7 @@ sim_linear</code></pre></div>
 <em>alternative hypothesis</em>
 </p>
 </div>
-<p>To test the null hypothesis, we need to test whether <span class="math inline">\(\hat\beta_1\)</span> is far enough away from zero to conclude that is it non-zero. How far enough from zero is determined by the value of <span class="math inline">\(\hat\beta_1\)</span> as well as <span class="math inline">\(SE(\hat\beta_1)\)</span>. We can compute a <em>t-statistic</em></p>
+<p>To test the null hypothesis, we need to test whether <span class="math inline">\(\hat\beta_1\)</span> is far enough away from zero to conclude that is it non-zero. How far enough from zero is determined by the value of <span class="math inline">\(\hat\beta_1\)</span> as well as <span class="math inline">\(SE(\hat\beta_1)\)</span>. We compute a <em>t-statistic</em></p>
 <p style="text-align:center">
 <span class="math inline">\(t = (\beta_1 - 0)/SE(\hat\beta_1)\)</span>
 </p>
@@ -338,6 +329,7 @@ sim_linear</code></pre></div>
 <em>t-statistic</em>
 </p>
 </div>
+<p>This measures how many standard deviations <span class="math inline">\(\hat\beta_1\)</span> is from 0. If there is no relationship between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, then <span class="math inline">\(t\)</span> will follow a t-distribution. The t-distribution is similar to the normal distribution, but has slightly heavier tails. Like the normal distribution, we can use this to compute the probability of observing any value of <span class="math inline">\(|t|\)</span></p>
 
 </div>
 </div>

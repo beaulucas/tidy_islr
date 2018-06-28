@@ -109,7 +109,6 @@ by_iter <- by_iter %>%
 # extract predictions
 preds <- unnest(by_iter, preds)
 
-sim_linear
 ggplot(data = sim_linear, aes(x = x, y = true_y)) +
   geom_point(alpha = 1/3) +
   geom_line(data = preds, aes(x = x, y = pred, colour = iter_set, group = iter_set), linetype = "F1", size = .75) +
@@ -123,7 +122,7 @@ ggplot(data = sim_linear, aes(x = x, y = true_y)) +
 
 The chart above demonstrates the population regression line (red) surrounded by ten different estimates of the least squares line. Notice how every least squares line (shades of blue) is different. This is because each one is generated from a random sample pulled from the simulated data. For a real-world comparison, the simulated data would be the entire population data which is often impossible to obtain. The observations used to generate the least squares line would be the sample data we have access to. In the same way a sample mean can provide a reasonable estimate of the population mean, fitting a least squares line can provide a reasonable estimate of the population regression line.
 
-This comparison of linear regression to estimating population means touches on the topic of bias. An estimate of $\mu$ using the the sample mean $\hat\mu$ is unbiased. On average, the sample mean will not systemically over or underestimtae $\mu$. If we were to take a large enough estimates of $\mu$, each produced by a particular set of observations, then this average would exactly equal $\mu$. This concept applies to our estimates of $\beta_0, \beta_1$ as well. 
+This comparison of linear regression to estimating population means touches on the topic of bias. An estimate of $\mu$ using the the sample mean $\hat\mu$ is unbiased. On average, the sample mean will not systemically over or underestimate $\mu$. If we were to take a large enough estimates of $\mu$, each produced by a particular set of observations, then this average would exactly equal $\mu$. This concept applies to our estimates of $\beta_0, \beta_1$ as well. 
 
 A question that can be asked is how close on average the sample mean $\hat\mu$ is to $\mu$. We can compute the *standard error* of $\hat\mu$ to answer this.
 
@@ -160,18 +159,51 @@ What can we use these standard error formulas for? A useful technique is to calc
 
 Standard errors can also be used to perform hypotheses tests.
 
+<div>
 <p style="text-align:center">$H_0$: There is no relationship between $X$ and $Y$, or $\beta_1 = 0$</p>
 <p class="vocab" style="text-align:right">*null hypothesis*</p>
 </div>
 
+<div>
 <p style="text-align:center">$H_0$: There exists a relationship between $X$ and $Y$, or $\beta_1 \neq 0$</p>
 <p class="vocab" style="text-align:right">*alternative hypothesis*</p>
 </div>
 
-To test the null hypothesis, we need to test whether $\hat\beta_1$ is far enough away from zero to conclude that is it non-zero. How far enough from zero is determined by the value of $\hat\beta_1$  as well as $SE(\hat\beta_1)$. We can compute a *t-statistic*
+To test the null hypothesis, we need to test whether $\hat\beta_1$ is far enough away from zero to conclude that is it non-zero. How far enough from zero is determined by the value of $\hat\beta_1$  as well as $SE(\hat\beta_1)$. We compute a *t-statistic*
 
 <p style="text-align:center">$t = (\beta_1 - 0)/SE(\hat\beta_1)$</p>
 <p class="vocab" style="text-align:right">*t-statistic*</p>
 </div>
+
+This measures how many standard deviations $\hat\beta_1$ is from 0. If there is no relationship between $X$ and $Y$, then $t$ will follow a t-distribution. The t-distribution is similar to the normal distribution, but has slightly heavier tails. Like the normal distribution, we can use this to compute the probability of observing any number equal to or larger than $|t|$. This probability is the *p-value*. We can interpret a p-value as the probability we would observe the sample data that produced the $t$-statistic, given that there is no actual relationship between the predictor $X$ and the response $Y$. This means that a small p-value supports the inference that there exists a relationship between the predictor and the response. In this case, based on whichever threshold $\alpha$ (common value is 0.05) we set, a small enough p-value would lead us to reject the null hypothesis.
+
+### Assessing the Accuracy of the Model
+
+Now that we determined the existence of a relationship, how can we measure how well the model fits the data?
+
+Measuring the quality of a linear regression fit is often handled by two quantities: the *residual standard error* and the *R^2* statistic.
+
+#### Residual Standard Error
+
+Since every observation has an associated error term $\epsilon$, having the knowledge of true $\beta_0$ and $\beta_1$ will still not allow one to perfectly predict $Y$. The residual standard error estimates the standard deviation of the error term.
+
+<p style="text-align:center">$RSE = \sqrt{1/(n-2)*RSS} = \sqrt{1/(n-2)\sum_{i=1}^{n}(y_i - \hat y)^2}$</p>
+<p class="vocab" style="text-align:right">*residual standard error*</p>
+</div>
+
+We can interpret the residual standard error as how much, on average, our predictions deviate from the true value. Whether the value is acceptable in terms of being a successful model depends on the context of the problem. Predicting hardware failure on an airplane would obviously carry much more stringent requirements than predicting the added sales from a change in a company's advertising budget.
+
+
+#### R^2 statistic
+
+The RSE provides an absolute number. Given that it depends on the scale of $Y$, comparing RSE values across different domains and datasets isn't useful. The R^2 statistic solves this problem by measuring in terms of proportion -- it measures the variance explained and so always takes a value between 0 and 1.
+
+<p style="text-align:center">$R^2 = (TSS - RSS)/TSS = 1 - RSS/TSS$</p>
+<p class="vocab" style="text-align:right">*R^2 statistic*</p>
+</div>
+
+where $TSS = \sum_{i=1}^{n}(y_i-\bar y)^2$ is the $total sum of squares$. TSS can be thought of the amount of total variability in the response variable before any model is fitted to it. RSS is measured after fitting a model, and measures the amount of unexplained variance remaining in the data. Therefore, R^2 can be thought of as the proportion of variance in the data that is explained by fitting a model with $X$. While R^2 is more intrepetable, determing what constitutes a R^2 is subjective to the problem. Relationships that are known to be linear with little variance would expect an R^2 very close to 1. In reality, a lot of real-world data is not truly linear and could be heavily influenced by unknown, immeasurable predictors. In such cases a linear approximation would be a rough fit, and a smaller R^2 would not be unexpected.
+
+
 
 

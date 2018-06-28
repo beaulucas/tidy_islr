@@ -124,7 +124,7 @@
   \postauthor{\par}
   \predate{\centering\large\emph}
   \postdate{\par}
-  \date{2018-06-20}
+  \date{2018-06-26}
 
 \usepackage{booktabs}
 \usepackage{amsthm}
@@ -720,14 +720,14 @@ types, and number of observations.
 
 \begin{verbatim}
 ## # A tibble: 100 x 3
-##       x     y z    
-##   <dbl> <dbl> <chr>
-## 1  24.8  51.6 tesla
-## 2  25.5  50.6 tesla
-## 3  25.5  52.7 tesla
-## 4  25.3  48.2 tesla
-## 5  25.3  49.2 tesla
-## 6  26.0  51.2 tesla
+##       x     y z     
+##   <dbl> <dbl> <chr> 
+## 1  25.7  49.3 google
+## 2  25.8  52.0 google
+## 3  25.9  52.1 google
+## 4  24.8  49.2 google
+## 5  23.9  49.7 google
+## 6  24.2  50.7 google
 ## # ... with 94 more rows
 \end{verbatim}
 
@@ -1443,25 +1443,6 @@ visualize this relationship:
 \CommentTok{# extract predictions}
 \NormalTok{preds <-}\StringTok{ }\KeywordTok{unnest}\NormalTok{(by_iter, preds)}
 
-\NormalTok{sim_linear}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## # A tibble: 200 x 6
-##      b0    b1     x      err sim_y true_y
-##   <dbl> <dbl> <dbl>    <dbl> <dbl>  <dbl>
-## 1     2     2 119.  -104.     240.   136.
-## 2     2     2 109.  -110.     220.   110.
-## 3     2     2  96.6   10.6    195.   206.
-## 4     2     2  90.5    5.02   183.   188.
-## 5     2     2 112.     0.889  225.   226.
-## 6     2     2 110.   -30.7    223.   192.
-## # ... with 194 more rows
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
 \KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ sim_linear, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{y =}\NormalTok{ true_y)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{alpha =} \DecValTok{1}\OperatorTok{/}\DecValTok{3}\NormalTok{) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ preds, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{y =}\NormalTok{ pred, }\DataTypeTok{colour =}\NormalTok{ iter_set, }\DataTypeTok{group =}\NormalTok{ iter_set), }\DataTypeTok{linetype =} \StringTok{"F1"}\NormalTok{, }\DataTypeTok{size =}\NormalTok{ .}\DecValTok{75}\NormalTok{) }\OperatorTok{+}
@@ -1490,7 +1471,7 @@ can provide a reasonable estimate of the population regression line.
 This comparison of linear regression to estimating population means
 touches on the topic of bias. An estimate of \(\mu\) using the the
 sample mean \(\hat\mu\) is unbiased. On average, the sample mean will
-not systemically over or underestimtae \(\mu\). If we were to take a
+not systemically over or underestimate \(\mu\). If we were to take a
 large enough estimates of \(\mu\), each produced by a particular set of
 observations, then this average would exactly equal \(\mu\). This
 concept applies to our estimates of \(\beta_0, \beta_1\) as well.
@@ -1546,11 +1527,18 @@ Standard errors can also be used to perform hypotheses tests.
 To test the null hypothesis, we need to test whether \(\hat\beta_1\) is
 far enough away from zero to conclude that is it non-zero. How far
 enough from zero is determined by the value of \(\hat\beta_1\) as well
-as \(SE(\hat\beta_1)\). We can compute a \emph{t-statistic}
+as \(SE(\hat\beta_1)\). We compute a \emph{t-statistic}
 
 \(t = (\beta_1 - 0)/SE(\hat\beta_1)\)
 
 \emph{t-statistic}
+
+This measures how many standard deviations \(\hat\beta_1\) is from 0. If
+there is no relationship between \(X\) and \(Y\), then \(t\) will follow
+a t-distribution. The t-distribution is similar to the normal
+distribution, but has slightly heavier tails. Like the normal
+distribution, we can use this to compute the probability of observing
+any value of \(|t|\)
 
 
 \end{document}
