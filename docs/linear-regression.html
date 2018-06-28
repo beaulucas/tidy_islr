@@ -25,7 +25,7 @@
 <meta name="author" content="Beau Lucas">
 
 
-<meta name="date" content="2018-06-26">
+<meta name="date" content="2018-06-28">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -129,6 +129,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="3.1" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression"><i class="fa fa-check"></i><b>3.1</b> Simple Linear Regression</a><ul>
 <li class="chapter" data-level="3.1.1" data-path="linear-regression.html"><a href="linear-regression.html#estimating-the-coefficients"><i class="fa fa-check"></i><b>3.1.1</b> Estimating the Coefficients</a></li>
 <li class="chapter" data-level="3.1.2" data-path="linear-regression.html"><a href="linear-regression.html#assessing-the-accuracy-of-the-coefficient-estimate"><i class="fa fa-check"></i><b>3.1.2</b> Assessing the Accuracy of the Coefficient Estimate</a></li>
+<li class="chapter" data-level="3.1.3" data-path="linear-regression.html"><a href="linear-regression.html#assessing-the-accuracy-of-the-model"><i class="fa fa-check"></i><b>3.1.3</b> Assessing the Accuracy of the Model</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -214,7 +215,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p style="text-align:center">
 <span class="math inline">\(Y = \beta_0 + \beta_1X + \epsilon\)</span>
 </p>
-</div>
 <p class="vocab" style="text-align:right">
 <em>population regression line</em>
 </p>
@@ -322,6 +322,7 @@ preds &lt;-<span class="st"> </span><span class="kw">unnest</span>(by_iter, pred
 </p>
 </div>
 <p>To test the null hypothesis, we need to test whether <span class="math inline">\(\hat\beta_1\)</span> is far enough away from zero to conclude that is it non-zero. How far enough from zero is determined by the value of <span class="math inline">\(\hat\beta_1\)</span> as well as <span class="math inline">\(SE(\hat\beta_1)\)</span>. We compute a <em>t-statistic</em></p>
+<div>
 <p style="text-align:center">
 <span class="math inline">\(t = (\beta_1 - 0)/SE(\hat\beta_1)\)</span>
 </p>
@@ -329,8 +330,39 @@ preds &lt;-<span class="st"> </span><span class="kw">unnest</span>(by_iter, pred
 <em>t-statistic</em>
 </p>
 </div>
-<p>This measures how many standard deviations <span class="math inline">\(\hat\beta_1\)</span> is from 0. If there is no relationship between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, then <span class="math inline">\(t\)</span> will follow a t-distribution. The t-distribution is similar to the normal distribution, but has slightly heavier tails. Like the normal distribution, we can use this to compute the probability of observing any value of <span class="math inline">\(|t|\)</span></p>
+<p>This measures how many standard deviations <span class="math inline">\(\hat\beta_1\)</span> is from 0. If there is no relationship between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, then <span class="math inline">\(t\)</span> will follow a t-distribution. The t-distribution is similar to the normal distribution, but has slightly heavier tails. Like the normal distribution, we can use this to compute the probability of observing any number equal to or larger than <span class="math inline">\(|t|\)</span>. This probability is the <em>p-value</em>. We can interpret a p-value as the probability we would observe the sample data that produced the <span class="math inline">\(t\)</span>-statistic, given that there is no actual relationship between the predictor <span class="math inline">\(X\)</span> and the response <span class="math inline">\(Y\)</span>. This means that a small p-value supports the inference that there exists a relationship between the predictor and the response. In this case, based on whichever threshold <span class="math inline">\(\alpha\)</span> (common value is 0.05) we set, a small enough p-value would lead us to reject the null hypothesis.</p>
+</div>
+<div id="assessing-the-accuracy-of-the-model" class="section level3">
+<h3><span class="header-section-number">3.1.3</span> Assessing the Accuracy of the Model</h3>
+<p>Now that we determined the existence of a relationship, how can we measure how well the model fits the data?</p>
+<p>Measuring the quality of a linear regression fit is often handled by two quantities: the <em>residual standard error</em> and the <em>R^2</em> statistic.</p>
+<div id="residual-standard-error" class="section level4">
+<h4><span class="header-section-number">3.1.3.1</span> Residual Standard Error</h4>
+<p>Since every observation has an associated error term <span class="math inline">\(\epsilon\)</span>, having the knowledge of true <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> will still not allow one to perfectly predict <span class="math inline">\(Y\)</span>. The residual standard error estimates the standard deviation of the error term.</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(RSE = \sqrt{1/(n-2)*RSS} = \sqrt{1/(n-2)\sum_{i=1}^{n}(y_i - \hat y)^2}\)</span>
+</p>
+<p class="vocab" style="text-align:right">
+<em>residual standard error</em>
+</p>
+</div>
+<p>We can interpret the residual standard error as how much, on average, our predictions deviate from the true value. Whether the value is acceptable in terms of being a successful model depends on the context of the problem. Predicting hardware failure on an airplane would obviously carry much more stringent requirements than predicting the added sales from a change in a company’s advertising budget.</p>
+</div>
+<div id="r2-statistic" class="section level4">
+<h4><span class="header-section-number">3.1.3.2</span> R^2 statistic</h4>
+<p>The RSE provides an absolute number. Given that it depends on the scale of <span class="math inline">\(Y\)</span>, comparing RSE values across different domains and datasets isn’t useful. The R^2 statistic solves this problem by measuring in terms of proportion – it measures the variance explained and so always takes a value between 0 and 1.</p>
+</div>
+<p style="text-align:center">
+<span class="math inline">\(R^2 = (TSS - RSS)/TSS = 1 - RSS/TSS\)</span>
+</p>
+<p class="vocab" style="text-align:right">
+<em>R^2 statistic</em>
+</p>
+</div>
+<p>where <span class="math inline">\(TSS = \sum_{i=1}^{n}(y_i-\bar y)^2\)</span> is the <em>total sum of squares</em>. TSS can be thought of the amount of total variability in the response variable before any model is fitted to it. RSS is measured after fitting a model, and measures the amount of unexplained variance remaining in the data. Therefore, R^2 can be thought of as the proportion of variance in the data that is explained by fitting a model with <span class="math inline">\(X\)</span>. While R^2 is more intrepetable, determing what constitutes a R^2 is subjective to the problem. Relationships that are known to be linear with little variance would expect an R^2 very close to 1. In reality, a lot of real-world data is not truly linear and could be heavily influenced by unknown, immeasurable predictors. In such cases a linear approximation would be a rough fit, and a smaller R^2 would not be unexpected.</p>
 
+</div>
 </div>
 </div>
 </div>

@@ -124,7 +124,7 @@
   \postauthor{\par}
   \predate{\centering\large\emph}
   \postdate{\par}
-  \date{2018-06-26}
+  \date{2018-06-28}
 
 \usepackage{booktabs}
 \usepackage{amsthm}
@@ -720,14 +720,14 @@ types, and number of observations.
 
 \begin{verbatim}
 ## # A tibble: 100 x 3
-##       x     y z     
-##   <dbl> <dbl> <chr> 
-## 1  25.7  49.3 google
-## 2  25.8  52.0 google
-## 3  25.9  52.1 google
-## 4  24.8  49.2 google
-## 5  23.9  49.7 google
-## 6  24.2  50.7 google
+##       x     y z      
+##   <dbl> <dbl> <chr>  
+## 1  23.5  49.6 twitter
+## 2  25.1  50.5 twitter
+## 3  25.8  50.4 twitter
+## 4  25.7  49.6 twitter
+## 5  25.3  51.4 twitter
+## 6  25.5  50.3 twitter
 ## # ... with 94 more rows
 \end{verbatim}
 
@@ -1538,7 +1538,69 @@ there is no relationship between \(X\) and \(Y\), then \(t\) will follow
 a t-distribution. The t-distribution is similar to the normal
 distribution, but has slightly heavier tails. Like the normal
 distribution, we can use this to compute the probability of observing
-any value of \(|t|\)
+any number equal to or larger than \(|t|\). This probability is the
+\emph{p-value}. We can interpret a p-value as the probability we would
+observe the sample data that produced the \(t\)-statistic, given that
+there is no actual relationship between the predictor \(X\) and the
+response \(Y\). This means that a small p-value supports the inference
+that there exists a relationship between the predictor and the response.
+In this case, based on whichever threshold \(\alpha\) (common value is
+0.05) we set, a small enough p-value would lead us to reject the null
+hypothesis.
+
+\subsection{Assessing the Accuracy of the
+Model}\label{assessing-the-accuracy-of-the-model}
+
+Now that we determined the existence of a relationship, how can we
+measure how well the model fits the data?
+
+Measuring the quality of a linear regression fit is often handled by two
+quantities: the \emph{residual standard error} and the \emph{R\^{}2}
+statistic.
+
+\subsubsection{Residual Standard Error}\label{residual-standard-error}
+
+Since every observation has an associated error term \(\epsilon\),
+having the knowledge of true \(\beta_0\) and \(\beta_1\) will still not
+allow one to perfectly predict \(Y\). The residual standard error
+estimates the standard deviation of the error term.
+
+\(RSE = \sqrt{1/(n-2)*RSS} = \sqrt{1/(n-2)\sum_{i=1}^{n}(y_i - \hat y)^2}\)
+
+\emph{residual standard error}
+
+We can interpret the residual standard error as how much, on average,
+our predictions deviate from the true value. Whether the value is
+acceptable in terms of being a successful model depends on the context
+of the problem. Predicting hardware failure on an airplane would
+obviously carry much more stringent requirements than predicting the
+added sales from a change in a company's advertising budget.
+
+\subsubsection{R\^{}2 statistic}\label{r2-statistic}
+
+The RSE provides an absolute number. Given that it depends on the scale
+of \(Y\), comparing RSE values across different domains and datasets
+isn't useful. The R\^{}2 statistic solves this problem by measuring in
+terms of proportion -- it measures the variance explained and so always
+takes a value between 0 and 1.
+
+\(R^2 = (TSS - RSS)/TSS = 1 - RSS/TSS\)
+
+\emph{R\^{}2 statistic}
+
+where \(TSS = \sum_{i=1}^{n}(y_i-\bar y)^2\) is the \emph{total sum of
+squares}. TSS can be thought of the amount of total variability in the
+response variable before any model is fitted to it. RSS is measured
+after fitting a model, and measures the amount of unexplained variance
+remaining in the data. Therefore, R\^{}2 can be thought of as the
+proportion of variance in the data that is explained by fitting a model
+with \(X\). While R\^{}2 is more intrepetable, determing what
+constitutes a R\^{}2 is subjective to the problem. Relationships that
+are known to be linear with little variance would expect an R\^{}2 very
+close to 1. In reality, a lot of real-world data is not truly linear and
+could be heavily influenced by unknown, immeasurable predictors. In such
+cases a linear approximation would be a rough fit, and a smaller R\^{}2
+would not be unexpected.
 
 
 \end{document}
