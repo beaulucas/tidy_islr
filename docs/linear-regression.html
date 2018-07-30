@@ -25,7 +25,7 @@
 <meta name="author" content="Beau Lucas">
 
 
-<meta name="date" content="2018-06-28">
+<meta name="date" content="2018-07-02">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -131,6 +131,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="3.1.2" data-path="linear-regression.html"><a href="linear-regression.html#assessing-the-accuracy-of-the-coefficient-estimate"><i class="fa fa-check"></i><b>3.1.2</b> Assessing the Accuracy of the Coefficient Estimate</a></li>
 <li class="chapter" data-level="3.1.3" data-path="linear-regression.html"><a href="linear-regression.html#assessing-the-accuracy-of-the-model"><i class="fa fa-check"></i><b>3.1.3</b> Assessing the Accuracy of the Model</a></li>
 </ul></li>
+<li class="chapter" data-level="3.2" data-path="linear-regression.html"><a href="linear-regression.html#multiple-linear-regression"><i class="fa fa-check"></i><b>3.2</b> Multiple Linear Regression</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/beaulucas/tidy_islr" target="blank">GitHub Repository</a></li>
@@ -297,12 +298,10 @@ preds &lt;-<span class="st"> </span><span class="kw">unnest</span>(by_iter, pred
 <span class="math inline">\(\hat\beta_1 \pm 2 * SE(\hat\beta_1)\)</span>
 </p>
 </div>
-</div>
 <div>
 <p style="text-align:center">
 <span class="math inline">\(\hat\beta_0 \pm 2 * SE(\hat\beta_0)\)</span>
 </p>
-</div>
 </div>
 <p>Standard errors can also be used to perform hypotheses tests.</p>
 <div>
@@ -352,7 +351,7 @@ preds &lt;-<span class="st"> </span><span class="kw">unnest</span>(by_iter, pred
 <div id="r2-statistic" class="section level4">
 <h4><span class="header-section-number">3.1.3.2</span> R^2 statistic</h4>
 <p>The RSE provides an absolute number. Given that it depends on the scale of <span class="math inline">\(Y\)</span>, comparing RSE values across different domains and datasets isn’t useful. The R^2 statistic solves this problem by measuring in terms of proportion – it measures the variance explained and so always takes a value between 0 and 1.</p>
-</div>
+<div>
 <p style="text-align:center">
 <span class="math inline">\(R^2 = (TSS - RSS)/TSS = 1 - RSS/TSS\)</span>
 </p>
@@ -360,10 +359,45 @@ preds &lt;-<span class="st"> </span><span class="kw">unnest</span>(by_iter, pred
 <em>R^2 statistic</em>
 </p>
 </div>
-<p>where <span class="math inline">\(TSS = \sum_{i=1}^{n}(y_i-\bar y)^2\)</span> is the <em>total sum of squares</em>. TSS can be thought of the amount of total variability in the response variable before any model is fitted to it. RSS is measured after fitting a model, and measures the amount of unexplained variance remaining in the data. Therefore, R^2 can be thought of as the proportion of variance in the data that is explained by fitting a model with <span class="math inline">\(X\)</span>. While R^2 is more intrepetable, determing what constitutes a R^2 is subjective to the problem. Relationships that are known to be linear with little variance would expect an R^2 very close to 1. In reality, a lot of real-world data is not truly linear and could be heavily influenced by unknown, immeasurable predictors. In such cases a linear approximation would be a rough fit, and a smaller R^2 would not be unexpected.</p>
+<p>where <span class="math inline">\(TSS = \sum_{i=1}^{n}(y_i-\bar y)^2\)</span> is the <em>total sum of squares</em>. TSS can be thought of the amount of total variability in the response variable before any model is fitted to it. RSS is measured after fitting a model, and measures the amount of unexplained variance remaining in the data. Therefore, R^2 can be thought of as the proportion of variance in the data that is explained by fitting a model with <span class="math inline">\(X\)</span>. While R^2 is more intrepetable, determing what constitutes a R^2 is subjective to the problem. Relationships that are known to be linear with little variance would expect an R^2 very close to 1. In reality, a lot of real-world data is not truly linear and could be heavily influenced by unknown, immeasurable predictors. In such cases a linear approximation would be a rough fit, and a smaller R^2 would not be unordinary.</p>
+<p>There is a relation between R^2 and the correlation.</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(r = Cor(X,Y) = \sum_{i=1}^{n}((x_i-\bar x)(y_i - \bar y))/(\sqrt{\sum_{i=1}^{n}(x_i - \bar x)^2}\sqrt{\sum_{i=1}^{n}(y_i - \bar y)^2})\)</span>
+</p>
+<p class="vocab" style="text-align:right">
+<em>correlation</em>
+</p>
+</div>
+<p>Both measure the linear relationship between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, and within the simple linear regression domain, <span class="math inline">\(r^2 = R^2\)</span>. Once we move into multiple linear regression, in which we are using multiple predictors to predict a response, correlation loses effectiveness at measuring a model in whole as it can only measure the relationship between a single pair of variables.</p>
+</div>
+</div>
+</div>
+<div id="multiple-linear-regression" class="section level2">
+<h2><span class="header-section-number">3.2</span> Multiple Linear Regression</h2>
+<p>Simple linear regression works well when the data involves a single predictor variable. In reality, there are often multiple predictor variables. We will need to extend the simple linear regression model and provide each predictor variable <span class="math inline">\(p\)</span> with a slope coefficient.</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(Y = \beta_0 + \beta_1X_1 + \beta_2X_2 + ... + \beta_pX_p + \epsilon\)</span>
+</p>
+<p class="vocab" style="text-align:right">
+<em>multiple linear regression</em>
+</p>
+</div>
+<p>Again, we need to estimate the regression coefficients.</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(\hat y = \hat\beta_0 + \hat\beta_1X_1 + \hat\beta_2X_2 + ... + \hat\beta_pX_p\)</span>
+</p>
+</div>
+<p>We will utilize the same approach of minimizing the sum of squared residuals (RSS).</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(RSS = \sum_{i=1}^{n}(y_i - \hat y_i)^2 = \sum_{i=1}^{n}(y_i - \hat\beta_0 - \hat\beta_1x_{i1} - \hat\beta_2x_{i2} - ... - \hat\beta_px_{ip})^2\)</span>
+</p>
+</div>
+<p>Minimizing these coefficients is more complicated than the simple linear regression setting, and is best represented using linear algebra. See <a href="https://en.wikipedia.org/wiki/Residual_sum_of_squares#Matrix_expression_for_the_OLS_residual_sum_of_squares">this Wikipedia section</a> for more information on the formula.</p>
 
-</div>
-</div>
 </div>
 </div>
             </section>
