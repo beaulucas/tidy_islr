@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html >
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>A Tidy Introduction To Statistical Learning</title>
-  <meta name="description" content="A Tidy Introduction To Statistical Learning">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 3 Linear Regression | A Tidy Introduction To Statistical Learning</title>
+  <meta name="description" content="Chapter 3 Linear Regression | A Tidy Introduction To Statistical Learning" />
+  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="A Tidy Introduction To Statistical Learning" />
+  <meta property="og:title" content="Chapter 3 Linear Regression | A Tidy Introduction To Statistical Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -17,25 +16,26 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="A Tidy Introduction To Statistical Learning" />
+  <meta name="twitter:title" content="Chapter 3 Linear Regression | A Tidy Introduction To Statistical Learning" />
   
   
   
 
-<meta name="author" content="Beau Lucas">
+<meta name="author" content="Beau Lucas" />
 
 
-<meta name="date" content="2018-07-02">
+<meta name="date" content="2019-08-06" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
 <link rel="prev" href="statistical-learning.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
@@ -50,41 +50,67 @@
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -131,7 +157,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="3.1.2" data-path="linear-regression.html"><a href="linear-regression.html#assessing-the-accuracy-of-the-coefficient-estimate"><i class="fa fa-check"></i><b>3.1.2</b> Assessing the Accuracy of the Coefficient Estimate</a></li>
 <li class="chapter" data-level="3.1.3" data-path="linear-regression.html"><a href="linear-regression.html#assessing-the-accuracy-of-the-model"><i class="fa fa-check"></i><b>3.1.3</b> Assessing the Accuracy of the Model</a></li>
 </ul></li>
-<li class="chapter" data-level="3.2" data-path="linear-regression.html"><a href="linear-regression.html#multiple-linear-regression"><i class="fa fa-check"></i><b>3.2</b> Multiple Linear Regression</a></li>
+<li class="chapter" data-level="3.2" data-path="linear-regression.html"><a href="linear-regression.html#multiple-linear-regression"><i class="fa fa-check"></i><b>3.2</b> Multiple Linear Regression</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="linear-regression.html"><a href="linear-regression.html#estimating-the-regression-coefficients"><i class="fa fa-check"></i><b>3.2.1</b> Estimating the Regression Coefficients</a></li>
+<li class="chapter" data-level="3.2.2" data-path="linear-regression.html"><a href="linear-regression.html#some-important-questions"><i class="fa fa-check"></i><b>3.2.2</b> Some Important Questions</a></li>
+</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/beaulucas/tidy_islr" target="blank">GitHub Repository</a></li>
@@ -169,7 +198,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <em>simple linear regression</em>
 </p>
 </div>
-<p><span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> represent the <em>intercept</em> and <em>slope</em> terms and are together known as the <em>coefficients</em>. <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> represent the unknown <em>intercept</em> and <em>slope</em> terms and are together known as the <em>coefficients</em>. We will use our training data to estimate these parameters and thus estimate the response <span class="math inline">\(Y\)</span> based on the value of <span class="math inline">\(X = x\)</span>:</p>
+<p><span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> represent the <em>intercept</em> and <em>slope</em> terms and are together known as the <em>coefficients</em>.
+<span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> represent the unknown <em>intercept</em> and <em>slope</em> terms and are together known as the <em>coefficients</em>. We will use our training data to estimate these parameters and thus estimate the response <span class="math inline">\(Y\)</span> based on the value of <span class="math inline">\(X = x\)</span>:</p>
 <div>
 <p style="text-align:center">
 <span class="math inline">\(\hat y = \hat\beta_0 + \hat\beta_1x\)</span>
@@ -223,10 +253,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p><span class="math inline">\(\beta_0\)</span> is the intercept term (value of <span class="math inline">\(Y\)</span> when <span class="math inline">\(X = 0\)</span>). <span class="math inline">\(\beta_1\)</span> is the slope (how much does <span class="math inline">\(Y\)</span> change with one-unit change of <span class="math inline">\(X\)</span>). <span class="math inline">\(\epsilon\)</span> is the error term that captures everything our model doesn’t (unknown variables, measurement error, unknown true relationship).</p>
 <p>The population regression line captures the best linear approximation to the true relationship between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>. In real data, we often don’t know the true relationship and have to rely on a set of observations. Using the observations to estimate the coefficients via least squares produces the <em>least squares line</em>. Let’s simulate and visualize this relationship:</p>
 <ul>
-<li>simulate <code>n = 200</code> observations</li>
+<li>simulate <code>n = 200</code> observations
+<ul>
 <li>compare the population regression line (<code>sim_y</code>) to a number of possible least squares lines (generated from 10 different training sets of the data)</li>
+</ul></li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># f(x), or Y = 2 + 2x + error</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># f(x), or Y = 2 + 2x + error</span>
 
 sim_linear &lt;-<span class="st"> </span><span class="kw">tibble</span>(
   <span class="dt">b0 =</span> <span class="dv">2</span>,
@@ -260,13 +292,13 @@ preds &lt;-<span class="st"> </span><span class="kw">unnest</span>(by_iter, pred
 
 <span class="kw">ggplot</span>(<span class="dt">data =</span> sim_linear, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> true_y)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> preds, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> pred, <span class="dt">colour =</span> iter_set, <span class="dt">group =</span> iter_set), <span class="dt">linetype =</span> <span class="st">&quot;F1&quot;</span>, <span class="dt">size =</span> .<span class="dv">75</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> preds, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> pred, <span class="dt">colour =</span> iter_set, <span class="dt">group =</span> iter_set), <span class="dt">linetype =</span> <span class="st">&quot;F1&quot;</span>, <span class="dt">size =</span> <span class="fl">.75</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> sim_y), <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>, <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),
         <span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), <span class="dt">axis.line =</span> <span class="kw">element_line</span>(<span class="dt">colour =</span> <span class="st">&quot;grey92&quot;</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Each least squares line provides a reasonable estimate&quot;</span>,
-       <span class="dt">y =</span> <span class="st">&quot;y&quot;</span>)</code></pre></div>
+       <span class="dt">y =</span> <span class="st">&quot;y&quot;</span>)</code></pre>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-9-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>The chart above demonstrates the population regression line (red) surrounded by ten different estimates of the least squares line. Notice how every least squares line (shades of blue) is different. This is because each one is generated from a random sample pulled from the simulated data. For a real-world comparison, the simulated data would be the entire population data which is often impossible to obtain. The observations used to generate the least squares line would be the sample data we have access to. In the same way a sample mean can provide a reasonable estimate of the population mean, fitting a least squares line can provide a reasonable estimate of the population regression line.</p>
 <p>This comparison of linear regression to estimating population means touches on the topic of bias. An estimate of <span class="math inline">\(\mu\)</span> using the the sample mean <span class="math inline">\(\hat\mu\)</span> is unbiased. On average, the sample mean will not systemically over or underestimate <span class="math inline">\(\mu\)</span>. If we were to take a large enough estimates of <span class="math inline">\(\mu\)</span>, each produced by a particular set of observations, then this average would exactly equal <span class="math inline">\(\mu\)</span>. This concept applies to our estimates of <span class="math inline">\(\beta_0, \beta_1\)</span> as well.</p>
@@ -384,6 +416,8 @@ preds &lt;-<span class="st"> </span><span class="kw">unnest</span>(by_iter, pred
 <em>multiple linear regression</em>
 </p>
 </div>
+<div id="estimating-the-regression-coefficients" class="section level3">
+<h3><span class="header-section-number">3.2.1</span> Estimating the Regression Coefficients</h3>
 <p>Again, we need to estimate the regression coefficients.</p>
 <div>
 <p style="text-align:center">
@@ -397,7 +431,66 @@ preds &lt;-<span class="st"> </span><span class="kw">unnest</span>(by_iter, pred
 </p>
 </div>
 <p>Minimizing these coefficients is more complicated than the simple linear regression setting, and is best represented using linear algebra. See <a href="https://en.wikipedia.org/wiki/Residual_sum_of_squares#Matrix_expression_for_the_OLS_residual_sum_of_squares">this Wikipedia section</a> for more information on the formula.</p>
+<p>Interpreting a particular coefficient, (say <span class="math inline">\(\beta_1\)</span>) in a multiple regression model can be thought of as follows: if constant value for all other <span class="math inline">\(\beta_p\)</span> are maintained, what effect would an increase in <span class="math inline">\(beta_1\)</span> have on <span class="math inline">\(Y\)</span>?</p>
+<p>A side effect of this is that certain predictors which were deemed significant when contained in a simple linear regression can become insignificant when multiple predictors are involved. For an advertising example, <code>newspaper</code> could be a significant predictor of <code>revenue</code> in the simple linear regression context. However, when combined with <code>tv</code> and <code>radio</code> in a multiple linear regression setting, the effects of increasing <code>newspaper</code> spend while maintaining <code>tv</code> and <code>radio</code> becomes insignificant. This could be due to a correlation of <code>newspaper</code> spend in markets where <code>radio</code> spend is high. Multiple linear regression exposes predictors that act as “surrogates” for others due to correlation.</p>
+</div>
+<div id="some-important-questions" class="section level3">
+<h3><span class="header-section-number">3.2.2</span> Some Important Questions</h3>
+<div id="is-there-a-relationship-between-the-response-and-predictors" class="section level4">
+<h4><span class="header-section-number">3.2.2.1</span> Is There a Relationship Between the Response and Predictors?</h4>
+<p>To check this, we need to check whethere all <span class="math inline">\(p\)</span> coefficients are zero, i.e. <span class="math inline">\(\beta_1 = \beta_2 = ... = \beta_p = 0\)</span>. We test the null hypothesis,</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(H_o:\beta_1 = \beta_2 = ... = \beta_p = 0\)</span>
+</p>
+</div>
+<p>against the alternative</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(H_a:\)</span> at least one <span class="math inline">\(\beta_j\)</span> is non-zero
+</p>
+</div>
+<p>The hypothesis test is performed by computing the <span class="math inline">\(F-statistic\)</span>,</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(F = \frac{(TSS-RSS)/p}{RSS/(n-p-1)}\)</span>
+</p>
+<p class="vocab" style="text-align:right">
+<em>correlation</em>
+</p>
+</div>
+<p>If linear model assumptions are correct, one can show that</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(E\{RSS/(n-p-1)\} = \sigma^2\)</span>
+</p>
+</div>
+<p>and that, provided <span class="math inline">\(H_o\)</span> is true,</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(E\{(TSS-RSS)/p\} = \sigma^2\)</span>
+</p>
+</div>
+<p>In simple terms, if <span class="math inline">\(H_o\)</span> were true and all of the predictors have regression coefficients of 0, we would expect the unexplained variance of the model to be approximately equal to that of the total variance, and both the numerator and the denominator of the F-statistic formula to be equal. When there is no relationship between the response and predictors, the F-statistic will take on a value close to 1. However, as RSS shrinks (the model begins to account for more of the variance), the numerator grows and the denominator shrinks, both causing the F-statistic to increase. We can think of the F-statistic as a ratio between the explained variance and unexplained variance. As the explained variance grows larger than the unexplained portion, the likelihood that we reject the null hypothesis grows.</p>
+<p>How large does the F-statistic need to be to reject the null hypothesis? This depends on <span class="math inline">\(n\)</span> and <span class="math inline">\(p\)</span>. As <span class="math inline">\(n\)</span> grows, F-statistics closer to 1 may provide sufficient evidence to reject <span class="math inline">\(H_o\)</span>. If <span class="math inline">\(H_o\)</span> is true and <span class="math inline">\(\epsilon_i\)</span> have a normal distribution, the F-statistic follows an F-distribution. We can compute the p-value for any value of <span class="math inline">\(n\)</span> and <span class="math inline">\(p\)</span> associated with an F-statistic.</p>
+<p>Sometimes we want to test whether a particular subset of <span class="math inline">\(q\)</span> of the coefficients are zero.</p>
+<p>The null hypothesis could be</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(H_o : \beta_{p-q+1} = \beta_{p-q+2} = \beta_p = 0\)</span>
+</p>
+</div>
+<p>In this case we fit a second model that uses all the variables except the last <span class="math inline">\(q\)</span>. We will call the residual sum of squares for the second model <span class="math inline">\(RSS_0\)</span>.</p>
+<p>Then, the F-statistic is,</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(F = \frac{(RSS_0 - RSS)/q}{RSS(n-p-1)}\)</span>
+</p>
+</div>
+<p>We are testing a model without the <span class="math inline">\(q\)</span> predictors and seeing how it compares to the original model containing all the predictors.</p>
 
+</div>
+</div>
 </div>
 </div>
             </section>
@@ -426,7 +519,7 @@ gitbook.start({
 "google": false,
 "linkedin": false,
 "weibo": false,
-"instapper": false,
+"instapaper": false,
 "vk": false,
 "all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
 },
@@ -436,6 +529,10 @@ gitbook.start({
 "size": 2
 },
 "edit": {
+"link": null,
+"text": null
+},
+"history": {
 "link": null,
 "text": null
 },
@@ -452,8 +549,8 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "";
-    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');
     script.src = src;

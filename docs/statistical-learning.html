@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html >
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>A Tidy Introduction To Statistical Learning</title>
-  <meta name="description" content="A Tidy Introduction To Statistical Learning">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 2 Statistical Learning | A Tidy Introduction To Statistical Learning</title>
+  <meta name="description" content="Chapter 2 Statistical Learning | A Tidy Introduction To Statistical Learning" />
+  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="A Tidy Introduction To Statistical Learning" />
+  <meta property="og:title" content="Chapter 2 Statistical Learning | A Tidy Introduction To Statistical Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -17,25 +16,26 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="A Tidy Introduction To Statistical Learning" />
+  <meta name="twitter:title" content="Chapter 2 Statistical Learning | A Tidy Introduction To Statistical Learning" />
   
   
   
 
-<meta name="author" content="Beau Lucas">
+<meta name="author" content="Beau Lucas" />
 
 
-<meta name="date" content="2018-07-02">
+<meta name="date" content="2019-08-06" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
 <link rel="prev" href="intro.html">
 <link rel="next" href="linear-regression.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
@@ -50,41 +50,67 @@
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -131,7 +157,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="3.1.2" data-path="linear-regression.html"><a href="linear-regression.html#assessing-the-accuracy-of-the-coefficient-estimate"><i class="fa fa-check"></i><b>3.1.2</b> Assessing the Accuracy of the Coefficient Estimate</a></li>
 <li class="chapter" data-level="3.1.3" data-path="linear-regression.html"><a href="linear-regression.html#assessing-the-accuracy-of-the-model"><i class="fa fa-check"></i><b>3.1.3</b> Assessing the Accuracy of the Model</a></li>
 </ul></li>
-<li class="chapter" data-level="3.2" data-path="linear-regression.html"><a href="linear-regression.html#multiple-linear-regression"><i class="fa fa-check"></i><b>3.2</b> Multiple Linear Regression</a></li>
+<li class="chapter" data-level="3.2" data-path="linear-regression.html"><a href="linear-regression.html#multiple-linear-regression"><i class="fa fa-check"></i><b>3.2</b> Multiple Linear Regression</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="linear-regression.html"><a href="linear-regression.html#estimating-the-regression-coefficients"><i class="fa fa-check"></i><b>3.2.1</b> Estimating the Regression Coefficients</a></li>
+<li class="chapter" data-level="3.2.2" data-path="linear-regression.html"><a href="linear-regression.html#some-important-questions"><i class="fa fa-check"></i><b>3.2.2</b> Some Important Questions</a></li>
+</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/beaulucas/tidy_islr" target="blank">GitHub Repository</a></li>
@@ -207,10 +236,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <ol style="list-style-type: decimal">
 <li>Make an assumption about functional form of <span class="math inline">\(f\)</span>, such as “<span class="math inline">\(f\)</span> is linear in <span class="math inline">\(X\)</span>”</li>
 <li>Perform procedure that uses training data to train the model
-<ul>
-<li>In case of linear model, this procedure estimates parameters <span class="math inline">\(β_0, β_1, ..., β_p\)</span></li>
-<li>Most common approach to fit linear model is <em>(ordinary) least squares</em></li>
-</ul></li>
+* In case of linear model, this procedure estimates parameters <span class="math inline">\(β_0, β_1, ..., β_p\)</span>
+* Most common approach to fit linear model is <em>(ordinary) least squares</em></li>
 </ol>
 <p>This is <em>parametric</em>, as it reduces the problem of estimating <span class="math inline">\(f\)</span> down to one of estimating a set of parameters. Problems that can arise:</p>
 <ul>
@@ -361,7 +388,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="graphics-plotting" class="section level4">
 <h4><span class="header-section-number">2.3.0.2</span> Graphics (Plotting)</h4>
 <p>Here we begin to explore the “tidy” approach to R. We will abstain from base R plotting and use <code>ggplot2</code>, which is a more powerful tool. Let’s plot a scatterplot with some basic labels.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tbl_rnorm &lt;-<span class="st"> </span><span class="kw">tibble</span>(
+<pre class="sourceCode r"><code class="sourceCode r">tbl_rnorm &lt;-<span class="st"> </span><span class="kw">tibble</span>(
   <span class="dt">x1 =</span> <span class="kw">rnorm</span>(<span class="dv">100</span>),
   <span class="dt">y1 =</span> <span class="kw">rnorm</span>(<span class="dv">100</span>)
 )
@@ -370,7 +397,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;plot of x1 vs. y1&quot;</span>,
        <span class="dt">x =</span> <span class="st">&quot;this is the x-axis&quot;</span>,
-       <span class="dt">y =</span> <span class="st">&quot;this is the y-axis&quot;</span>)</code></pre></div>
+       <span class="dt">y =</span> <span class="st">&quot;this is the y-axis&quot;</span>)</code></pre>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-1-1.png" width="576" style="display: block; margin: auto;" /></p>
 </div>
 <div id="indexing-data" class="section level4">
@@ -380,9 +407,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="loading-data" class="section level4">
 <h4><span class="header-section-number">2.3.0.4</span> Loading data</h4>
 <p><em>ISLR</em> mentions insuring proper working directory before loading data. Dealing with working directories in R is a bad idea. Fortunately, it’s easily avoidable through the use of RStudio <em>projects</em>, which keep all files used in analysis together and make your work more robust and reproducible. See the <a href="http://r4ds.had.co.nz/workflow-projects.html">RStudio Projects</a> chapter in <em>r4ds</em> for more information.</p>
-<p>We will opt for the <code>readr</code> (part of the <code>tidyverse</code>) package instead of base R. Take a look at this subsection of <em>r4ds</em> for reasons why: <a href="http://r4ds.had.co.nz/data-import.html"><em>11.2.1 Compared to base R</em></a></p>
+<p>We will opt for the <code>readr</code> (part of the <code>tidyverse</code>) package instead of base R. Take a look at this subsection of <em>r4ds</em> for reasons why:
+<a href="http://r4ds.had.co.nz/data-import.html"><em>11.2.1 Compared to base R</em></a></p>
 <p>Below is a reproducible example in which we create a tibble, save it as a .txt file, and then read it in with <code>write_tsv()</code>. The set of <code>read_*</code> functions in <code>readr</code> will be the standrad way to read local files into R. If you are using RStudio projects, there is no need to worry about working directories.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># generate dummy data to read in</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># generate dummy data to read in</span>
 generic_company_tibble &lt;-<span class="st"> </span><span class="kw">tibble</span>(
   <span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dv">100</span>, <span class="dt">mean =</span> <span class="dv">25</span>),
   <span class="dt">y =</span> <span class="kw">rnorm</span>(<span class="dv">100</span>, <span class="dt">mean =</span> <span class="dv">50</span>),
@@ -391,19 +419,19 @@ generic_company_tibble &lt;-<span class="st"> </span><span class="kw">tibble</sp
 
 tmp &lt;-<span class="st"> </span><span class="kw">tempfile</span>()
 <span class="kw">write_tsv</span>(generic_company_tibble, tmp)
-company_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(tmp)</code></pre></div>
+company_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(tmp)</code></pre>
 <p><code>readr</code> provides a nice summary of the imported tibble. Calling the tibble by name will also give a breakdown of column names, data types, and number of observations.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">company_data</code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">company_data</code></pre>
 <pre><code>## # A tibble: 100 x 3
-##       x     y z       
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;   
-## 1  24.4  51.6 facebook
-## 2  24.5  51.1 facebook
-## 3  24.0  48.8 facebook
-## 4  26.3  50.9 facebook
-## 5  24.8  50.6 facebook
-## 6  22.2  49.6 facebook
-## # ... with 94 more rows</code></pre>
+##       x     y z        
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;    
+## 1  24.6  48.9 microsoft
+## 2  23.4  48.4 microsoft
+## 3  24.5  51.5 microsoft
+## 4  22.8  49.4 microsoft
+## 5  24.6  50.3 microsoft
+## 6  26.2  50.0 microsoft
+## # … with 94 more rows</code></pre>
 </div>
 <div id="additional-graphical-and-numerical-summaries" class="section level4">
 <h4><span class="header-section-number">2.3.0.5</span> Additional Graphical and Numerical Summaries</h4>
@@ -437,9 +465,24 @@ company_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(tmp)
 <li>Explain whether each scenario is a classification or regression problem, and indicate whether we are most interested in inference or prediction. Finally, provide n and p.</li>
 </ol>
 <ol style="list-style-type: lower-alpha">
-<li>We collect a set of data on the top 500 firms in the US. For each firm we record profit, number of employees, industry and the CEO salary. We are interested in understanding which factors affect CEO salary. - <strong>(regression; inference)</strong> This is a regression problem with both qualitative and quantitative predictors. Inference is the main goal, as the company probably wants a model that is human-readable in order to understand what determines a CEO’s salary. - <code>n = 500, p = 3</code></li>
-<li>We are considering launching a new product and wish to know whether it will be a success or a failure. We collect data on 20 similar products that were previously launched. For each product we have recorded whether it was a success or failure, price charged for the product, marketing budget, competition price, and ten other variables. - <strong>(classification; prediction)</strong> The goal is to classify whether a product will be a success or failure. Prediction is the goal, as they want to accurately determine if their product will succeed or fail. - <code>n = 20, p = 4</code></li>
-<li>We are interested in predicting the % change in the USD/Euro exchange rate in relation to the weekly changes in the world stock markets. Hence we collect weekly data for all of 2012. For each week we record the % change in the USD/Euro, the % change in the US market, the % change in the British market, and the % change in the German market. - <strong>(regression; prediction)</strong> The goal is to predict the % change of the exchange rate.</li>
+<li>We collect a set of data on the top 500 firms in the US. For each firm we record profit, number of employees, industry and the CEO salary. We are interested in understanding which factors affect CEO salary.
+<ul>
+<li><strong>(regression; inference)</strong> This is a regression problem with both qualitative and quantitative predictors. Inference is the main goal, as the company probably wants a model that is human-readable in order to understand what determines a CEO’s salary.
+<ul>
+<li><code>n = 500, p = 3</code></li>
+</ul></li>
+</ul></li>
+<li>We are considering launching a new product and wish to know whether it will be a success or a failure. We collect data on 20 similar products that were previously launched. For each product we have recorded whether it was a success or failure, price charged for the product, marketing budget, competition price, and ten other variables.
+<ul>
+<li><strong>(classification; prediction)</strong> The goal is to classify whether a product will be a success or failure. Prediction is the goal, as they want to accurately determine if their product will succeed or fail.
+<ul>
+<li><code>n = 20, p = 4</code></li>
+</ul></li>
+</ul></li>
+<li>We are interested in predicting the % change in the USD/Euro exchange rate in relation to the weekly changes in the world stock markets. Hence we collect weekly data for all of 2012. For each week we record the % change in the USD/Euro, the % change in the US market, the % change in the British market, and the % change in the German market.
+<ul>
+<li><strong>(regression; prediction)</strong> The goal is to predict the % change of the exchange rate.</li>
+</ul></li>
 </ol>
 <ol start="3" style="list-style-type: decimal">
 <li>We now revisit the bias-variance decomposition</li>
@@ -447,7 +490,7 @@ company_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(tmp)
 <ol style="list-style-type: lower-alpha">
 <li>Provide a sketch of typical (squared) bias, variance, training error, test error, and Bayes (or irreducible) error curves, on a single plot, as we go from less flexible statistical learning methods towards more flexible approaches. The x-axis should represent the amount of flexibility in the method, and the y-axis should represent the values for each curve. There should be five curves. Make sure to label each one.</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bias_variance &lt;-<span class="st"> </span><span class="kw">tibble</span>(
+<pre class="sourceCode r"><code class="sourceCode r">bias_variance &lt;-<span class="st"> </span><span class="kw">tibble</span>(
   <span class="dt">flexibility =</span> <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>),
   <span class="dt">bias =</span> <span class="kw">c</span>(<span class="dv">300</span>,<span class="dv">200</span>,<span class="dv">150</span>,<span class="dv">100</span>,<span class="dv">50</span>),
   <span class="dt">variance =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">25</span>,<span class="dv">125</span>,<span class="dv">250</span>,<span class="dv">500</span>),
@@ -459,7 +502,7 @@ company_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(tmp)
 
 <span class="kw">ggplot</span>(bias_variance, <span class="kw">aes</span>(<span class="dt">x =</span> flexibility, <span class="dt">y =</span> value, <span class="dt">colour =</span> measurement)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">se =</span> <span class="ot">FALSE</span>, <span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="dt">formula =</span> y <span class="op">~</span><span class="st"> </span><span class="kw">poly</span>(x,<span class="dv">3</span>)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">theme_minimal</span>()</code></pre></div>
+<span class="st">  </span><span class="kw">theme_minimal</span>()</code></pre>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-4-1.png" width="576" style="display: block; margin: auto;" /></p>
 <ol start="4" style="list-style-type: decimal">
 <li>You will now think of some real-life applications for statistical learning.
@@ -526,13 +569,13 @@ company_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(tmp)
 <ol start="7" style="list-style-type: decimal">
 <li>The table below provides a training data set containing six observa- tions, three predictors, and one qualitative response variable.</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">training_set &lt;-<span class="st"> </span><span class="kw">tibble</span>(
+<pre class="sourceCode r"><code class="sourceCode r">training_set &lt;-<span class="st"> </span><span class="kw">tibble</span>(
   <span class="dt">x1 =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>),
   <span class="dt">x2 =</span> <span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>),
   <span class="dt">x3 =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">1</span>),
   <span class="dt">y =</span> <span class="kw">c</span>(<span class="st">&quot;red&quot;</span>,<span class="st">&quot;red&quot;</span>,<span class="st">&quot;red&quot;</span>,<span class="st">&quot;green&quot;</span>,<span class="st">&quot;green&quot;</span>,<span class="st">&quot;red&quot;</span>))
 
-<span class="kw">kable</span>(training_set)</code></pre></div>
+<span class="kw">kable</span>(training_set)</code></pre>
 <table>
 <thead>
 <tr>
@@ -647,13 +690,13 @@ red
 </center>
 <p><br></p>
 <p>Let’s write a function that can handle this in R, then use the <code>rowwise()</code> feature of dplyr to apply it across the rows of our tibble.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">euc_dist &lt;-<span class="st"> </span><span class="cf">function</span>(x1, x2) <span class="kw">sqrt</span>(<span class="kw">sum</span>((x1 <span class="op">-</span><span class="st"> </span>x2) <span class="op">^</span><span class="st"> </span><span class="dv">2</span>))
+<pre class="sourceCode r"><code class="sourceCode r">euc_dist &lt;-<span class="st"> </span><span class="cf">function</span>(x1, x2) <span class="kw">sqrt</span>(<span class="kw">sum</span>((x1 <span class="op">-</span><span class="st"> </span>x2) <span class="op">^</span><span class="st"> </span><span class="dv">2</span>))
 training_set &lt;-<span class="st"> </span>training_set <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">distance =</span> <span class="kw">euc_dist</span>(<span class="kw">c</span>(x1,x2,x3), <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>))) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ungroup</span>()
 
-<span class="kw">kable</span>(training_set)</code></pre></div>
+<span class="kw">kable</span>(training_set)</code></pre>
 <table>
 <thead>
 <tr>
@@ -783,23 +826,23 @@ red
 <li>What is our prediction with K = 1? Why?</li>
 </ol>
 <p>Let’s find the <code>y</code> value of the single closest (<code>k = 1</code>) training observation.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">training_set <span class="op">%&gt;%</span><span class="st"> </span>
+<pre class="sourceCode r"><code class="sourceCode r">training_set <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">filter</span>(distance <span class="op">==</span><span class="st"> </span><span class="kw">min</span>(distance)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(y) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">pull</span>()</code></pre></div>
+<span class="st">  </span><span class="kw">pull</span>()</code></pre>
 <pre><code>## [1] &quot;green&quot;</code></pre>
 <p>Since the closest observation in the training data is <code>green</code>, <code>K = 1</code> classifies our test observation as <code>green</code>.</p>
 <ol start="3" style="list-style-type: lower-alpha">
 <li>What is our prediction with K = 3? Why?</li>
 </ol>
 <p>First we find the three closest values. Then we measure the breakdown of <code>y</code> responses in this group of three observations. We find that two observations have value of <code>red</code>, and one has <code>green</code>. Given <code>red</code> has the highest probability of the two <code>y</code> values, we assign the training observation as <code>red</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">training_set <span class="op">%&gt;%</span>
+<pre class="sourceCode r"><code class="sourceCode r">training_set <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">top_n</span>(<span class="dv">3</span>, <span class="op">-</span>distance) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(y) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarise</span>(<span class="dt">prop =</span> <span class="kw">n</span>()<span class="op">/</span><span class="kw">max</span>(n)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">filter</span>(prop <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(prop)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">pull</span>(y)</code></pre></div>
+<span class="st">  </span><span class="kw">pull</span>(y)</code></pre>
 <pre><code>## [1] &quot;red&quot;</code></pre>
 <ol start="4" style="list-style-type: lower-alpha">
 <li>If Bayes decision boundary is highly non-linear, then do we expect the best value of <span class="math inline">\(K\)</span> to be large or small? Why?
@@ -837,7 +880,7 @@ gitbook.start({
 "google": false,
 "linkedin": false,
 "weibo": false,
-"instapper": false,
+"instapaper": false,
 "vk": false,
 "all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
 },
@@ -847,6 +890,10 @@ gitbook.start({
 "size": 2
 },
 "edit": {
+"link": null,
+"text": null
+},
+"history": {
 "link": null,
 "text": null
 },
@@ -863,8 +910,8 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "";
-    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');
     script.src = src;

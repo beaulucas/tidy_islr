@@ -281,6 +281,10 @@ In simple terms, if $H_o$ were true and all of the predictors have regression co
 
 How large does the F-statistic need to be to reject the null hypothesis? This depends on $n$ and $p$. As $n$ grows, F-statistics closer to 1 may provide sufficient evidence to reject $H_o$. If $H_o$ is true and $\epsilon_i$ have a normal distribution, the F-statistic follows an F-distribution. We can compute the p-value for any value of $n$ and $p$ associated with an F-statistic.
 
+```{r}
+# TODO remove this section?
+```
+
 Sometimes we want to test whether a particular subset of $q$ of the coefficients are zero.
 
 The null hypothesis could be 
@@ -298,4 +302,33 @@ Then, the F-statistic is,
 </div>
 
 We are testing a model without the $q$ predictors and seeing how it compares to the original model containing all the predictors.
+
+Why do we need to look at overall F-statistics if we have individual p-values of the predictors? There are scenarios where individual predictors, by chance, will have *small* p-values, even in the absence of any true association. This could lead us to incorrectly diagnose a relationship. 
+
+The overall F-statistic does not suffer this problem because it adjusts for the number of predictors.
+
+The F-statistic approach works when the number of predictors $p$ is small compared to $n$. Sometimes, we have situations where $p > n$. In this situation, ther eare more coefficients $\beta_j$ to estimate than observations from which to estimate them. Such situations requires different approaches that we haven't discussed yet (see chapter 6)
+
+```{r}
+# TODO add chapter 6 link
+```
+
+#### Deciding on Important Variables
+
+The first thing we do in a multiple regression is to compute the F-statistic and determine that at least one of the predictors is related to the response.
+
+The task of determining which predictors are associated with the response is referred to as *variable selection*. We could try out a lot of different models with combinations of predictors, $2^p$, but this is not practical as $p$ grows.
+
+There are three ways to approach this task:
+
+* *Forward selection*: we begin with the *null model*, which contains an intercept but no predictors. We then fit $p$ simple linear regressions and add to the null model the variable that results in the lowest RSS. We then repeat the process to determine the lowest RSS of the now two-variable model, continuing until some stopping rule is satisfied.
+
+* *Backward selection*: Start with all the variables in the model, remove the variable with the largest p-value. Then, for the new $(p - 1)$-variable model, do the same. Continue until stopping rule is reached (for example, some p-value threshold)
+
+* *Mixed selection*: Start with no variables, and proceed with forward selection. If any p-value of added variables pass a threshold once new predictors are added, we remove them. We continue the forward and backward until all variables in model have a sufficiently low p-value.
+
+#### Model Fit
+
+
+
 
