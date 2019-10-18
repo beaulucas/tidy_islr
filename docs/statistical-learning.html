@@ -24,7 +24,7 @@
 <meta name="author" content="Beau Lucas" />
 
 
-<meta name="date" content="2019-08-06" />
+<meta name="date" content="2019-10-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -152,14 +152,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.4" data-path="statistical-learning.html"><a href="statistical-learning.html#exercises"><i class="fa fa-check"></i><b>2.4</b> Exercises</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>3</b> Linear Regression</a><ul>
-<li class="chapter" data-level="3.1" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression"><i class="fa fa-check"></i><b>3.1</b> Simple Linear Regression</a><ul>
-<li class="chapter" data-level="3.1.1" data-path="linear-regression.html"><a href="linear-regression.html#estimating-the-coefficients"><i class="fa fa-check"></i><b>3.1.1</b> Estimating the Coefficients</a></li>
-<li class="chapter" data-level="3.1.2" data-path="linear-regression.html"><a href="linear-regression.html#assessing-the-accuracy-of-the-coefficient-estimate"><i class="fa fa-check"></i><b>3.1.2</b> Assessing the Accuracy of the Coefficient Estimate</a></li>
-<li class="chapter" data-level="3.1.3" data-path="linear-regression.html"><a href="linear-regression.html#assessing-the-accuracy-of-the-model"><i class="fa fa-check"></i><b>3.1.3</b> Assessing the Accuracy of the Model</a></li>
+<li class="chapter" data-level="3.1" data-path="linear-regression.html"><a href="linear-regression.html#packages-used-in-this-chapter"><i class="fa fa-check"></i><b>3.1</b> Packages used in this chapter</a></li>
+<li class="chapter" data-level="3.2" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression"><i class="fa fa-check"></i><b>3.2</b> Simple Linear Regression</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="linear-regression.html"><a href="linear-regression.html#estimating-the-coefficients"><i class="fa fa-check"></i><b>3.2.1</b> Estimating the Coefficients</a></li>
+<li class="chapter" data-level="3.2.2" data-path="linear-regression.html"><a href="linear-regression.html#assessing-the-accuracy-of-the-coefficient-estimate"><i class="fa fa-check"></i><b>3.2.2</b> Assessing the Accuracy of the Coefficient Estimate</a></li>
+<li class="chapter" data-level="3.2.3" data-path="linear-regression.html"><a href="linear-regression.html#assessing-the-accuracy-of-the-model"><i class="fa fa-check"></i><b>3.2.3</b> Assessing the Accuracy of the Model</a></li>
 </ul></li>
-<li class="chapter" data-level="3.2" data-path="linear-regression.html"><a href="linear-regression.html#multiple-linear-regression"><i class="fa fa-check"></i><b>3.2</b> Multiple Linear Regression</a><ul>
-<li class="chapter" data-level="3.2.1" data-path="linear-regression.html"><a href="linear-regression.html#estimating-the-regression-coefficients"><i class="fa fa-check"></i><b>3.2.1</b> Estimating the Regression Coefficients</a></li>
-<li class="chapter" data-level="3.2.2" data-path="linear-regression.html"><a href="linear-regression.html#some-important-questions"><i class="fa fa-check"></i><b>3.2.2</b> Some Important Questions</a></li>
+<li class="chapter" data-level="3.3" data-path="linear-regression.html"><a href="linear-regression.html#multiple-linear-regression"><i class="fa fa-check"></i><b>3.3</b> Multiple Linear Regression</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="linear-regression.html"><a href="linear-regression.html#estimating-the-regression-coefficients"><i class="fa fa-check"></i><b>3.3.1</b> Estimating the Regression Coefficients</a></li>
+<li class="chapter" data-level="3.3.2" data-path="linear-regression.html"><a href="linear-regression.html#some-important-questions"><i class="fa fa-check"></i><b>3.3.2</b> Some Important Questions</a></li>
+<li class="chapter" data-level="3.3.3" data-path="linear-regression.html"><a href="linear-regression.html#other-considerations-in-the-regression-model"><i class="fa fa-check"></i><b>3.3.3</b> Other Considerations in the Regression Model</a></li>
+<li class="chapter" data-level="3.3.4" data-path="linear-regression.html"><a href="linear-regression.html#qualitative-predictors-with-more-than-two-levels"><i class="fa fa-check"></i><b>3.3.4</b> Qualitative Predictors with More than Two Levels</a></li>
+<li class="chapter" data-level="3.3.5" data-path="linear-regression.html"><a href="linear-regression.html#extensions-of-the-linear-model"><i class="fa fa-check"></i><b>3.3.5</b> Extensions of the Linear Model</a></li>
+<li class="chapter" data-level="3.3.6" data-path="linear-regression.html"><a href="linear-regression.html#potential-problems"><i class="fa fa-check"></i><b>3.3.6</b> Potential Problems</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -423,14 +428,14 @@ company_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(tmp)
 <p><code>readr</code> provides a nice summary of the imported tibble. Calling the tibble by name will also give a breakdown of column names, data types, and number of observations.</p>
 <pre class="sourceCode r"><code class="sourceCode r">company_data</code></pre>
 <pre><code>## # A tibble: 100 x 3
-##       x     y z        
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;    
-## 1  24.6  48.9 microsoft
-## 2  23.4  48.4 microsoft
-## 3  24.5  51.5 microsoft
-## 4  22.8  49.4 microsoft
-## 5  24.6  50.3 microsoft
-## 6  26.2  50.0 microsoft
+##       x     y z    
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;
+## 1  24.9  48.5 tesla
+## 2  24.6  50.0 tesla
+## 3  27.0  50.7 tesla
+## 4  23.0  48.4 tesla
+## 5  25.3  50.7 tesla
+## 6  28.0  50.2 tesla
 ## # … with 94 more rows</code></pre>
 </div>
 <div id="additional-graphical-and-numerical-summaries" class="section level4">

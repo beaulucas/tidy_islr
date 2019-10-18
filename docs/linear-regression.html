@@ -24,7 +24,7 @@
 <meta name="author" content="Beau Lucas" />
 
 
-<meta name="date" content="2019-08-06" />
+<meta name="date" content="2019-10-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -152,14 +152,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.4" data-path="statistical-learning.html"><a href="statistical-learning.html#exercises"><i class="fa fa-check"></i><b>2.4</b> Exercises</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>3</b> Linear Regression</a><ul>
-<li class="chapter" data-level="3.1" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression"><i class="fa fa-check"></i><b>3.1</b> Simple Linear Regression</a><ul>
-<li class="chapter" data-level="3.1.1" data-path="linear-regression.html"><a href="linear-regression.html#estimating-the-coefficients"><i class="fa fa-check"></i><b>3.1.1</b> Estimating the Coefficients</a></li>
-<li class="chapter" data-level="3.1.2" data-path="linear-regression.html"><a href="linear-regression.html#assessing-the-accuracy-of-the-coefficient-estimate"><i class="fa fa-check"></i><b>3.1.2</b> Assessing the Accuracy of the Coefficient Estimate</a></li>
-<li class="chapter" data-level="3.1.3" data-path="linear-regression.html"><a href="linear-regression.html#assessing-the-accuracy-of-the-model"><i class="fa fa-check"></i><b>3.1.3</b> Assessing the Accuracy of the Model</a></li>
+<li class="chapter" data-level="3.1" data-path="linear-regression.html"><a href="linear-regression.html#packages-used-in-this-chapter"><i class="fa fa-check"></i><b>3.1</b> Packages used in this chapter</a></li>
+<li class="chapter" data-level="3.2" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression"><i class="fa fa-check"></i><b>3.2</b> Simple Linear Regression</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="linear-regression.html"><a href="linear-regression.html#estimating-the-coefficients"><i class="fa fa-check"></i><b>3.2.1</b> Estimating the Coefficients</a></li>
+<li class="chapter" data-level="3.2.2" data-path="linear-regression.html"><a href="linear-regression.html#assessing-the-accuracy-of-the-coefficient-estimate"><i class="fa fa-check"></i><b>3.2.2</b> Assessing the Accuracy of the Coefficient Estimate</a></li>
+<li class="chapter" data-level="3.2.3" data-path="linear-regression.html"><a href="linear-regression.html#assessing-the-accuracy-of-the-model"><i class="fa fa-check"></i><b>3.2.3</b> Assessing the Accuracy of the Model</a></li>
 </ul></li>
-<li class="chapter" data-level="3.2" data-path="linear-regression.html"><a href="linear-regression.html#multiple-linear-regression"><i class="fa fa-check"></i><b>3.2</b> Multiple Linear Regression</a><ul>
-<li class="chapter" data-level="3.2.1" data-path="linear-regression.html"><a href="linear-regression.html#estimating-the-regression-coefficients"><i class="fa fa-check"></i><b>3.2.1</b> Estimating the Regression Coefficients</a></li>
-<li class="chapter" data-level="3.2.2" data-path="linear-regression.html"><a href="linear-regression.html#some-important-questions"><i class="fa fa-check"></i><b>3.2.2</b> Some Important Questions</a></li>
+<li class="chapter" data-level="3.3" data-path="linear-regression.html"><a href="linear-regression.html#multiple-linear-regression"><i class="fa fa-check"></i><b>3.3</b> Multiple Linear Regression</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="linear-regression.html"><a href="linear-regression.html#estimating-the-regression-coefficients"><i class="fa fa-check"></i><b>3.3.1</b> Estimating the Regression Coefficients</a></li>
+<li class="chapter" data-level="3.3.2" data-path="linear-regression.html"><a href="linear-regression.html#some-important-questions"><i class="fa fa-check"></i><b>3.3.2</b> Some Important Questions</a></li>
+<li class="chapter" data-level="3.3.3" data-path="linear-regression.html"><a href="linear-regression.html#other-considerations-in-the-regression-model"><i class="fa fa-check"></i><b>3.3.3</b> Other Considerations in the Regression Model</a></li>
+<li class="chapter" data-level="3.3.4" data-path="linear-regression.html"><a href="linear-regression.html#qualitative-predictors-with-more-than-two-levels"><i class="fa fa-check"></i><b>3.3.4</b> Qualitative Predictors with More than Two Levels</a></li>
+<li class="chapter" data-level="3.3.5" data-path="linear-regression.html"><a href="linear-regression.html#extensions-of-the-linear-model"><i class="fa fa-check"></i><b>3.3.5</b> Extensions of the Linear Model</a></li>
+<li class="chapter" data-level="3.3.6" data-path="linear-regression.html"><a href="linear-regression.html#potential-problems"><i class="fa fa-check"></i><b>3.3.6</b> Potential Problems</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -186,8 +191,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Chapter 3</span> Linear Regression</h1>
 <hr />
 <p>Linear regression is a simple yet very powerful approach in statistical learning. It is important to have a strong understanding of it before moving on to more complex learning methods.</p>
+<div id="packages-used-in-this-chapter" class="section level2">
+<h2><span class="header-section-number">3.1</span> Packages used in this chapter</h2>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
+<span class="kw">library</span>(modelr)</code></pre>
+</div>
 <div id="simple-linear-regression" class="section level2">
-<h2><span class="header-section-number">3.1</span> Simple Linear Regression</h2>
+<h2><span class="header-section-number">3.2</span> Simple Linear Regression</h2>
 <p>Simple linear regression is predicting a quantitative response <span class="math inline">\(Y\)</span> based off a single predcitor <span class="math inline">\(X\)</span>.</p>
 <p>It can be written as below:</p>
 <div>
@@ -206,7 +216,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </p>
 </div>
 <div id="estimating-the-coefficients" class="section level3">
-<h3><span class="header-section-number">3.1.1</span> Estimating the Coefficients</h3>
+<h3><span class="header-section-number">3.2.1</span> Estimating the Coefficients</h3>
 <p>We need to use data to estimate these coefficients.</p>
 <div>
 <p style="text-align:center">
@@ -240,7 +250,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 <div id="assessing-the-accuracy-of-the-coefficient-estimate" class="section level3">
-<h3><span class="header-section-number">3.1.2</span> Assessing the Accuracy of the Coefficient Estimate</h3>
+<h3><span class="header-section-number">3.2.2</span> Assessing the Accuracy of the Coefficient Estimate</h3>
 <p>Remember that the true function for <span class="math inline">\(f\)</span> contains a random error term <span class="math inline">\(\epsilon\)</span>. This means the linear relationship can be written as</p>
 <div>
 <p style="text-align:center">
@@ -266,14 +276,14 @@ sim_linear &lt;-<span class="st"> </span><span class="kw">tibble</span>(
   <span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">100</span> <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="dt">n =</span> <span class="dv">200</span>, <span class="dt">mean =</span> <span class="dv">100</span>, <span class="dt">sd =</span> <span class="dv">15</span>),
   <span class="dt">err =</span> <span class="kw">rnorm</span>(<span class="dv">200</span>, <span class="dt">sd =</span> <span class="dv">50</span>),
   <span class="dt">sim_y =</span> b0 <span class="op">+</span><span class="st"> </span>b1 <span class="op">*</span><span class="st"> </span>x,
-  <span class="dt">true_y =</span> b0 <span class="op">+</span><span class="st"> </span>b1<span class="op">*</span>x <span class="op">+</span><span class="st"> </span>err
+  <span class="dt">true_y =</span> b0 <span class="op">+</span><span class="st"> </span>b1 <span class="op">*</span><span class="st"> </span>x <span class="op">+</span><span class="st"> </span>err
 )
 
 <span class="co"># generate 10 training sets</span>
 y &lt;-<span class="st"> </span><span class="kw">tibble</span>()
 <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>) {
-x &lt;-<span class="st"> </span><span class="kw">sample_frac</span>(sim_linear, <span class="fl">0.1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">iter_set =</span> i)
-y &lt;-<span class="st"> </span>y <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">bind_rows</span>(x)
+  x &lt;-<span class="st"> </span><span class="kw">sample_frac</span>(sim_linear, <span class="fl">0.1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">iter_set =</span> i)
+  y &lt;-<span class="st"> </span>y <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">bind_rows</span>(x)
 }
 
 <span class="co"># apply linear model to each sample</span>
@@ -284,22 +294,28 @@ lm_model &lt;-<span class="st"> </span><span class="cf">function</span>(df) {
   <span class="kw">lm</span>(true_y <span class="op">~</span><span class="st"> </span>x, <span class="dt">data =</span> df)
 }
 by_iter &lt;-<span class="st"> </span>by_iter <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">model =</span> <span class="kw">map</span>(data, lm_model),
-         <span class="dt">preds =</span> <span class="kw">map2</span>(data, model, add_predictions))
+<span class="st">  </span><span class="kw">mutate</span>(
+    <span class="dt">model =</span> <span class="kw">map</span>(data, lm_model),
+    <span class="dt">preds =</span> <span class="kw">map2</span>(data, model, add_predictions)
+  )
 
 <span class="co"># extract predictions</span>
 preds &lt;-<span class="st"> </span><span class="kw">unnest</span>(by_iter, preds)
 
 <span class="kw">ggplot</span>(<span class="dt">data =</span> sim_linear, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> true_y)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">3</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> preds, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> pred, <span class="dt">colour =</span> iter_set, <span class="dt">group =</span> iter_set), <span class="dt">linetype =</span> <span class="st">&quot;F1&quot;</span>, <span class="dt">size =</span> <span class="fl">.75</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> sim_y), <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span>
-<span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>, <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),
-        <span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), <span class="dt">axis.line =</span> <span class="kw">element_line</span>(<span class="dt">colour =</span> <span class="st">&quot;grey92&quot;</span>)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Each least squares line provides a reasonable estimate&quot;</span>,
-       <span class="dt">y =</span> <span class="st">&quot;y&quot;</span>)</code></pre>
-<p><img src="tidy_islr_files/figure-html/unnamed-chunk-9-1.png" width="576" style="display: block; margin: auto;" /></p>
+<span class="st">  </span><span class="kw">theme</span>(
+    <span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>, <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),
+    <span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), <span class="dt">axis.line =</span> <span class="kw">element_line</span>(<span class="dt">colour =</span> <span class="st">&quot;grey92&quot;</span>)
+  ) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(
+    <span class="dt">title =</span> <span class="st">&quot;Each least squares line provides a reasonable estimate&quot;</span>,
+    <span class="dt">y =</span> <span class="st">&quot;y&quot;</span>
+  )</code></pre>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-10-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>The chart above demonstrates the population regression line (red) surrounded by ten different estimates of the least squares line. Notice how every least squares line (shades of blue) is different. This is because each one is generated from a random sample pulled from the simulated data. For a real-world comparison, the simulated data would be the entire population data which is often impossible to obtain. The observations used to generate the least squares line would be the sample data we have access to. In the same way a sample mean can provide a reasonable estimate of the population mean, fitting a least squares line can provide a reasonable estimate of the population regression line.</p>
 <p>This comparison of linear regression to estimating population means touches on the topic of bias. An estimate of <span class="math inline">\(\mu\)</span> using the the sample mean <span class="math inline">\(\hat\mu\)</span> is unbiased. On average, the sample mean will not systemically over or underestimate <span class="math inline">\(\mu\)</span>. If we were to take a large enough estimates of <span class="math inline">\(\mu\)</span>, each produced by a particular set of observations, then this average would exactly equal <span class="math inline">\(\mu\)</span>. This concept applies to our estimates of <span class="math inline">\(\beta_0, \beta_1\)</span> as well.</p>
 <p>A question that can be asked is how close on average the sample mean <span class="math inline">\(\hat\mu\)</span> is to <span class="math inline">\(\mu\)</span>. We can compute the <em>standard error</em> of <span class="math inline">\(\hat\mu\)</span> to answer this.</p>
@@ -364,11 +380,11 @@ preds &lt;-<span class="st"> </span><span class="kw">unnest</span>(by_iter, pred
 <p>This measures how many standard deviations <span class="math inline">\(\hat\beta_1\)</span> is from 0. If there is no relationship between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, then <span class="math inline">\(t\)</span> will follow a t-distribution. The t-distribution is similar to the normal distribution, but has slightly heavier tails. Like the normal distribution, we can use this to compute the probability of observing any number equal to or larger than <span class="math inline">\(|t|\)</span>. This probability is the <em>p-value</em>. We can interpret a p-value as the probability we would observe the sample data that produced the <span class="math inline">\(t\)</span>-statistic, given that there is no actual relationship between the predictor <span class="math inline">\(X\)</span> and the response <span class="math inline">\(Y\)</span>. This means that a small p-value supports the inference that there exists a relationship between the predictor and the response. In this case, based on whichever threshold <span class="math inline">\(\alpha\)</span> (common value is 0.05) we set, a small enough p-value would lead us to reject the null hypothesis.</p>
 </div>
 <div id="assessing-the-accuracy-of-the-model" class="section level3">
-<h3><span class="header-section-number">3.1.3</span> Assessing the Accuracy of the Model</h3>
+<h3><span class="header-section-number">3.2.3</span> Assessing the Accuracy of the Model</h3>
 <p>Now that we determined the existence of a relationship, how can we measure how well the model fits the data?</p>
 <p>Measuring the quality of a linear regression fit is often handled by two quantities: the <em>residual standard error</em> and the <em>R^2</em> statistic.</p>
 <div id="residual-standard-error" class="section level4">
-<h4><span class="header-section-number">3.1.3.1</span> Residual Standard Error</h4>
+<h4><span class="header-section-number">3.2.3.1</span> Residual Standard Error</h4>
 <p>Since every observation has an associated error term <span class="math inline">\(\epsilon\)</span>, having the knowledge of true <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> will still not allow one to perfectly predict <span class="math inline">\(Y\)</span>. The residual standard error estimates the standard deviation of the error term.</p>
 <div>
 <p style="text-align:center">
@@ -381,7 +397,7 @@ preds &lt;-<span class="st"> </span><span class="kw">unnest</span>(by_iter, pred
 <p>We can interpret the residual standard error as how much, on average, our predictions deviate from the true value. Whether the value is acceptable in terms of being a successful model depends on the context of the problem. Predicting hardware failure on an airplane would obviously carry much more stringent requirements than predicting the added sales from a change in a company’s advertising budget.</p>
 </div>
 <div id="r2-statistic" class="section level4">
-<h4><span class="header-section-number">3.1.3.2</span> R^2 statistic</h4>
+<h4><span class="header-section-number">3.2.3.2</span> R^2 statistic</h4>
 <p>The RSE provides an absolute number. Given that it depends on the scale of <span class="math inline">\(Y\)</span>, comparing RSE values across different domains and datasets isn’t useful. The R^2 statistic solves this problem by measuring in terms of proportion – it measures the variance explained and so always takes a value between 0 and 1.</p>
 <div>
 <p style="text-align:center">
@@ -406,7 +422,7 @@ preds &lt;-<span class="st"> </span><span class="kw">unnest</span>(by_iter, pred
 </div>
 </div>
 <div id="multiple-linear-regression" class="section level2">
-<h2><span class="header-section-number">3.2</span> Multiple Linear Regression</h2>
+<h2><span class="header-section-number">3.3</span> Multiple Linear Regression</h2>
 <p>Simple linear regression works well when the data involves a single predictor variable. In reality, there are often multiple predictor variables. We will need to extend the simple linear regression model and provide each predictor variable <span class="math inline">\(p\)</span> with a slope coefficient.</p>
 <div>
 <p style="text-align:center">
@@ -417,7 +433,7 @@ preds &lt;-<span class="st"> </span><span class="kw">unnest</span>(by_iter, pred
 </p>
 </div>
 <div id="estimating-the-regression-coefficients" class="section level3">
-<h3><span class="header-section-number">3.2.1</span> Estimating the Regression Coefficients</h3>
+<h3><span class="header-section-number">3.3.1</span> Estimating the Regression Coefficients</h3>
 <p>Again, we need to estimate the regression coefficients.</p>
 <div>
 <p style="text-align:center">
@@ -435,9 +451,9 @@ preds &lt;-<span class="st"> </span><span class="kw">unnest</span>(by_iter, pred
 <p>A side effect of this is that certain predictors which were deemed significant when contained in a simple linear regression can become insignificant when multiple predictors are involved. For an advertising example, <code>newspaper</code> could be a significant predictor of <code>revenue</code> in the simple linear regression context. However, when combined with <code>tv</code> and <code>radio</code> in a multiple linear regression setting, the effects of increasing <code>newspaper</code> spend while maintaining <code>tv</code> and <code>radio</code> becomes insignificant. This could be due to a correlation of <code>newspaper</code> spend in markets where <code>radio</code> spend is high. Multiple linear regression exposes predictors that act as “surrogates” for others due to correlation.</p>
 </div>
 <div id="some-important-questions" class="section level3">
-<h3><span class="header-section-number">3.2.2</span> Some Important Questions</h3>
+<h3><span class="header-section-number">3.3.2</span> Some Important Questions</h3>
 <div id="is-there-a-relationship-between-the-response-and-predictors" class="section level4">
-<h4><span class="header-section-number">3.2.2.1</span> Is There a Relationship Between the Response and Predictors?</h4>
+<h4><span class="header-section-number">3.3.2.1</span> Is There a Relationship Between the Response and Predictors?</h4>
 <p>To check this, we need to check whethere all <span class="math inline">\(p\)</span> coefficients are zero, i.e. <span class="math inline">\(\beta_1 = \beta_2 = ... = \beta_p = 0\)</span>. We test the null hypothesis,</p>
 <div>
 <p style="text-align:center">
@@ -473,6 +489,7 @@ preds &lt;-<span class="st"> </span><span class="kw">unnest</span>(by_iter, pred
 </div>
 <p>In simple terms, if <span class="math inline">\(H_o\)</span> were true and all of the predictors have regression coefficients of 0, we would expect the unexplained variance of the model to be approximately equal to that of the total variance, and both the numerator and the denominator of the F-statistic formula to be equal. When there is no relationship between the response and predictors, the F-statistic will take on a value close to 1. However, as RSS shrinks (the model begins to account for more of the variance), the numerator grows and the denominator shrinks, both causing the F-statistic to increase. We can think of the F-statistic as a ratio between the explained variance and unexplained variance. As the explained variance grows larger than the unexplained portion, the likelihood that we reject the null hypothesis grows.</p>
 <p>How large does the F-statistic need to be to reject the null hypothesis? This depends on <span class="math inline">\(n\)</span> and <span class="math inline">\(p\)</span>. As <span class="math inline">\(n\)</span> grows, F-statistics closer to 1 may provide sufficient evidence to reject <span class="math inline">\(H_o\)</span>. If <span class="math inline">\(H_o\)</span> is true and <span class="math inline">\(\epsilon_i\)</span> have a normal distribution, the F-statistic follows an F-distribution. We can compute the p-value for any value of <span class="math inline">\(n\)</span> and <span class="math inline">\(p\)</span> associated with an F-statistic.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> remove this section?</span></code></pre>
 <p>Sometimes we want to test whether a particular subset of <span class="math inline">\(q\)</span> of the coefficients are zero.</p>
 <p>The null hypothesis could be</p>
 <div>
@@ -488,6 +505,353 @@ preds &lt;-<span class="st"> </span><span class="kw">unnest</span>(by_iter, pred
 </p>
 </div>
 <p>We are testing a model without the <span class="math inline">\(q\)</span> predictors and seeing how it compares to the original model containing all the predictors.</p>
+<p>Why do we need to look at overall F-statistics if we have individual p-values of the predictors? There are scenarios where individual predictors, by chance, will have <em>small</em> p-values, even in the absence of any true association. This could lead us to incorrectly diagnose a relationship.</p>
+<p>The overall F-statistic does not suffer this problem because it adjusts for the number of predictors.</p>
+<p>The F-statistic approach works when the number of predictors <span class="math inline">\(p\)</span> is small compared to <span class="math inline">\(n\)</span>. Sometimes, we have situations where <span class="math inline">\(p &gt; n\)</span>. In this situation, ther eare more coefficients <span class="math inline">\(\beta_j\)</span> to estimate than observations from which to estimate them. Such situations requires different approaches that we haven’t discussed yet (see chapter 6)</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> add chapter 6 link</span></code></pre>
+</div>
+<div id="deciding-on-important-variables" class="section level4">
+<h4><span class="header-section-number">3.3.2.2</span> Deciding on Important Variables</h4>
+<p>The first thing we do in a multiple regression is to compute the F-statistic and determine that at least one of the predictors is related to the response.</p>
+<p>The task of determining which predictors are associated with the response is referred to as <em>variable selection</em>. We could try out a lot of different models with combinations of predictors, <span class="math inline">\(2^p\)</span>, but this is not practical as <span class="math inline">\(p\)</span> grows.</p>
+<p>There are three ways to approach this task:</p>
+<ul>
+<li><p><em>Forward selection</em>: we begin with the <em>null model</em>, which contains an intercept but no predictors. We then fit <span class="math inline">\(p\)</span> simple linear regressions and add to the null model the variable that results in the lowest RSS. We then repeat the process to determine the lowest RSS of the now two-variable model, continuing until some stopping rule is satisfied.</p></li>
+<li><p><em>Backward selection</em>: Start with all the variables in the model, remove the variable with the largest p-value. Then, for the new <span class="math inline">\((p - 1)\)</span>-variable model, do the same. Continue until stopping rule is reached (for example, some p-value threshold)</p></li>
+<li><p><em>Mixed selection</em>: Start with no variables, and proceed with forward selection. If any p-value of added variables pass a threshold once new predictors are added, we remove them. We continue the forward and backward until all variables in model have a sufficiently low p-value.</p></li>
+</ul>
+</div>
+<div id="model-fit" class="section level4">
+<h4><span class="header-section-number">3.3.2.3</span> Model Fit</h4>
+<p>Two common methods of model fit are the <span class="math inline">\(RSE\)</span> and <span class="math inline">\(R^2\)</span>, the fraction of variance explained.</p>
+<p>More on <span class="math inline">\(R^2\)</span>:</p>
+<ul>
+<li>Values closer to <code>1</code> indicate a better fit</li>
+<li>Adding more variables can only increase it
+<ul>
+<li>Adding variables that barely increase it can lead to overfitting</li>
+</ul></li>
+</ul>
+<p>Plotting the model can also be useful.</p>
+</div>
+<div id="predictions" class="section level4">
+<h4><span class="header-section-number">3.3.2.4</span> Predictions</h4>
+<p>Three sorts of uncertainty within a given model:</p>
+<ol style="list-style-type: decimal">
+<li><p>The coefficient estimates <span class="math inline">\(\hat\beta_0 + \hat\beta_1...,\hat\beta_p\)</span> are estimates for <span class="math inline">\(\beta_0 + \beta_1...,\beta_p\)</span>. This inaccuracy is part of the <em>reducible error</em>. We can compute a confidence interval to determine how close <span class="math inline">\(\hat Y\)</span> is to <span class="math inline">\(f(X)\)</span>.</p></li>
+<li><p><em>Model bias</em> can result from the fact that we are fitting a linear approximation to the true surface of <span class="math inline">\(f(X)\)</span>.</p></li>
+<li><p>Even if we knew <span class="math inline">\(f(X)\)</span>, we still have random error <span class="math inline">\(\epsilon\)</span>, which is the <em>irreducible error</em>. We can use prediction intervals to estimate how far <span class="math inline">\(Y\)</span> will differ from <span class="math inline">\(\hat Y\)</span>. These will always be larger than confidence intervals, because they incorporate both the reducible + irreducible error.</p></li>
+</ol>
+</div>
+</div>
+<div id="other-considerations-in-the-regression-model" class="section level3">
+<h3><span class="header-section-number">3.3.3</span> Other Considerations in the Regression Model</h3>
+<p>So far, all predictors have been <em>quantitative</em>. However, it is common to have <em>qualitative</em> variables as well.</p>
+<p>Take a look at the <code>ISLR::Credit</code> dataset, which has a mix of both types.</p>
+<pre class="sourceCode r"><code class="sourceCode r">tidy_credit &lt;-<span class="st"> </span>ISLR<span class="op">::</span>Credit <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span>janitor<span class="op">::</span><span class="kw">clean_names</span>()
+tidy_credit</code></pre>
+<pre><code>## # A tibble: 400 x 12
+##      id income limit rating cards   age education gender student married
+##   &lt;int&gt;  &lt;dbl&gt; &lt;int&gt;  &lt;int&gt; &lt;int&gt; &lt;int&gt;     &lt;int&gt; &lt;fct&gt;  &lt;fct&gt;   &lt;fct&gt;  
+## 1     1   14.9  3606    283     2    34        11 &quot; Mal… No      Yes    
+## 2     2  106.   6645    483     3    82        15 Female Yes     Yes    
+## 3     3  105.   7075    514     4    71        11 &quot; Mal… No      No     
+## 4     4  149.   9504    681     3    36        11 Female No      No     
+## 5     5   55.9  4897    357     2    68        16 &quot; Mal… No      Yes    
+## 6     6   80.2  8047    569     4    77        10 &quot; Mal… No      No     
+## # … with 394 more rows, and 2 more variables: ethnicity &lt;fct&gt;,
+## #   balance &lt;int&gt;</code></pre>
+<div id="predictors-with-only-two-levels" class="section level4">
+<h4><span class="header-section-number">3.3.3.1</span> Predictors with only Two Levels</h4>
+<p>Suppose we wish to investigate difference in credit card balance between males and females, ignoring all other variables. If a <em>qualitative</em> variable (also known as a <em>factor</em>) only has two possible values, then incorporating it into a model is easy. We can create a binomial dummy variable that takes on two values. For <code>gender</code>, this could be a variable that is <code>0</code> if observation has value <code>male</code>, and <code>1</code> if observation has value <code>female</code>. This variable can then be used in the regression equation.</p>
+<p>Take note that <code>lm()</code> automatically creates dummy variables when given qualitative predictors.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> insert regression equation</span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">credit_model &lt;-<span class="st"> </span><span class="kw">lm</span>(balance <span class="op">~</span><span class="st"> </span>gender, <span class="dt">data =</span> tidy_credit)
+tidy_credit_model &lt;-<span class="st"> </span>broom<span class="op">::</span><span class="kw">tidy</span>(credit_model)
+tidy_credit_model</code></pre>
+<pre><code>## # A tibble: 2 x 5
+##   term         estimate std.error statistic  p.value
+##   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)     510.       33.1    15.4   2.91e-42
+## 2 genderFemale     19.7      46.1     0.429 6.69e- 1</code></pre>
+<p>How to interpret this: males are estimated to carry a balance of <code>$510</code>. Meanwhile, females are expected to carry an additional <span class="math inline">\(19.70\)</span> in debt. Notice the p-value is very high, indicating there is no significant difference between genders.</p>
+</div>
+</div>
+<div id="qualitative-predictors-with-more-than-two-levels" class="section level3">
+<h3><span class="header-section-number">3.3.4</span> Qualitative Predictors with More than Two Levels</h3>
+<p>A single dummy variable can not represent all the possible values. We can create additional dummy variables for this.</p>
+<p>Let’s make a dummy variable from <code>ethnicity</code> column, which takes three distinct values. This will yield two dummy variables.</p>
+<pre class="sourceCode r"><code class="sourceCode r">tidy_credit <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">distinct</span>(ethnicity)</code></pre>
+<pre><code>## # A tibble: 3 x 1
+##   ethnicity       
+##   &lt;fct&gt;           
+## 1 Caucasian       
+## 2 Asian           
+## 3 African American</code></pre>
+<p><code>fastDummies</code> package will be used to generate these. In this case, <code>African American</code> serves as the baseline, and dummy variables are created for <code>Caucasian</code> and <code>Asian</code>. <strong>There will always be one fewer dummy variable than the number of levels.</strong></p>
+<pre class="sourceCode r"><code class="sourceCode r">tidy_credit_dummy &lt;-<span class="st"> </span>tidy_credit <span class="op">%&gt;%</span>
+<span class="st">  </span>fastDummies<span class="op">::</span><span class="kw">dummy_cols</span>(<span class="dt">select_columns =</span> <span class="st">&quot;ethnicity&quot;</span>, <span class="dt">remove_first_dummy =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span>janitor<span class="op">::</span><span class="kw">clean_names</span>()
+
+tidy_credit_dummy <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(<span class="kw">starts_with</span>(<span class="st">&quot;ethnicity&quot;</span>))</code></pre>
+<pre><code>## # A tibble: 400 x 3
+##   ethnicity ethnicity_asian ethnicity_caucasian
+##   &lt;fct&gt;               &lt;int&gt;               &lt;int&gt;
+## 1 Caucasian               0                   1
+## 2 Asian                   1                   0
+## 3 Asian                   1                   0
+## 4 Asian                   1                   0
+## 5 Caucasian               0                   1
+## 6 Caucasian               0                   1
+## # … with 394 more rows</code></pre>
+<p>We can again run the model with newly created dummy variables. Keep in mind, prior creation is not necessary, as <code>lm</code> will generate them automatically.</p>
+<pre class="sourceCode r"><code class="sourceCode r">ethnicity_model &lt;-<span class="st"> </span><span class="kw">lm</span>(balance <span class="op">~</span><span class="st"> </span>ethnicity_asian <span class="op">+</span><span class="st"> </span>ethnicity_caucasian, <span class="dt">data =</span> tidy_credit_dummy)
+broom<span class="op">::</span><span class="kw">tidy</span>(ethnicity_model)</code></pre>
+<pre><code>## # A tibble: 3 x 5
+##   term                estimate std.error statistic  p.value
+##   &lt;chr&gt;                  &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)            531.       46.3    11.5   1.77e-26
+## 2 ethnicity_asian        -18.7      65.0    -0.287 7.74e- 1
+## 3 ethnicity_caucasian    -12.5      56.7    -0.221 8.26e- 1</code></pre>
+</div>
+<div id="extensions-of-the-linear-model" class="section level3">
+<h3><span class="header-section-number">3.3.5</span> Extensions of the Linear Model</h3>
+<p>The linear regression model makes highly restrictive assumptions. Two of the most important are that the relationship between predictors and response are <em>additive</em> and <em>linear</em>.</p>
+<p>Additive means that the effect of changes in a predictor <span class="math inline">\(X_j\)</span> on the response <span class="math inline">\(Y\)</span> is independet of the values of the other predictors. Linear means that the the change in response <span class="math inline">\(Y\)</span> to a one-unit change in <span class="math inline">\(X_j\)</span> is constant, regardless of the value of <span class="math inline">\(X_j\)</span>.</p>
+<p>Here are some common approaches of extending the linear model.</p>
+<div id="removing-the-additive-assumption" class="section level4">
+<h4><span class="header-section-number">3.3.5.1</span> Removing the Additive Assumption</h4>
+<p>The additive property assumes that predictors slope terms are independent of the values of other predictors. However, this is not always the case. Imagine an advertising scenario where the effectiveness of TV spend is affected by the radio spend. This is known as an <em>interaction</em> effect. Imagine we have a model with two predictors, but they are not strictly additive. We could extend this model by adding an <em>interaction term</em> to it.</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(Y = \beta_0 + \beta_1X_1 + \beta_2X_2 + \beta_3X_1X_2 + \epsilon\)</span>
+</p>
+</div>
+<p>Now, the effect of <span class="math inline">\(X_1\)</span> on <span class="math inline">\(Y\)</span> is no longer constant; adjusting <span class="math inline">\(X_2\)</span> will change the impact of <span class="math inline">\(X_1\)</span> on <span class="math inline">\(Y\)</span>.</p>
+<p>An easy scenario is the productivity of a factory. Adding lines and workers both would increase productivity. However, the effect is not purely additive. Adding lines without having workers to operate them would not increase productivity. There is an interaction between workers and lines that needs to be accounted for.</p>
+<p>The <em>hierarchical principle</em> states that <em>if we include an interaction in a model, we should also include the main effects, even if the p-values associated with their coefficients are not significant</em>.</p>
+<p>It’s also possible for qualitative and quantitative variables to interact with each other. We will again use the <code>Credit</code> data set. Suppose we wish to predict <code>balance</code> using the <code>income</code> (quantitative) and <code>student</code> (qualitative) variables.</p>
+<p>First, let’s take a look at what it looks like to fit this model without an interaction term. Both <code>income</code> and <code>student</code> are significant.</p>
+<pre class="sourceCode r"><code class="sourceCode r">lm_credit &lt;-<span class="st"> </span><span class="kw">lm</span>(balance <span class="op">~</span><span class="st"> </span>income <span class="op">+</span><span class="st"> </span>student, <span class="dt">data =</span> tidy_credit)
+lm_credit <span class="op">%&gt;%</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">tidy</span>()</code></pre>
+<pre><code>## # A tibble: 3 x 5
+##   term        estimate std.error statistic  p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)   211.      32.5        6.51 2.34e-10
+## 2 income          5.98     0.557     10.8  7.82e-24
+## 3 studentYes    383.      65.3        5.86 9.78e- 9</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">tidy_credit <span class="op">%&gt;%</span>
+<span class="st">  </span>modelr<span class="op">::</span><span class="kw">add_predictions</span>(lm_credit) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> income, <span class="dt">y =</span> pred, <span class="dt">colour =</span> student)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> balance, <span class="dt">colour =</span> student), <span class="dt">fill =</span> <span class="st">&quot;grey&quot;</span>, <span class="dt">pch =</span> <span class="dv">21</span>, <span class="dt">alpha =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_minimal</span>()</code></pre>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-18-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>It’s a pretty good fit, and because there is no interaction terms, the lines are parallel. Notice how many more observations there are to fit on for the non-students.</p>
+<p>Now, let’s add an interaction term.</p>
+<pre class="sourceCode r"><code class="sourceCode r">lm_credit_int &lt;-<span class="st"> </span><span class="kw">lm</span>(balance <span class="op">~</span><span class="st"> </span>income <span class="op">+</span><span class="st"> </span>student <span class="op">+</span><span class="st"> </span>income <span class="op">*</span><span class="st"> </span>student, <span class="dt">data =</span> tidy_credit)
+lm_credit_int <span class="op">%&gt;%</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">tidy</span>()</code></pre>
+<pre><code>## # A tibble: 4 x 5
+##   term              estimate std.error statistic  p.value
+##   &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)         201.      33.7        5.95 5.79e- 9
+## 2 income                6.22     0.592     10.5  6.34e-23
+## 3 studentYes          477.     104.         4.57 6.59e- 6
+## 4 income:studentYes    -2.00     1.73      -1.15 2.49e- 1</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">tidy_credit <span class="op">%&gt;%</span>
+<span class="st">  </span>modelr<span class="op">::</span><span class="kw">add_predictions</span>(lm_credit_int) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> income, <span class="dt">y =</span> pred, <span class="dt">colour =</span> student)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> balance, <span class="dt">colour =</span> student), <span class="dt">fill =</span> <span class="st">&quot;grey&quot;</span>, <span class="dt">pch =</span> <span class="dv">21</span>, <span class="dt">alpha =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_minimal</span>()</code></pre>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-20-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>The model now takes into account how <code>income</code> and <code>student</code> interact with each other. Interpreting the chart suggests that increases in <code>income</code> among students has a smaller effect on balance than it does to non-students.</p>
+<p>Does it fit better?</p>
+<pre class="sourceCode r"><code class="sourceCode r">models &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">without_interaction =</span> lm_credit, <span class="dt">with_interaction =</span> lm_credit_int)
+purrr<span class="op">::</span><span class="kw">map_df</span>(models, broom<span class="op">::</span>glance, <span class="dt">.id =</span> <span class="st">&quot;model&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(model, r.squared, statistic, p.value, df)</code></pre>
+<pre><code>## # A tibble: 2 x 5
+##   model               r.squared statistic  p.value    df
+##   &lt;chr&gt;                   &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt;
+## 1 without_interaction     0.277      76.2 9.64e-29     3
+## 2 with_interaction        0.280      51.3 4.94e-28     4</code></pre>
+<p>Not by much. The model with the interaction term has a slightly higher <span class="math inline">\(R^2\)</span>, but the added complexity of the model, combined with the small number of observations of students in the dataset, suggests overfitting.</p>
+</div>
+<div id="non-linear-relationships" class="section level4">
+<h4><span class="header-section-number">3.3.5.2</span> Non-linear Relationships</h4>
+<p>The linear model assumes a linear relationship between the response and predictors. We can extend the linear model to accomodate non-linear relationships using <em>polynomial regression</em>.</p>
+<p>A way to incorporate non-linear associations into a linear model is to include transformed versions of the predictor in the model. For example, within the <code>Auto</code> dataset, predicting <code>mpg</code> with a second-order polynomial of <code>horsepower</code> would look like this:</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(mpg = \beta_0 + \beta_1horsepower + \beta_2horsepower^2 + \epsilon\)</span>
+</p>
+</div>
+<p>Let’s look at the <code>Auto</code> dataset with models of different polynomial degrees overlaid. Clearly, the data is not linear, exhibiting a <em>quadratic</em> shape.</p>
+<pre class="sourceCode r"><code class="sourceCode r">tidy_auto &lt;-<span class="st"> </span>ISLR<span class="op">::</span>Auto <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>()
+
+lm_auto &lt;-<span class="st"> </span><span class="kw">lm</span>(mpg <span class="op">~</span><span class="st"> </span>horsepower, <span class="dt">data =</span> tidy_auto)
+lm_auto2 &lt;-<span class="st"> </span><span class="kw">lm</span>(mpg <span class="op">~</span><span class="st"> </span><span class="kw">poly</span>(horsepower, <span class="dv">2</span>), <span class="dt">data =</span> tidy_auto)
+lm_auto5 &lt;-<span class="st"> </span><span class="kw">lm</span>(mpg <span class="op">~</span><span class="st"> </span><span class="kw">poly</span>(horsepower, <span class="dv">5</span>), <span class="dt">data =</span> tidy_auto)
+
+tidy_auto <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">gather_predictions</span>(lm_auto, lm_auto2, lm_auto5) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> horsepower, <span class="dt">y =</span> mpg)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">3</span>, <span class="dt">pch =</span> <span class="dv">21</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> pred, <span class="dt">colour =</span> model), <span class="dt">size =</span> <span class="fl">1.5</span>)</code></pre>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-22-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>The second-order polynomial does a good job of fitting the data, while the fifth-order seems to be unnecessary. The model performance reflects that:</p>
+<pre class="sourceCode r"><code class="sourceCode r">models &lt;-<span class="st"> </span><span class="kw">list</span>(
+  <span class="dt">linear =</span> lm_auto,
+  <span class="dt">second_order =</span> lm_auto2,
+  <span class="dt">fifth_order =</span> lm_auto5
+)
+purrr<span class="op">::</span><span class="kw">map_df</span>(models, broom<span class="op">::</span>glance, <span class="dt">.id =</span> <span class="st">&quot;model&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(model, r.squared, statistic, p.value, df)</code></pre>
+<pre><code>## # A tibble: 3 x 5
+##   model        r.squared statistic  p.value    df
+##   &lt;chr&gt;            &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt;
+## 1 linear           0.606      600. 7.03e-81     2
+## 2 second_order     0.688      428. 5.40e-99     3
+## 3 fifth_order      0.697      177. 1.16e-97     6</code></pre>
+<p>The second-order model has significantly higher R^2, and only one more degree of freedom.</p>
+<p>This approach of extending linear models to accomodate non-linear relationships is known as polynomial regression.</p>
+</div>
+</div>
+<div id="potential-problems" class="section level3">
+<h3><span class="header-section-number">3.3.6</span> Potential Problems</h3>
+<p>Many problems can occur when fitting a linear model to a data set.</p>
+<ol style="list-style-type: decimal">
+<li>Non-linearity of the response-predictor relationship.</li>
+<li>Correlation of error terms.</li>
+<li>Non-constant variance of error terms</li>
+<li>Outliers</li>
+<li>High-leverage points</li>
+<li>Collinearity</li>
+</ol>
+<div id="non-linearity-of-the-data" class="section level4">
+<h4><span class="header-section-number">3.3.6.1</span> 1. Non-linearity of the data</h4>
+<p>The linear model assumes a straight-line relationship between the predictors and the response. If this is not the case, the inference and prediction accuracy of the fit are suspect.</p>
+<p>We can use a <em>residual plot</em> to visualize when a linear model is placed on to a non-linear relationship. For a simple linear regression model, we plot the residuals <span class="math inline">\(e_i = y_i - \hat{y}_i\)</span> compared to the predictor. For multiple regression, we plot the residuals versus the predicted values <span class="math inline">\(\hat{y}_i\)</span>. If the relationship is linear, the residuals should exhibit a random pattern.</p>
+<p>Let’s take the <code>Auto</code> dataset and plot the residuals compared to <code>horsepower</code> for each model we fit. Notice in the model containing no quadratic term is U-shaped, indicating a non-linear relationship. The model that contains <code>horsepower^2</code> exhibits little pattern in the residuals, indicating a better fit.</p>
+<pre class="sourceCode r"><code class="sourceCode r">tidy_auto <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">gather_predictions</span>(lm_auto, lm_auto2, lm_auto5) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> horsepower, <span class="dt">y =</span> mpg<span class="op">-</span>pred, <span class="dt">colour=</span>model)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">3</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">size =</span> <span class="fl">1.5</span>, <span class="dt">colour=</span><span class="st">&quot;grey&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>model, <span class="dt">nrow=</span><span class="dv">3</span>)</code></pre>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-24-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>If the residual plot indicates that there non-linear associations in the data, a simple approach is to use non-linear transofmrations of the predictors.</p>
+</div>
+<div id="correlation-of-error-terms" class="section level4">
+<h4><span class="header-section-number">3.3.6.2</span> 2. Correlation of Error Terms</h4>
+<p>The linear regression model assumes that the error terms <span class="math inline">\(\epsilon_1,\epsilon_2,...,\epsilon_n\)</span> are uncorrelated.</p>
+<p>This means that for a given error term <span class="math inline">\(e_i\)</span>, no information is provided about the value <span class="math inline">\(e_{i+1}\)</span>. The standard errors that are computed for the estimated regression coefficients are based on this assumption.</p>
+<p>If there is a correlation among the error terms, than the estimated standard errors will tend to underestimate the true standard errors, producing confidence and prediction intervals narrower than they should be. Given the incorrect assumption, a 95% confidence interval may have a much lower probability than 0.95 of containing the true value of the parameter. P-values would also be lower than they should be, giving us an unwarranted sense of confidence in our model.</p>
+<p>These correlations occur frequently in <em>time series</em> data, which consists of observations obtained at discrete points in time. In many cases, observations that are obtained at adjacent time periods points will have positively correlated errors.</p>
+<p>We can again plot the residuals as a function of time to see if this is the case. If no correlation, there should be no pattern in the residuals. If error terms exhibit correlation, we may see that adjacent residuals exhibit similar values, known as <em>tracking</em>.</p>
+<p>This can also happen outside of time series data. The assumption of uncorrelated errors is extremely important for linear regression as well as other statistical methods.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> add a residual plot for time series with correlated error terms, similar to pg. 95</span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">tidy_sunspot &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">y=</span><span class="kw">as.matrix</span>(sunspot.year), <span class="dt">ds=</span><span class="kw">time</span>(sunspot.year)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>()
+tidy_sunspot
+sunspot_lm &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_sunspot, y <span class="op">~</span><span class="st"> </span>ds)
+tidy_sunspot <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_predictions</span>(sunspot_lm) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>ds, <span class="dt">y=</span>pred<span class="op">-</span>y)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&quot;lm&quot;</span>, <span class="dt">se =</span> <span class="ot">FALSE</span>)</code></pre>
+</div>
+<div id="non-constant-variance-of-error-terms" class="section level4">
+<h4><span class="header-section-number">3.3.6.3</span> 3. Non-constant Variance of Error Terms</h4>
+<p>Another assumption of linear regression is that the error terms have a constant variance, <span class="math inline">\(Var(\epsilon_i) = \sigma^2\)</span>. Standard errors, confidence intervals, and hypothesis tests rely upon this assumption.</p>
+<p>It is common for error terms to exhiti non-constant variance. Non-constant variance in the errors, also known as <em>heteroscedasticity</em>, can be identified from a <em>funnel shape</em> in the residual plot.</p>
+<p>Let’s take a look at the <code>MASS::cats</code> dataset, which contains observations of various cats sex, body weight, and heart weight. We fit a linear model to it, and then plot the residuals.</p>
+<p>I’ve added a linear fit to the residual plot itself. Observe how the error terms begin to funnel out as <code>bwt</code> increases, indicating non-constant variance of the error terms.</p>
+<pre class="sourceCode r"><code class="sourceCode r">tidy_cats &lt;-<span class="st"> </span>MASS<span class="op">::</span>cats <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span>janitor<span class="op">::</span><span class="kw">clean_names</span>()
+lm_cats &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_cats, hwt <span class="op">~</span><span class="st"> </span>bwt)
+
+tidy_cats <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_predictions</span>(lm_cats) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> bwt, <span class="dt">y =</span> hwt <span class="op">-</span><span class="st"> </span>pred)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&quot;lm&quot;</span>, <span class="dt">level =</span> <span class="fl">0.99</span>)</code></pre>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-26-1.png" width="576" style="display: block; margin: auto;" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> add OLS method to this</span>
+<span class="co"># get weights of each response</span>
+
+<span class="co"># fit a linear model on the residuals</span>
+tidy_cats_res &lt;-<span class="st"> </span>tidy_cats <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">add_predictions</span>(lm_cats) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">res =</span> hwt <span class="op">-</span><span class="st"> </span>pred) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(bwt, hwt, res)
+lm_cats_res &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_cats_res, res <span class="op">~</span><span class="st"> </span>hwt)
+
+cat_weights &lt;-<span class="st"> </span>tidy_cats_res <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_predictions</span>(lm_cats_res) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">res_var =</span> (res<span class="op">-</span>pred)<span class="op">^</span><span class="dv">2</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">weight =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span>res_var) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">pull</span>(weight)
+
+lm_cats_weights &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_cats, hwt <span class="op">~</span><span class="st"> </span>bwt, <span class="dt">weights =</span> cat_weights)
+
+tidy_cats <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">gather_predictions</span>(lm_cats, lm_cats_weights) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> bwt, <span class="dt">y =</span> hwt <span class="op">-</span><span class="st"> </span>pred, <span class="dt">colour =</span> model)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> hwt<span class="op">-</span>pred, <span class="dt">colour =</span> model)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&quot;lm&quot;</span>)</code></pre>
+<p>When this occurs, there a few ways to remedy it. You could transform the response <span class="math inline">\(Y\)</span> using a function such as <span class="math inline">\(logY\)</span> or <span class="math inline">\(\sqrt{Y}\)</span>. If we have a good idea of the variance of each response, we could fit our model using <em>weighted least squares</em>, which weights proportional to the inverse of the expected variance of an observation.</p>
+</div>
+<div id="outliers" class="section level4">
+<h4><span class="header-section-number">3.3.6.4</span> 4. Outliers</h4>
+<p>An <em>outlier</em> is a point for which <span class="math inline">\(y_i\)</span> is far from the value predicted by the model. These can arise for a variety of reasons, such as incorrect recording of an observation during data collection.</p>
+<p>For the <code>msleep</code> dataset below, which contains data on mammal sleep durations, I’ve highlighted two observations that most would consider outliers. This is for the <code>African elephant</code> and <code>Asian elephant</code> mammals, who’s bodyweights are far and away from the rest of mammals. There are others that could be considered outliers as well. Identifying outliers is an often arbitrary process.</p>
+<pre class="sourceCode r"><code class="sourceCode r">msleep <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> awake, <span class="dt">y =</span> bodywt, <span class="dt">colour =</span> name)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span>gghighlight<span class="op">::</span><span class="kw">gghighlight</span>(bodywt<span class="op">&gt;</span><span class="dv">2000</span>)</code></pre>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-28-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>Let’s fit a linear model to predict body weight from how long the animal is awake.</p>
+<p>Notice how the data that maintains the elephant observations significantly affects the slope, drawing the regression line away from the majority of observations.</p>
+<pre class="sourceCode r"><code class="sourceCode r">lm_sleep &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> msleep, bodywt <span class="op">~</span><span class="st"> </span>awake)
+lm_sleep_filtered &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> msleep <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(name <span class="op">!=</span><span class="st"> &#39;African elephant&#39;</span>), bodywt <span class="op">~</span><span class="st"> </span>awake)
+msleep <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">gather_predictions</span>(lm_sleep, lm_sleep_filtered) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> awake, <span class="dt">y =</span> bodywt)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">pch=</span><span class="dv">21</span>, <span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> pred, <span class="dt">colour =</span> model), <span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_colour_viridis_d</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_minimal</span>()</code></pre>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-29-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>The model excluding the elephant observations has a significantly higher <span class="math inline">\(R^2\)</span>, which indicates a better fit.</p>
+<pre class="sourceCode r"><code class="sourceCode r">models &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">with_outliers =</span> lm_sleep,
+               <span class="dt">without_outliers =</span> lm_sleep_filtered)
+purrr<span class="op">::</span><span class="kw">map_df</span>(models, broom<span class="op">::</span>glance, <span class="dt">.id =</span> <span class="st">&quot;model&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(model, r.squared, statistic, p.value, df)</code></pre>
+<pre><code>## # A tibble: 2 x 5
+##   model            r.squared statistic  p.value    df
+##   &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt;
+## 1 with_outliers       0.0973      8.73 0.00409      2
+## 2 without_outliers    0.142      13.3  0.000473     2</code></pre>
+<p>Another way of handling an outlier is transforming the predictor. Upon inspection of the scatterplot, it becomes clear that the relationship between <code>bodywt</code> and <code>awake</code> is not linear. If we take the same dataset and apply a <code>log</code> function to response variable <code>bodywt</code>, we see that the outliers no longer exists.</p>
+<pre class="sourceCode r"><code class="sourceCode r">msleep <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> awake, <span class="dt">y =</span> <span class="kw">log</span>(bodywt))) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>()</code></pre>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-31-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>The model that uses <code>log(bodywt)</code> as the response also has better performance than both models above.</p>
+<pre class="sourceCode r"><code class="sourceCode r">lm_sleep_log &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> msleep, <span class="kw">log</span>(bodywt) <span class="op">~</span><span class="st"> </span>awake)
+lm_sleep_log <span class="op">%&gt;%</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">glance</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(r.squared, statistic, p.value, df)</code></pre>
+<pre><code>## # A tibble: 1 x 4
+##   r.squared statistic      p.value    df
+##       &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt; &lt;int&gt;
+## 1     0.324      38.7 0.0000000202     2</code></pre>
+</div>
+<div id="high-leverage-points" class="section level4">
+<h4><span class="header-section-number">3.3.6.5</span> 5. High Leverage Points</h4>
 
 </div>
 </div>

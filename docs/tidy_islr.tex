@@ -124,7 +124,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2019-08-06}
+    \date{2019-10-18}
 
 \usepackage{booktabs}
 \usepackage{amsthm}
@@ -169,12 +169,13 @@ We will utilize the \texttt{tidyverse} ecosystem to tackle the exercises and lab
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{require}\NormalTok{(ISLR)}
-\KeywordTok{require}\NormalTok{(MASS)}
-\KeywordTok{require}\NormalTok{(tidyverse)}
-\KeywordTok{require}\NormalTok{(knitr)}
-\KeywordTok{require}\NormalTok{(kableExtra)}
-\KeywordTok{require}\NormalTok{(modelr)}
+\KeywordTok{library}\NormalTok{(ISLR)}
+\KeywordTok{library}\NormalTok{(MASS)}
+\KeywordTok{library}\NormalTok{(tidyverse)}
+\KeywordTok{library}\NormalTok{(knitr)}
+\KeywordTok{library}\NormalTok{(kableExtra)}
+\KeywordTok{library}\NormalTok{(modelr)}
+\KeywordTok{library}\NormalTok{(broom)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -527,14 +528,14 @@ Below is a reproducible example in which we create a tibble, save it as a .txt f
 
 \begin{verbatim}
 ## # A tibble: 100 x 3
-##       x     y z     
-##   <dbl> <dbl> <chr> 
-## 1  23.0  50.1 google
-## 2  23.7  50.3 google
-## 3  25.8  48.9 google
-## 4  24.5  51.5 google
-## 5  24.6  48.2 google
-## 6  23.8  49.8 google
+##       x     y z    
+##   <dbl> <dbl> <chr>
+## 1  23.9  50.5 uber 
+## 2  25.3  49.2 uber 
+## 3  24.6  48.6 uber 
+## 4  24.9  51.0 uber 
+## 5  26.4  49.1 uber 
+## 6  24.8  50.7 uber 
 ## # ... with 94 more rows
 \end{verbatim}
 
@@ -1050,6 +1051,16 @@ The R exercises are pretty basic after this. I am going to skip them for now.
 
 Linear regression is a simple yet very powerful approach in statistical learning. It is important to have a strong understanding of it before moving on to more complex learning methods.
 
+\hypertarget{packages-used-in-this-chapter}{%
+\section{Packages used in this chapter}\label{packages-used-in-this-chapter}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(tidyverse)}
+\KeywordTok{library}\NormalTok{(modelr)}
+\end{Highlighting}
+\end{Shaded}
+
 \hypertarget{simple-linear-regression}{%
 \section{Simple Linear Regression}\label{simple-linear-regression}}
 
@@ -1126,14 +1137,14 @@ The population regression line captures the best linear approximation to the tru
   \DataTypeTok{x =} \DecValTok{1}\OperatorTok{:}\DecValTok{100} \OperatorTok{+}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(}\DataTypeTok{n =} \DecValTok{200}\NormalTok{, }\DataTypeTok{mean =} \DecValTok{100}\NormalTok{, }\DataTypeTok{sd =} \DecValTok{15}\NormalTok{),}
   \DataTypeTok{err =} \KeywordTok{rnorm}\NormalTok{(}\DecValTok{200}\NormalTok{, }\DataTypeTok{sd =} \DecValTok{50}\NormalTok{),}
   \DataTypeTok{sim_y =}\NormalTok{ b0 }\OperatorTok{+}\StringTok{ }\NormalTok{b1 }\OperatorTok{*}\StringTok{ }\NormalTok{x,}
-  \DataTypeTok{true_y =}\NormalTok{ b0 }\OperatorTok{+}\StringTok{ }\NormalTok{b1}\OperatorTok{*}\NormalTok{x }\OperatorTok{+}\StringTok{ }\NormalTok{err}
+  \DataTypeTok{true_y =}\NormalTok{ b0 }\OperatorTok{+}\StringTok{ }\NormalTok{b1 }\OperatorTok{*}\StringTok{ }\NormalTok{x }\OperatorTok{+}\StringTok{ }\NormalTok{err}
 \NormalTok{)}
 
 \CommentTok{# generate 10 training sets}
 \NormalTok{y <-}\StringTok{ }\KeywordTok{tibble}\NormalTok{()}
 \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{) \{}
-\NormalTok{x <-}\StringTok{ }\KeywordTok{sample_frac}\NormalTok{(sim_linear, }\FloatTok{0.1}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{iter_set =}\NormalTok{ i)}
-\NormalTok{y <-}\StringTok{ }\NormalTok{y }\OperatorTok{%>%}\StringTok{ }\KeywordTok{bind_rows}\NormalTok{(x)}
+\NormalTok{  x <-}\StringTok{ }\KeywordTok{sample_frac}\NormalTok{(sim_linear, }\FloatTok{0.1}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{iter_set =}\NormalTok{ i)}
+\NormalTok{  y <-}\StringTok{ }\NormalTok{y }\OperatorTok{%>%}\StringTok{ }\KeywordTok{bind_rows}\NormalTok{(x)}
 \NormalTok{\}}
 
 \CommentTok{# apply linear model to each sample}
@@ -1144,25 +1155,31 @@ The population regression line captures the best linear approximation to the tru
   \KeywordTok{lm}\NormalTok{(true_y }\OperatorTok{~}\StringTok{ }\NormalTok{x, }\DataTypeTok{data =}\NormalTok{ df)}
 \NormalTok{\}}
 \NormalTok{by_iter <-}\StringTok{ }\NormalTok{by_iter }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{model =} \KeywordTok{map}\NormalTok{(data, lm_model),}
-         \DataTypeTok{preds =} \KeywordTok{map2}\NormalTok{(data, model, add_predictions))}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}
+    \DataTypeTok{model =} \KeywordTok{map}\NormalTok{(data, lm_model),}
+    \DataTypeTok{preds =} \KeywordTok{map2}\NormalTok{(data, model, add_predictions)}
+\NormalTok{  )}
 
 \CommentTok{# extract predictions}
 \NormalTok{preds <-}\StringTok{ }\KeywordTok{unnest}\NormalTok{(by_iter, preds)}
 
 \KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ sim_linear, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{y =}\NormalTok{ true_y)) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{alpha =} \DecValTok{1}\OperatorTok{/}\DecValTok{3}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{alpha =} \DecValTok{1} \OperatorTok{/}\StringTok{ }\DecValTok{3}\NormalTok{) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ preds, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{y =}\NormalTok{ pred, }\DataTypeTok{colour =}\NormalTok{ iter_set, }\DataTypeTok{group =}\NormalTok{ iter_set), }\DataTypeTok{linetype =} \StringTok{"F1"}\NormalTok{, }\DataTypeTok{size =} \FloatTok{.75}\NormalTok{) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ sim_y), }\DataTypeTok{colour =} \StringTok{"red"}\NormalTok{, }\DataTypeTok{size =} \FloatTok{1.5}\NormalTok{) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{theme_minimal}\NormalTok{() }\OperatorTok{+}
-\StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position =} \StringTok{"none"}\NormalTok{, }\DataTypeTok{panel.grid.minor =} \KeywordTok{element_blank}\NormalTok{(),}
-        \DataTypeTok{panel.grid.major =} \KeywordTok{element_blank}\NormalTok{(), }\DataTypeTok{axis.line =} \KeywordTok{element_line}\NormalTok{(}\DataTypeTok{colour =} \StringTok{"grey92"}\NormalTok{)) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title =} \StringTok{"Each least squares line provides a reasonable estimate"}\NormalTok{,}
-       \DataTypeTok{y =} \StringTok{"y"}\NormalTok{)}
+\StringTok{  }\KeywordTok{theme}\NormalTok{(}
+    \DataTypeTok{legend.position =} \StringTok{"none"}\NormalTok{, }\DataTypeTok{panel.grid.minor =} \KeywordTok{element_blank}\NormalTok{(),}
+    \DataTypeTok{panel.grid.major =} \KeywordTok{element_blank}\NormalTok{(), }\DataTypeTok{axis.line =} \KeywordTok{element_line}\NormalTok{(}\DataTypeTok{colour =} \StringTok{"grey92"}\NormalTok{)}
+\NormalTok{  ) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}
+    \DataTypeTok{title =} \StringTok{"Each least squares line provides a reasonable estimate"}\NormalTok{,}
+    \DataTypeTok{y =} \StringTok{"y"}
+\NormalTok{  )}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics{tidy_islr_files/figure-latex/unnamed-chunk-9-1} \end{center}
+\begin{center}\includegraphics{tidy_islr_files/figure-latex/unnamed-chunk-10-1} \end{center}
 
 The chart above demonstrates the population regression line (red) surrounded by ten different estimates of the least squares line. Notice how every least squares line (shades of blue) is different. This is because each one is generated from a random sample pulled from the simulated data. For a real-world comparison, the simulated data would be the entire population data which is often impossible to obtain. The observations used to generate the least squares line would be the sample data we have access to. In the same way a sample mean can provide a reasonable estimate of the population mean, fitting a least squares line can provide a reasonable estimate of the population regression line.
 
@@ -1303,6 +1320,12 @@ In simple terms, if \(H_o\) were true and all of the predictors have regression 
 
 How large does the F-statistic need to be to reject the null hypothesis? This depends on \(n\) and \(p\). As \(n\) grows, F-statistics closer to 1 may provide sufficient evidence to reject \(H_o\). If \(H_o\) is true and \(\epsilon_i\) have a normal distribution, the F-statistic follows an F-distribution. We can compute the p-value for any value of \(n\) and \(p\) associated with an F-statistic.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# }\AlertTok{TODO}\CommentTok{ remove this section?}
+\end{Highlighting}
+\end{Shaded}
+
 Sometimes we want to test whether a particular subset of \(q\) of the coefficients are zero.
 
 The null hypothesis could be
@@ -1316,6 +1339,595 @@ Then, the F-statistic is,
 \(F = \frac{(RSS_0 - RSS)/q}{RSS(n-p-1)}\)
 
 We are testing a model without the \(q\) predictors and seeing how it compares to the original model containing all the predictors.
+
+Why do we need to look at overall F-statistics if we have individual p-values of the predictors? There are scenarios where individual predictors, by chance, will have \emph{small} p-values, even in the absence of any true association. This could lead us to incorrectly diagnose a relationship.
+
+The overall F-statistic does not suffer this problem because it adjusts for the number of predictors.
+
+The F-statistic approach works when the number of predictors \(p\) is small compared to \(n\). Sometimes, we have situations where \(p > n\). In this situation, ther eare more coefficients \(\beta_j\) to estimate than observations from which to estimate them. Such situations requires different approaches that we haven't discussed yet (see chapter 6)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# }\AlertTok{TODO}\CommentTok{ add chapter 6 link}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{deciding-on-important-variables}{%
+\subsubsection{Deciding on Important Variables}\label{deciding-on-important-variables}}
+
+The first thing we do in a multiple regression is to compute the F-statistic and determine that at least one of the predictors is related to the response.
+
+The task of determining which predictors are associated with the response is referred to as \emph{variable selection}. We could try out a lot of different models with combinations of predictors, \(2^p\), but this is not practical as \(p\) grows.
+
+There are three ways to approach this task:
+
+\begin{itemize}
+\item
+  \emph{Forward selection}: we begin with the \emph{null model}, which contains an intercept but no predictors. We then fit \(p\) simple linear regressions and add to the null model the variable that results in the lowest RSS. We then repeat the process to determine the lowest RSS of the now two-variable model, continuing until some stopping rule is satisfied.
+\item
+  \emph{Backward selection}: Start with all the variables in the model, remove the variable with the largest p-value. Then, for the new \((p - 1)\)-variable model, do the same. Continue until stopping rule is reached (for example, some p-value threshold)
+\item
+  \emph{Mixed selection}: Start with no variables, and proceed with forward selection. If any p-value of added variables pass a threshold once new predictors are added, we remove them. We continue the forward and backward until all variables in model have a sufficiently low p-value.
+\end{itemize}
+
+\hypertarget{model-fit}{%
+\subsubsection{Model Fit}\label{model-fit}}
+
+Two common methods of model fit are the \(RSE\) and \(R^2\), the fraction of variance explained.
+
+More on \(R^2\):
+
+\begin{itemize}
+\tightlist
+\item
+  Values closer to \texttt{1} indicate a better fit
+\item
+  Adding more variables can only increase it
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Adding variables that barely increase it can lead to overfitting
+  \end{itemize}
+\end{itemize}
+
+Plotting the model can also be useful.
+
+\hypertarget{predictions}{%
+\subsubsection{Predictions}\label{predictions}}
+
+Three sorts of uncertainty within a given model:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  The coefficient estimates \(\hat\beta_0 + \hat\beta_1...,\hat\beta_p\) are estimates for \(\beta_0 + \beta_1...,\beta_p\). This inaccuracy is part of the \emph{reducible error}. We can compute a confidence interval to determine how close \(\hat Y\) is to \(f(X)\).
+\item
+  \emph{Model bias} can result from the fact that we are fitting a linear approximation to the true surface of \(f(X)\).
+\item
+  Even if we knew \(f(X)\), we still have random error \(\epsilon\), which is the \emph{irreducible error}. We can use prediction intervals to estimate how far \(Y\) will differ from \(\hat Y\). These will always be larger than confidence intervals, because they incorporate both the reducible + irreducible error.
+\end{enumerate}
+
+\hypertarget{other-considerations-in-the-regression-model}{%
+\subsection{Other Considerations in the Regression Model}\label{other-considerations-in-the-regression-model}}
+
+So far, all predictors have been \emph{quantitative}. However, it is common to have \emph{qualitative} variables as well.
+
+Take a look at the \texttt{ISLR::Credit} dataset, which has a mix of both types.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tidy_credit <-}\StringTok{ }\NormalTok{ISLR}\OperatorTok{::}\NormalTok{Credit }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{as_tibble}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{janitor}\OperatorTok{::}\KeywordTok{clean_names}\NormalTok{()}
+\NormalTok{tidy_credit}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 400 x 12
+##      id income limit rating cards   age education gender student married
+##   <int>  <dbl> <int>  <int> <int> <int>     <int> <fct>  <fct>   <fct>  
+## 1     1   14.9  3606    283     2    34        11 " Mal~ No      Yes    
+## 2     2  106.   6645    483     3    82        15 Female Yes     Yes    
+## 3     3  105.   7075    514     4    71        11 " Mal~ No      No     
+## 4     4  149.   9504    681     3    36        11 Female No      No     
+## 5     5   55.9  4897    357     2    68        16 " Mal~ No      Yes    
+## 6     6   80.2  8047    569     4    77        10 " Mal~ No      No     
+## # ... with 394 more rows, and 2 more variables: ethnicity <fct>,
+## #   balance <int>
+\end{verbatim}
+
+\hypertarget{predictors-with-only-two-levels}{%
+\subsubsection{Predictors with only Two Levels}\label{predictors-with-only-two-levels}}
+
+Suppose we wish to investigate difference in credit card balance between males and females, ignoring all other variables. If a \emph{qualitative} variable (also known as a \emph{factor}) only has two possible values, then incorporating it into a model is easy. We can create a binomial dummy variable that takes on two values. For \texttt{gender}, this could be a variable that is \texttt{0} if observation has value \texttt{male}, and \texttt{1} if observation has value \texttt{female}. This variable can then be used in the regression equation.
+
+Take note that \texttt{lm()} automatically creates dummy variables when given qualitative predictors.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# }\AlertTok{TODO}\CommentTok{ insert regression equation}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{credit_model <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(balance }\OperatorTok{~}\StringTok{ }\NormalTok{gender, }\DataTypeTok{data =}\NormalTok{ tidy_credit)}
+\NormalTok{tidy_credit_model <-}\StringTok{ }\NormalTok{broom}\OperatorTok{::}\KeywordTok{tidy}\NormalTok{(credit_model)}
+\NormalTok{tidy_credit_model}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 2 x 5
+##   term         estimate std.error statistic  p.value
+##   <chr>           <dbl>     <dbl>     <dbl>    <dbl>
+## 1 (Intercept)     510.       33.1    15.4   2.91e-42
+## 2 genderFemale     19.7      46.1     0.429 6.69e- 1
+\end{verbatim}
+
+How to interpret this: males are estimated to carry a balance of \texttt{\$510}. Meanwhile, females are expected to carry an additional \(19.70\) in debt. Notice the p-value is very high, indicating there is no significant difference between genders.
+
+\hypertarget{qualitative-predictors-with-more-than-two-levels}{%
+\subsection{Qualitative Predictors with More than Two Levels}\label{qualitative-predictors-with-more-than-two-levels}}
+
+A single dummy variable can not represent all the possible values. We can create additional dummy variables for this.
+
+Let's make a dummy variable from \texttt{ethnicity} column, which takes three distinct values. This will yield two dummy variables.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tidy_credit }\OperatorTok{%>%}\StringTok{ }\KeywordTok{distinct}\NormalTok{(ethnicity)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 3 x 1
+##   ethnicity       
+##   <fct>           
+## 1 Caucasian       
+## 2 Asian           
+## 3 African American
+\end{verbatim}
+
+\texttt{fastDummies} package will be used to generate these. In this case, \texttt{African\ American} serves as the baseline, and dummy variables are created for \texttt{Caucasian} and \texttt{Asian}. \textbf{There will always be one fewer dummy variable than the number of levels.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tidy_credit_dummy <-}\StringTok{ }\NormalTok{tidy_credit }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{fastDummies}\OperatorTok{::}\KeywordTok{dummy_cols}\NormalTok{(}\DataTypeTok{select_columns =} \StringTok{"ethnicity"}\NormalTok{, }\DataTypeTok{remove_first_dummy =} \OtherTok{TRUE}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{janitor}\OperatorTok{::}\KeywordTok{clean_names}\NormalTok{()}
+
+\NormalTok{tidy_credit_dummy }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(}\KeywordTok{starts_with}\NormalTok{(}\StringTok{"ethnicity"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 400 x 3
+##   ethnicity ethnicity_asian ethnicity_caucasian
+##   <fct>               <int>               <int>
+## 1 Caucasian               0                   1
+## 2 Asian                   1                   0
+## 3 Asian                   1                   0
+## 4 Asian                   1                   0
+## 5 Caucasian               0                   1
+## 6 Caucasian               0                   1
+## # ... with 394 more rows
+\end{verbatim}
+
+We can again run the model with newly created dummy variables. Keep in mind, prior creation is not necessary, as \texttt{lm} will generate them automatically.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ethnicity_model <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(balance }\OperatorTok{~}\StringTok{ }\NormalTok{ethnicity_asian }\OperatorTok{+}\StringTok{ }\NormalTok{ethnicity_caucasian, }\DataTypeTok{data =}\NormalTok{ tidy_credit_dummy)}
+\NormalTok{broom}\OperatorTok{::}\KeywordTok{tidy}\NormalTok{(ethnicity_model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 3 x 5
+##   term                estimate std.error statistic  p.value
+##   <chr>                  <dbl>     <dbl>     <dbl>    <dbl>
+## 1 (Intercept)            531.       46.3    11.5   1.77e-26
+## 2 ethnicity_asian        -18.7      65.0    -0.287 7.74e- 1
+## 3 ethnicity_caucasian    -12.5      56.7    -0.221 8.26e- 1
+\end{verbatim}
+
+\hypertarget{extensions-of-the-linear-model}{%
+\subsection{Extensions of the Linear Model}\label{extensions-of-the-linear-model}}
+
+The linear regression model makes highly restrictive assumptions. Two of the most important are that the relationship between predictors and response are \emph{additive} and \emph{linear}.
+
+Additive means that the effect of changes in a predictor \(X_j\) on the response \(Y\) is independet of the values of the other predictors. Linear means that the the change in response \(Y\) to a one-unit change in \(X_j\) is constant, regardless of the value of \(X_j\).
+
+Here are some common approaches of extending the linear model.
+
+\hypertarget{removing-the-additive-assumption}{%
+\subsubsection{Removing the Additive Assumption}\label{removing-the-additive-assumption}}
+
+The additive property assumes that predictors slope terms are independent of the values of other predictors. However, this is not always the case. Imagine an advertising scenario where the effectiveness of TV spend is affected by the radio spend. This is known as an \emph{interaction} effect. Imagine we have a model with two predictors, but they are not strictly additive. We could extend this model by adding an \emph{interaction term} to it.
+
+\(Y = \beta_0 + \beta_1X_1 + \beta_2X_2 + \beta_3X_1X_2 + \epsilon\)
+
+Now, the effect of \(X_1\) on \(Y\) is no longer constant; adjusting \(X_2\) will change the impact of \(X_1\) on \(Y\).
+
+An easy scenario is the productivity of a factory. Adding lines and workers both would increase productivity. However, the effect is not purely additive. Adding lines without having workers to operate them would not increase productivity. There is an interaction between workers and lines that needs to be accounted for.
+
+The \emph{hierarchical principle} states that \emph{if we include an interaction in a model, we should also include the main effects, even if the p-values associated with their coefficients are not significant}.
+
+It's also possible for qualitative and quantitative variables to interact with each other. We will again use the \texttt{Credit} data set. Suppose we wish to predict \texttt{balance} using the \texttt{income} (quantitative) and \texttt{student} (qualitative) variables.
+
+First, let's take a look at what it looks like to fit this model without an interaction term. Both \texttt{income} and \texttt{student} are significant.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lm_credit <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(balance }\OperatorTok{~}\StringTok{ }\NormalTok{income }\OperatorTok{+}\StringTok{ }\NormalTok{student, }\DataTypeTok{data =}\NormalTok{ tidy_credit)}
+\NormalTok{lm_credit }\OperatorTok{%>%}\StringTok{ }\NormalTok{broom}\OperatorTok{::}\KeywordTok{tidy}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 3 x 5
+##   term        estimate std.error statistic  p.value
+##   <chr>          <dbl>     <dbl>     <dbl>    <dbl>
+## 1 (Intercept)   211.      32.5        6.51 2.34e-10
+## 2 income          5.98     0.557     10.8  7.82e-24
+## 3 studentYes    383.      65.3        5.86 9.78e- 9
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tidy_credit }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{modelr}\OperatorTok{::}\KeywordTok{add_predictions}\NormalTok{(lm_credit) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ income, }\DataTypeTok{y =}\NormalTok{ pred, }\DataTypeTok{colour =}\NormalTok{ student)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{size =} \FloatTok{1.5}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ balance, }\DataTypeTok{colour =}\NormalTok{ student), }\DataTypeTok{fill =} \StringTok{"grey"}\NormalTok{, }\DataTypeTok{pch =} \DecValTok{21}\NormalTok{, }\DataTypeTok{alpha =} \DecValTok{1} \OperatorTok{/}\StringTok{ }\DecValTok{2}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{tidy_islr_files/figure-latex/unnamed-chunk-18-1} \end{center}
+
+It's a pretty good fit, and because there is no interaction terms, the lines are parallel. Notice how many more observations there are to fit on for the non-students.
+
+Now, let's add an interaction term.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lm_credit_int <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(balance }\OperatorTok{~}\StringTok{ }\NormalTok{income }\OperatorTok{+}\StringTok{ }\NormalTok{student }\OperatorTok{+}\StringTok{ }\NormalTok{income }\OperatorTok{*}\StringTok{ }\NormalTok{student, }\DataTypeTok{data =}\NormalTok{ tidy_credit)}
+\NormalTok{lm_credit_int }\OperatorTok{%>%}\StringTok{ }\NormalTok{broom}\OperatorTok{::}\KeywordTok{tidy}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 4 x 5
+##   term              estimate std.error statistic  p.value
+##   <chr>                <dbl>     <dbl>     <dbl>    <dbl>
+## 1 (Intercept)         201.      33.7        5.95 5.79e- 9
+## 2 income                6.22     0.592     10.5  6.34e-23
+## 3 studentYes          477.     104.         4.57 6.59e- 6
+## 4 income:studentYes    -2.00     1.73      -1.15 2.49e- 1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tidy_credit }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{modelr}\OperatorTok{::}\KeywordTok{add_predictions}\NormalTok{(lm_credit_int) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ income, }\DataTypeTok{y =}\NormalTok{ pred, }\DataTypeTok{colour =}\NormalTok{ student)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{size =} \FloatTok{1.5}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ balance, }\DataTypeTok{colour =}\NormalTok{ student), }\DataTypeTok{fill =} \StringTok{"grey"}\NormalTok{, }\DataTypeTok{pch =} \DecValTok{21}\NormalTok{, }\DataTypeTok{alpha =} \DecValTok{1} \OperatorTok{/}\StringTok{ }\DecValTok{2}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{tidy_islr_files/figure-latex/unnamed-chunk-20-1} \end{center}
+
+The model now takes into account how \texttt{income} and \texttt{student} interact with each other. Interpreting the chart suggests that increases in \texttt{income} among students has a smaller effect on balance than it does to non-students.
+
+Does it fit better?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{models <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}\DataTypeTok{without_interaction =}\NormalTok{ lm_credit, }\DataTypeTok{with_interaction =}\NormalTok{ lm_credit_int)}
+\NormalTok{purrr}\OperatorTok{::}\KeywordTok{map_df}\NormalTok{(models, broom}\OperatorTok{::}\NormalTok{glance, }\DataTypeTok{.id =} \StringTok{"model"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(model, r.squared, statistic, p.value, df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 2 x 5
+##   model               r.squared statistic  p.value    df
+##   <chr>                   <dbl>     <dbl>    <dbl> <int>
+## 1 without_interaction     0.277      76.2 9.64e-29     3
+## 2 with_interaction        0.280      51.3 4.94e-28     4
+\end{verbatim}
+
+Not by much. The model with the interaction term has a slightly higher \(R^2\), but the added complexity of the model, combined with the small number of observations of students in the dataset, suggests overfitting.
+
+\hypertarget{non-linear-relationships}{%
+\subsubsection{Non-linear Relationships}\label{non-linear-relationships}}
+
+The linear model assumes a linear relationship between the response and predictors. We can extend the linear model to accomodate non-linear relationships using \emph{polynomial regression}.
+
+A way to incorporate non-linear associations into a linear model is to include transformed versions of the predictor in the model. For example, within the \texttt{Auto} dataset, predicting \texttt{mpg} with a second-order polynomial of \texttt{horsepower} would look like this:
+
+\(mpg = \beta_0 + \beta_1horsepower + \beta_2horsepower^2 + \epsilon\)
+
+Let's look at the \texttt{Auto} dataset with models of different polynomial degrees overlaid. Clearly, the data is not linear, exhibiting a \emph{quadratic} shape.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tidy_auto <-}\StringTok{ }\NormalTok{ISLR}\OperatorTok{::}\NormalTok{Auto }\OperatorTok{%>%}\StringTok{ }\KeywordTok{as_tibble}\NormalTok{()}
+
+\NormalTok{lm_auto <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(mpg }\OperatorTok{~}\StringTok{ }\NormalTok{horsepower, }\DataTypeTok{data =}\NormalTok{ tidy_auto)}
+\NormalTok{lm_auto2 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(mpg }\OperatorTok{~}\StringTok{ }\KeywordTok{poly}\NormalTok{(horsepower, }\DecValTok{2}\NormalTok{), }\DataTypeTok{data =}\NormalTok{ tidy_auto)}
+\NormalTok{lm_auto5 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(mpg }\OperatorTok{~}\StringTok{ }\KeywordTok{poly}\NormalTok{(horsepower, }\DecValTok{5}\NormalTok{), }\DataTypeTok{data =}\NormalTok{ tidy_auto)}
+
+\NormalTok{tidy_auto }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gather_predictions}\NormalTok{(lm_auto, lm_auto2, lm_auto5) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ horsepower, }\DataTypeTok{y =}\NormalTok{ mpg)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{alpha =} \DecValTok{1} \OperatorTok{/}\StringTok{ }\DecValTok{3}\NormalTok{, }\DataTypeTok{pch =} \DecValTok{21}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ pred, }\DataTypeTok{colour =}\NormalTok{ model), }\DataTypeTok{size =} \FloatTok{1.5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{tidy_islr_files/figure-latex/unnamed-chunk-22-1} \end{center}
+
+The second-order polynomial does a good job of fitting the data, while the fifth-order seems to be unnecessary. The model performance reflects that:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{models <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}
+  \DataTypeTok{linear =}\NormalTok{ lm_auto,}
+  \DataTypeTok{second_order =}\NormalTok{ lm_auto2,}
+  \DataTypeTok{fifth_order =}\NormalTok{ lm_auto5}
+\NormalTok{)}
+\NormalTok{purrr}\OperatorTok{::}\KeywordTok{map_df}\NormalTok{(models, broom}\OperatorTok{::}\NormalTok{glance, }\DataTypeTok{.id =} \StringTok{"model"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(model, r.squared, statistic, p.value, df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 3 x 5
+##   model        r.squared statistic  p.value    df
+##   <chr>            <dbl>     <dbl>    <dbl> <int>
+## 1 linear           0.606      600. 7.03e-81     2
+## 2 second_order     0.688      428. 5.40e-99     3
+## 3 fifth_order      0.697      177. 1.16e-97     6
+\end{verbatim}
+
+The second-order model has significantly higher R\^{}2, and only one more degree of freedom.
+
+This approach of extending linear models to accomodate non-linear relationships is known as polynomial regression.
+
+\hypertarget{potential-problems}{%
+\subsection{Potential Problems}\label{potential-problems}}
+
+Many problems can occur when fitting a linear model to a data set.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Non-linearity of the response-predictor relationship.
+\item
+  Correlation of error terms.
+\item
+  Non-constant variance of error terms
+\item
+  Outliers
+\item
+  High-leverage points
+\item
+  Collinearity
+\end{enumerate}
+
+\hypertarget{non-linearity-of-the-data}{%
+\subsubsection{1. Non-linearity of the data}\label{non-linearity-of-the-data}}
+
+The linear model assumes a straight-line relationship between the predictors and the response. If this is not the case, the inference and prediction accuracy of the fit are suspect.
+
+We can use a \emph{residual plot} to visualize when a linear model is placed on to a non-linear relationship. For a simple linear regression model, we plot the residuals \(e_i = y_i - \hat{y}_i\) compared to the predictor. For multiple regression, we plot the residuals versus the predicted values \(\hat{y}_i\). If the relationship is linear, the residuals should exhibit a random pattern.
+
+Let's take the \texttt{Auto} dataset and plot the residuals compared to \texttt{horsepower} for each model we fit. Notice in the model containing no quadratic term is U-shaped, indicating a non-linear relationship. The model that contains \texttt{horsepower\^{}2} exhibits little pattern in the residuals, indicating a better fit.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tidy_auto }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gather_predictions}\NormalTok{(lm_auto, lm_auto2, lm_auto5) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ horsepower, }\DataTypeTok{y =}\NormalTok{ mpg}\OperatorTok{-}\NormalTok{pred, }\DataTypeTok{colour=}\NormalTok{model)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{alpha =} \DecValTok{1} \OperatorTok{/}\StringTok{ }\DecValTok{3}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_hline}\NormalTok{(}\DataTypeTok{yintercept =} \DecValTok{0}\NormalTok{, }\DataTypeTok{size =} \FloatTok{1.5}\NormalTok{, }\DataTypeTok{colour=}\StringTok{"grey"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{(}\OperatorTok{~}\NormalTok{model, }\DataTypeTok{nrow=}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{tidy_islr_files/figure-latex/unnamed-chunk-24-1} \end{center}
+
+If the residual plot indicates that there non-linear associations in the data, a simple approach is to use non-linear transofmrations of the predictors.
+
+\hypertarget{correlation-of-error-terms}{%
+\subsubsection{2. Correlation of Error Terms}\label{correlation-of-error-terms}}
+
+The linear regression model assumes that the error terms \(\epsilon_1,\epsilon_2,...,\epsilon_n\) are uncorrelated.
+
+This means that for a given error term \(e_i\), no information is provided about the value \(e_{i+1}\). The standard errors that are computed for the estimated regression coefficients are based on this assumption.
+
+If there is a correlation among the error terms, than the estimated standard errors will tend to underestimate the true standard errors, producing confidence and prediction intervals narrower than they should be. Given the incorrect assumption, a 95\% confidence interval may have a much lower probability than 0.95 of containing the true value of the parameter. P-values would also be lower than they should be, giving us an unwarranted sense of confidence in our model.
+
+These correlations occur frequently in \emph{time series} data, which consists of observations obtained at discrete points in time. In many cases, observations that are obtained at adjacent time periods points will have positively correlated errors.
+
+We can again plot the residuals as a function of time to see if this is the case. If no correlation, there should be no pattern in the residuals. If error terms exhibit correlation, we may see that adjacent residuals exhibit similar values, known as \emph{tracking}.
+
+This can also happen outside of time series data. The assumption of uncorrelated errors is extremely important for linear regression as well as other statistical methods.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# }\AlertTok{TODO}\CommentTok{ add a residual plot for time series with correlated error terms, similar to pg. 95}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tidy_sunspot <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{y=}\KeywordTok{as.matrix}\NormalTok{(sunspot.year), }\DataTypeTok{ds=}\KeywordTok{time}\NormalTok{(sunspot.year)) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{as_tibble}\NormalTok{()}
+\NormalTok{tidy_sunspot}
+\NormalTok{sunspot_lm <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ tidy_sunspot, y }\OperatorTok{~}\StringTok{ }\NormalTok{ds)}
+\NormalTok{tidy_sunspot }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{add_predictions}\NormalTok{(sunspot_lm) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{ds, }\DataTypeTok{y=}\NormalTok{pred}\OperatorTok{-}\NormalTok{y)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_smooth}\NormalTok{(}\DataTypeTok{method=}\StringTok{"lm"}\NormalTok{, }\DataTypeTok{se =} \OtherTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{non-constant-variance-of-error-terms}{%
+\subsubsection{3. Non-constant Variance of Error Terms}\label{non-constant-variance-of-error-terms}}
+
+Another assumption of linear regression is that the error terms have a constant variance, \(Var(\epsilon_i) = \sigma^2\). Standard errors, confidence intervals, and hypothesis tests rely upon this assumption.
+
+It is common for error terms to exhiti non-constant variance. Non-constant variance in the errors, also known as \emph{heteroscedasticity}, can be identified from a \emph{funnel shape} in the residual plot.
+
+Let's take a look at the \texttt{MASS::cats} dataset, which contains observations of various cats sex, body weight, and heart weight. We fit a linear model to it, and then plot the residuals.
+
+I've added a linear fit to the residual plot itself. Observe how the error terms begin to funnel out as \texttt{bwt} increases, indicating non-constant variance of the error terms.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tidy_cats <-}\StringTok{ }\NormalTok{MASS}\OperatorTok{::}\NormalTok{cats }\OperatorTok{%>%}\StringTok{ }\KeywordTok{as_tibble}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }\NormalTok{janitor}\OperatorTok{::}\KeywordTok{clean_names}\NormalTok{()}
+\NormalTok{lm_cats <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ tidy_cats, hwt }\OperatorTok{~}\StringTok{ }\NormalTok{bwt)}
+
+\NormalTok{tidy_cats }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{add_predictions}\NormalTok{(lm_cats) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ bwt, }\DataTypeTok{y =}\NormalTok{ hwt }\OperatorTok{-}\StringTok{ }\NormalTok{pred)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_smooth}\NormalTok{(}\DataTypeTok{method=}\StringTok{"lm"}\NormalTok{, }\DataTypeTok{level =} \FloatTok{0.99}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{tidy_islr_files/figure-latex/unnamed-chunk-26-1} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# }\AlertTok{TODO}\CommentTok{ add OLS method to this}
+\CommentTok{# get weights of each response}
+
+\CommentTok{# fit a linear model on the residuals}
+\NormalTok{tidy_cats_res <-}\StringTok{ }\NormalTok{tidy_cats }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{add_predictions}\NormalTok{(lm_cats) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{res =}\NormalTok{ hwt }\OperatorTok{-}\StringTok{ }\NormalTok{pred) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(bwt, hwt, res)}
+\NormalTok{lm_cats_res <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ tidy_cats_res, res }\OperatorTok{~}\StringTok{ }\NormalTok{hwt)}
+
+\NormalTok{cat_weights <-}\StringTok{ }\NormalTok{tidy_cats_res }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{add_predictions}\NormalTok{(lm_cats_res) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{res_var =}\NormalTok{ (res}\OperatorTok{-}\NormalTok{pred)}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{weight =} \DecValTok{1} \OperatorTok{/}\StringTok{ }\NormalTok{res_var) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{pull}\NormalTok{(weight)}
+
+\NormalTok{lm_cats_weights <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ tidy_cats, hwt }\OperatorTok{~}\StringTok{ }\NormalTok{bwt, }\DataTypeTok{weights =}\NormalTok{ cat_weights)}
+
+\NormalTok{tidy_cats }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gather_predictions}\NormalTok{(lm_cats, lm_cats_weights) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ bwt, }\DataTypeTok{y =}\NormalTok{ hwt }\OperatorTok{-}\StringTok{ }\NormalTok{pred, }\DataTypeTok{colour =}\NormalTok{ model)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ hwt}\OperatorTok{-}\NormalTok{pred, }\DataTypeTok{colour =}\NormalTok{ model)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_smooth}\NormalTok{(}\DataTypeTok{method=}\StringTok{"lm"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+When this occurs, there a few ways to remedy it. You could transform the response \(Y\) using a function such as \(logY\) or \(\sqrt{Y}\). If we have a good idea of the variance of each response, we could fit our model using \emph{weighted least squares}, which weights proportional to the inverse of the expected variance of an observation.
+
+\hypertarget{outliers}{%
+\subsubsection{4. Outliers}\label{outliers}}
+
+An \emph{outlier} is a point for which \(y_i\) is far from the value predicted by the model. These can arise for a variety of reasons, such as incorrect recording of an observation during data collection.
+
+For the \texttt{msleep} dataset below, which contains data on mammal sleep durations, I've highlighted two observations that most would consider outliers. This is for the \texttt{African\ elephant} and \texttt{Asian\ elephant} mammals, who's bodyweights are far and away from the rest of mammals. There are others that could be considered outliers as well. Identifying outliers is an often arbitrary process.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{msleep }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ awake, }\DataTypeTok{y =}\NormalTok{ bodywt, }\DataTypeTok{colour =}\NormalTok{ name)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\NormalTok{gghighlight}\OperatorTok{::}\KeywordTok{gghighlight}\NormalTok{(bodywt}\OperatorTok{>}\DecValTok{2000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{tidy_islr_files/figure-latex/unnamed-chunk-28-1} \end{center}
+
+Let's fit a linear model to predict body weight from how long the animal is awake.
+
+Notice how the data that maintains the elephant observations significantly affects the slope, drawing the regression line away from the majority of observations.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lm_sleep <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ msleep, bodywt }\OperatorTok{~}\StringTok{ }\NormalTok{awake)}
+\NormalTok{lm_sleep_filtered <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ msleep }\OperatorTok{%>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(name }\OperatorTok{!=}\StringTok{ 'African elephant'}\NormalTok{), bodywt }\OperatorTok{~}\StringTok{ }\NormalTok{awake)}
+\NormalTok{msleep }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gather_predictions}\NormalTok{(lm_sleep, lm_sleep_filtered) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ awake, }\DataTypeTok{y =}\NormalTok{ bodywt)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{pch=}\DecValTok{21}\NormalTok{, }\DataTypeTok{alpha =} \DecValTok{1}\OperatorTok{/}\DecValTok{3}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ pred, }\DataTypeTok{colour =}\NormalTok{ model), }\DataTypeTok{size =} \FloatTok{1.5}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_colour_viridis_d}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{tidy_islr_files/figure-latex/unnamed-chunk-29-1} \end{center}
+
+The model excluding the elephant observations has a significantly higher \(R^2\), which indicates a better fit.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{models <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}\DataTypeTok{with_outliers =}\NormalTok{ lm_sleep,}
+               \DataTypeTok{without_outliers =}\NormalTok{ lm_sleep_filtered)}
+\NormalTok{purrr}\OperatorTok{::}\KeywordTok{map_df}\NormalTok{(models, broom}\OperatorTok{::}\NormalTok{glance, }\DataTypeTok{.id =} \StringTok{"model"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(model, r.squared, statistic, p.value, df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 2 x 5
+##   model            r.squared statistic  p.value    df
+##   <chr>                <dbl>     <dbl>    <dbl> <int>
+## 1 with_outliers       0.0973      8.73 0.00409      2
+## 2 without_outliers    0.142      13.3  0.000473     2
+\end{verbatim}
+
+Another way of handling an outlier is transforming the predictor. Upon inspection of the scatterplot, it becomes clear that the relationship between \texttt{bodywt} and \texttt{awake} is not linear. If we take the same dataset and apply a \texttt{log} function to response variable \texttt{bodywt}, we see that the outliers no longer exists.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{msleep }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ awake, }\DataTypeTok{y =} \KeywordTok{log}\NormalTok{(bodywt))) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_smooth}\NormalTok{(}\DataTypeTok{method =} \StringTok{"lm"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{tidy_islr_files/figure-latex/unnamed-chunk-31-1} \end{center}
+
+The model that uses \texttt{log(bodywt)} as the response also has better performance than both models above.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lm_sleep_log <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ msleep, }\KeywordTok{log}\NormalTok{(bodywt) }\OperatorTok{~}\StringTok{ }\NormalTok{awake)}
+\NormalTok{lm_sleep_log }\OperatorTok{%>%}\StringTok{ }\NormalTok{broom}\OperatorTok{::}\KeywordTok{glance}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(r.squared, statistic, p.value, df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 4
+##   r.squared statistic      p.value    df
+##       <dbl>     <dbl>        <dbl> <int>
+## 1     0.324      38.7 0.0000000202     2
+\end{verbatim}
+
+\hypertarget{high-leverage-points}{%
+\subsubsection{5. High Leverage Points}\label{high-leverage-points}}
 
 
 \end{document}
