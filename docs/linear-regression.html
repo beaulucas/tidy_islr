@@ -24,7 +24,7 @@
 <meta name="author" content="Beau Lucas" />
 
 
-<meta name="date" content="2019-10-18" />
+<meta name="date" content="2019-10-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -816,7 +816,7 @@ tidy_cats <span class="op">%&gt;%</span>
 <p>Let’s fit a linear model to predict body weight from how long the animal is awake.</p>
 <p>Notice how the data that maintains the elephant observations significantly affects the slope, drawing the regression line away from the majority of observations.</p>
 <pre class="sourceCode r"><code class="sourceCode r">lm_sleep &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> msleep, bodywt <span class="op">~</span><span class="st"> </span>awake)
-lm_sleep_filtered &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> msleep <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(name <span class="op">!=</span><span class="st"> &#39;African elephant&#39;</span>), bodywt <span class="op">~</span><span class="st"> </span>awake)
+lm_sleep_filtered &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> msleep <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="op">!</span>name <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;African elephant&#39;</span>, <span class="st">&#39;Asian elephant&#39;</span>)), bodywt <span class="op">~</span><span class="st"> </span>awake)
 msleep <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">gather_predictions</span>(lm_sleep, lm_sleep_filtered) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> awake, <span class="dt">y =</span> bodywt)) <span class="op">+</span>
@@ -831,11 +831,11 @@ msleep <span class="op">%&gt;%</span>
 purrr<span class="op">::</span><span class="kw">map_df</span>(models, broom<span class="op">::</span>glance, <span class="dt">.id =</span> <span class="st">&quot;model&quot;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(model, r.squared, statistic, p.value, df)</code></pre>
 <pre><code>## # A tibble: 2 x 5
-##   model            r.squared statistic  p.value    df
-##   &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt;
-## 1 with_outliers       0.0973      8.73 0.00409      2
-## 2 without_outliers    0.142      13.3  0.000473     2</code></pre>
-<p>Another way of handling an outlier is transforming the predictor. Upon inspection of the scatterplot, it becomes clear that the relationship between <code>bodywt</code> and <code>awake</code> is not linear. If we take the same dataset and apply a <code>log</code> function to response variable <code>bodywt</code>, we see that the outliers no longer exists.</p>
+##   model            r.squared statistic    p.value    df
+##   &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt; &lt;int&gt;
+## 1 with_outliers       0.0973      8.73 0.00409        2
+## 2 without_outliers    0.222      22.5  0.00000900     2</code></pre>
+<p>Another way of handling an outlier is transforming the response variable. Upon inspection of the scatterplot, it becomes clear that the relationship between <code>bodywt</code> and <code>awake</code> is not linear. If we take the same dataset and apply a <code>log</code> function to response variable <code>bodywt</code>, we see that the outliers no longer exists.</p>
 <pre class="sourceCode r"><code class="sourceCode r">msleep <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> awake, <span class="dt">y =</span> <span class="kw">log</span>(bodywt))) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>) <span class="op">+</span>
@@ -852,6 +852,79 @@ lm_sleep_log <span class="op">%&gt;%</span><span class="st"> </span>broom<span c
 </div>
 <div id="high-leverage-points" class="section level4">
 <h4><span class="header-section-number">3.3.6.5</span> 5. High Leverage Points</h4>
+<p>Observations with <em>high leverage</em> have an unusual value for <span class="math inline">\(x_i\)</span>. In a simple regression model, these are practically the same as outliers (I could have flipped predictors with response in my mammal sleep model above). High leverage points are observations that significantly move the regression line. However, in multiple regression, it is possible to have an observation that is well within the range of each individual predictor’s values, but unusual terms of the full set of predictors.</p>
+<p>Let’s look at <code>temp</code> and <code>ozone</code> data from <code>airquality</code> dataset. Plenty of observations have ozone &gt; <code>100</code> and temp &lt; <code>80</code>, but the combination is rare. If we fit models with and without this leverage point, we can see how the regression line moves.</p>
+<pre class="sourceCode r"><code class="sourceCode r">tidy_airquality &lt;-<span class="st"> </span>airquality <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span>janitor<span class="op">::</span><span class="kw">clean_names</span>()
+
+tidy_airquality <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ozone, <span class="dt">y =</span> temp)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span>gghighlight<span class="op">::</span><span class="kw">gghighlight</span>(ozone <span class="op">&gt;</span><span class="st"> </span><span class="dv">100</span> <span class="op">&amp;</span><span class="st"> </span>temp <span class="op">&lt;</span><span class="st"> </span><span class="dv">80</span>)</code></pre>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-33-1.png" width="576" style="display: block; margin: auto;" /></p>
+<pre class="sourceCode r"><code class="sourceCode r">lm_temp &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_airquality, temp <span class="op">~</span><span class="st"> </span>ozone)
+lm_temp_filtered &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_airquality <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="op">!</span>(ozone <span class="op">&gt;</span><span class="st"> </span><span class="dv">100</span> <span class="op">&amp;</span><span class="st"> </span>temp <span class="op">&lt;</span><span class="st"> </span><span class="dv">80</span>)), temp <span class="op">~</span><span class="st"> </span>ozone)</code></pre>
+<p>Notice the slight change in the fit. This observation isn’t that extreme, but still produces a visible difference in fit. More extreme observations would move this line even further, potentially causing an improper fit.</p>
+<pre class="sourceCode r"><code class="sourceCode r">tidy_airquality <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">gather_predictions</span>(lm_temp, lm_temp_filtered) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ozone, <span class="dt">y =</span> pred, <span class="dt">colour =</span> model)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> temp), <span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="dt">colour =</span> <span class="st">&quot;grey&quot;</span>)</code></pre>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-35-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>The model without the strange observation performs slightly better. In reality, I would probably include it as going from an <span class="math inline">\(R^2\)</span> of <code>0.488</code> to <code>0.506</code> isn’t worth the manual effort.</p>
+<pre class="sourceCode r"><code class="sourceCode r">models &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">with_leverage =</span> lm_temp,
+               <span class="dt">without_leverage =</span> lm_temp_filtered)
+purrr<span class="op">::</span><span class="kw">map_df</span>(models, broom<span class="op">::</span>glance, <span class="dt">.id =</span> <span class="st">&quot;model&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(model, r.squared, statistic, p.value, df)</code></pre>
+<pre><code>## # A tibble: 2 x 5
+##   model            r.squared statistic  p.value    df
+##   &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt;
+## 1 with_leverage        0.488      109. 2.93e-18     2
+## 2 without_leverage     0.506      116. 5.05e-19     2</code></pre>
+<p>We can also quantify an observation’s leverage by computing the <span class="math inline">\(leverage statistic\)</span>. A large value of this statistic indicates an observation with high leverage. For a simple linear regression,</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(h_i = \frac{1}{n} + \frac{x_i - \bar{x}^2}{\sum_{i&#39;=1}^{n}}\)</span>
+</p>
+<p class="vocab" style="text-align:right">
+<em>leverage statistic</em>
+</p>
+</div>
+<p>As <span class="math inline">\(x_i\)</span> increases from <span class="math inline">\(\bar{x}\)</span>, <span class="math inline">\(h_i\)</span> increases. Combined with a high residual (outlier), a high-leverage observation could be dangerous.</p>
+</div>
+<div id="colinearity" class="section level4">
+<h4><span class="header-section-number">3.3.6.6</span> 6. Colinearity</h4>
+<p><code>Collinearity</code> is when two or more predictor variables are closely related to one another.</p>
+<p>If we look at our <code>tidy_credit</code> tibble, we see that <code>rating</code> and <code>limit</code> are very highly correlated with one another.</p>
+<pre class="sourceCode r"><code class="sourceCode r">tidy_credit <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> rating, <span class="dt">y =</span> limit)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-37-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>The effects of collinearity can make it difficult to separate out the individual effects of collinear variables on the response. Since <code>limit</code> and <code>rating</code> move together, it can be hard to determine how each one separately is associated with the response, <code>balance</code>.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> add contour plot</span>
+<span class="co"># clean up what this link did: https://yetanotheriteration.netlify.com/2018/01/high-collinearity-effect-in-regressions/</span></code></pre>
+<p>Two multiple regression models show the effects of regressing <code>balance</code> on <code>age + limit</code> versus <code>rating + limit</code>. Notice the large p-value for <code>limit</code>, combined with the &gt;10x increase in standard error for its coefficient compared to the original model. It’s effects have been masked by the collinearity it shares with <code>rating</code>.</p>
+<pre class="sourceCode r"><code class="sourceCode r">lm_age_limit &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_credit, balance <span class="op">~</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>limit)
+lm_rating_limit &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_credit, balance <span class="op">~</span><span class="st"> </span>rating <span class="op">+</span><span class="st"> </span>limit)
+models &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="st">`</span><span class="dt">Balance ~ Age + Limit</span><span class="st">`</span> =<span class="st"> </span>lm_age_limit,
+               <span class="st">`</span><span class="dt">Balance ~ Rating + Limit</span><span class="st">`</span> =<span class="st"> </span>lm_rating_limit)
+purrr<span class="op">::</span><span class="kw">map_df</span>(models, broom<span class="op">::</span>tidy, <span class="dt">.id =</span> <span class="st">&quot;model&quot;</span>)</code></pre>
+<pre><code>## # A tibble: 6 x 6
+##   model                  term        estimate std.error statistic   p.value
+##   &lt;chr&gt;                  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 Balance ~ Age + Limit  (Intercept) -1.73e+2  43.8        -3.96  9.01e-  5
+## 2 Balance ~ Age + Limit  age         -2.29e+0   0.672      -3.41  7.23e-  4
+## 3 Balance ~ Age + Limit  limit        1.73e-1   0.00503    34.5   1.63e-121
+## 4 Balance ~ Rating + Li… (Intercept) -3.78e+2  45.3        -8.34  1.21e- 15
+## 5 Balance ~ Rating + Li… rating       2.20e+0   0.952       2.31  2.13e-  2
+## 6 Balance ~ Rating + Li… limit        2.45e-2   0.0638      0.384 7.01e-  1</code></pre>
+<p>The growth in the standard error caused by collinearity caises the t-statistic (<span class="math inline">\(B_j\)</span> divided by it’s standard error) to decline. As a result, we may fail to reject <span class="math inline">\(H_0: \beta_j = 0\)</span>. This means that the <em>power</em> of the hypothesis test – the probability of correctly detecting a non-zero coefficient – is reduced by collinearity. Thus, it is desirable to identify and address collinearity problems while fitting the model.</p>
+<p>A simple way is to look at the correlation matrix of the predoctors.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(corrr)
+tidy_credit <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select_if</span>(is.numeric) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>id) <span class="op">%&gt;%</span>
+<span class="st">  </span>corrr<span class="op">::</span><span class="kw">correlate</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span>corrr<span class="op">:::</span><span class="kw">stretch</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x))</code></pre>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-40-1.png" width="576" style="display: block; margin: auto;" /></p>
 
 </div>
 </div>

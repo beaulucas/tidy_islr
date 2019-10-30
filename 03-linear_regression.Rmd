@@ -14,6 +14,8 @@ Linear regression is a simple yet very powerful approach in statistical learning
 ```{r}
 library(tidyverse)
 library(modelr)
+library(knitr)
+library(kableExtra)
 ```
 
 ## Simple Linear Regression
@@ -666,7 +668,7 @@ Notice how the data that maintains the elephant observations significantly affec
 
 ```{r}
 lm_sleep <- lm(data = msleep, bodywt ~ awake)
-lm_sleep_filtered <- lm(data = msleep %>% filter(name != 'African elephant'), bodywt ~ awake)
+lm_sleep_filtered <- lm(data = msleep %>% filter(!name %in% c('African elephant', 'Asian elephant')), bodywt ~ awake)
 msleep %>%
   gather_predictions(lm_sleep, lm_sleep_filtered) %>%
   ggplot(aes(x = awake, y = bodywt)) +
@@ -705,12 +707,383 @@ lm_sleep_log %>% broom::glance() %>%
 
 #### 5. High Leverage Points
 
-Observations with *high leverage* have an unusual value for $x_i$.
+Observations with *high leverage* have an unusual value for $x_i$. In a simple regression model, these are practically the same as outliers (I could have flipped predictors with response in my mammal sleep model above). High leverage points are observations that significantly move the regression line. However, in multiple regression, it is possible to have an observation that is well within the range of each individual predictor's values, but unusual terms of the full set of predictors.
+
+Let's look at `temp` and `ozone` data from `airquality` dataset. Plenty of observations have ozone > `100` and temp < `80`, but the combination is rare. If we fit models with and without this leverage point, we can see how the regression line moves.
+
+```{r}
+tidy_airquality <- airquality %>%
+  as_tibble() %>%
+  janitor::clean_names()
+
+tidy_airquality %>%
+  ggplot(aes(x = ozone, y = temp)) + geom_point() + gghighlight::gghighlight(ozone > 100 & temp < 80)
+```
+
+```{r}
+lm_temp <- lm(data = tidy_airquality, temp ~ ozone)
+lm_temp_filtered <- lm(data = tidy_airquality %>% filter(!(ozone > 100 & temp < 80)), temp ~ ozone)
+```
+
+Notice the slight change in the fit. This observation isn't that extreme, but still produces a visible difference in fit. More extreme observations would move this line even further, potentially causing an improper fit.
+
+```{r}
+tidy_airquality %>%
+  gather_predictions(lm_temp, lm_temp_filtered) %>%
+  ggplot(aes(x = ozone, y = pred, colour = model)) +
+  geom_line() +
+  geom_point(aes(y = temp), alpha = 1/3, colour = "grey")
+```
+
+The model without the strange observation performs slightly better. In reality, I would probably include it as going from an $R^2$ of `0.488` to `0.506` isn't worth the manual effort.
+
+```{r}
+models <- list(with_leverage = lm_temp,
+               without_leverage = lm_temp_filtered)
+purrr::map_df(models, broom::glance, .id = "model") %>%
+  select(model, r.squared, statistic, p.value, df)
+```
+
+We can also quantify an observation's leverage by computing the $leverage statistic$. A large value of this statistic indicates an observation with high leverage. For a simple linear regression,
+
+<div>
+<p style="text-align:center">$h_i = \frac{1}{n} + \frac{x_i - \bar{x}^2}{\sum_{i'=1}^{n}}$</p>
+<p class="vocab" style="text-align:right">*leverage statistic*</p>
+</div>
+
+As $x_i$ increases from $\bar{x}$, $h_i$ increases. Combined with a high residual (outlier), a high-leverage observation could be dangerous.
+
+#### 6. Colinearity
+
+`Collinearity` is when two or more predictor variables are closely related to one another.
+
+If we look at our `tidy_credit` tibble, we see that `rating` and `limit` are very highly correlated with one another.
+
+```{r}
+tidy_credit %>% ggplot(aes(x = rating, y = limit)) + geom_point()
+```
+
+The effects of collinearity can make it difficult to separate out the individual effects of collinear variables on the response. Since `limit` and `rating` move together, it can be hard to determine how each one separately is associated with the response, `balance`.
+
+```{r}
+# TODO add contour plot
+# clean up what this link did: https://yetanotheriteration.netlify.com/2018/01/high-collinearity-effect-in-regressions/
+```
+
+Two multiple regression models show the effects of regressing `balance` on `age + limit` versus `rating + limit`. Notice the large p-value for `limit`, combined with the >10x increase in standard error for its coefficient compared to the original model. It's effects have been masked by the collinearity it shares with `rating`. 
+
+```{r}
+lm_age_limit <- lm(data = tidy_credit, balance ~ age + limit)
+lm_rating_limit <- lm(data = tidy_credit, balance ~ rating + limit)
+models <- list(`Balance ~ Age + Limit` = lm_age_limit,
+               `Balance ~ Rating + Limit` = lm_rating_limit)
+purrr::map_df(models, broom::tidy, .id = "model")
+```
+
+The growth in the standard error caused by collinearity caises the t-statistic ($B_j$ divided by it's standard error) to decline. As a result, we may fail to reject $H_0: \beta_j = 0$. This means that the *power* of the hypothesis test -- the probability of correctly detecting a non-zero coefficient -- is reduced by collinearity. Thus, it is desirable to identify and address collinearity problems while fitting the model.
+
+A simple way is to look at the correlation matrix of the predictors.
+
+```{r}
+library(corrr)
+tidy_credit_corr <- tidy_credit %>%
+  select_if(is.numeric) %>%
+  select(-id) %>%
+  corrr::correlate() %>%
+  corrr:::stretch() %>%
+  filter(!is.na(r))
+
+# remove duplicate combinations of x, y
+tidy_credit_corr <- tidy_credit_corr %>%
+  mutate(sort_var = map2_chr(x, y, ~toString(sort(c(.x, .y))))) %>%
+  distinct(sort_var, .keep_all = TRUE) %>%
+  select(-sort_var)
+
+tidy_credit_corr %>% arrange(desc(abs(r))) %>%
+  filter(abs(r) > 0.05) %>%
+  kable() %>%
+  kableExtra::kable_styling()
+```
+
+Here we can see the strongest correlation is between `limit` and `rating`, `rating` and `balance`, which makes sense. Card issuers give higher `limit` to those with higher `rating`, and `rating` is directly affted by `balance`. As we move down the table, weaker correlations appear, such as `cards` and `education`. 
+
+Such tables allow one to identify potential collinearity problems between two predictors. However, it is possible for collinearity to exist between three or more variables even if there is no correlation between any of the pairs in that group. This is called *multicollinearity*. In this case, we compute the *variance inflation factor* (VIF). The VIF is the ratio of the variance of $\hat\beta_j$ when fitting the full model divided by the variance of $\hat\beta_j$ if fit on its own.
+
+VIF can also be thought of as checking if a predictor can be explained by all the other predictors in the dataset. In this case, that predictor provides no novel information, but can add a significant amount of variance. Such predictors with high VIF are a candidate for removal from the model.
+
+Here is a video (Python) explaining how to use VIF to tackle multicollinearity:
+
+* [Variance Inflation Factor (VIF) for Detecting Multicolinearity in Python](https://www.youtube.com/watch?v=qmt7ZZoiDwc)
+
+A rule of thumb is that a VIF value exceeding 10 indicates a problematic amount of collinearity.
+
+The VIF for each variable can be computed using the formula
+
+<div>
+<p style="text-align:center">$VIF(\hat\beta_j) =  \frac{1}{1-R^2_{X_j|X_-j}}$</p>
+<p class="vocab" style="text-align:right">*leverage statistic*</p>
+</div>
+
+where $R^2_{X_j|X_-j}$ is the $R^2$ from a regression of $X_j$ onto all of the other predictors. If a variable $X_j$ has a high $R^2$ when regressed onto all other predictor variables (other predictor variables can explain a large amount of $X_j$'s variance), the VIF will be high.
+
+In R, we can use the `car` package to calculate `GVIF` for a `lm` object.
+
+```{r}
+car::vif(credit_model)
+car::vif(lm(data = tidy_credit %>%
+              select(-id), balance ~ .)) %>%
+  as_tibble(rownames = "variable") %>%
+  arrange(desc(GVIF))
+```
+
+As we can see here, the most problematic variables are `rating` and `limit`, which both exceed VIFs of 200. It seems that `rating` and `limit` can be explained by the other predictors in the dataset.
+
+There are two simple solutions for this. The first is to drop problematic variables from the regression.
+
+Let's drop `rating` and see what happens.
+
+```{r}
+car::vif(lm(data = tidy_credit %>%
+              select(-id, -rating), balance ~ .)) %>%
+  as_tibble(rownames = "variable") %>%
+  arrange(desc(GVIF))
+```
+
+Just like that, `limit` goes from VIF >200 down to ~2.7. Is the fit compromised? The model without rating has an $R^2$ of `0.954`, while the model containing it has `0.955`. Such negligible change in $R_2$ shows the redundant information provided by the variable. Reducing the multicollinearity gives us an equivalent level fit while reducing the chance for a significant predictor to end up with an insignificant coefficient in our model. This is especially important when extending a pre-existing model on to a new, unknown sample.
+
+Another solution would be to combine collinear variables into a single predictor. For example, taking the average of standardized versions of `limit` and `rating` and creating a new variable that measures *credit worthiness*.
+
+### The Marketing Plan
 
 
+```{r}
+# TODO
+```
+
+We return to the seven questions we set out to answer regarding `Advertising` data.
+
+### Comparison of Linear Regression with *K*-Nearest Neighbors
+
+Linear regression is an example of a *parametric* approach because it assumes a linear functional form for $f(X)$. The advantages are:
+
+* estimating small number of coefficients is easy
+* coefficients have simple intrepretations
+* tests of statistical significance are easily performed
+
+However, the strong assumptions of the form of $f(X)$ come at a cost. If the functional form is far from the truth, then the model will perform poorly in terms of prediction accuracy.
+
+*Non-parametric* methods do not explicitly assume a parametric form for $f(X)$, and thereby provide an alternative and more flexible approach for performing regression. Let's consider one of the simplest and best-known non-parametric methods, *K-nearest neighbors regression* (KNN regression).
+
+Given a value for $K$ and a prediction point $x_0$, KNN regression first identifies the $K$ training observations that are closest to $x_0$, represented by $\mathcal{N}_0$. It then estimates $f(x_0)$ using the average of all the training response in $\mathcal{N}_0$. In other words,
+
+<div>
+<p style="text-align:center">$\hat{f}(x_0) = \frac{1}{K}\sum_{x_i\in\mathcal{N_0}y_i$</p>
+<p class="vocab" style="text-align:right"></p>
+</div>
+
+When $K$ is small, the KNN fits close to the training observations, and provides a rough step function. As $K$ increases, the prediction is averaged over a larger number of observations, producing small regions of constant prediction and smoother fits. The optimal value for $K$ depends on the *bias-variance tradeoff*.
+
+A small value of $K$ provides the most flexible fit, which will have low bias but high variance. The high variance comes from the prediction in a particular region being dependant on a small number of observations. In contrast, larger values of $K$ provide a smoother and less variable fit; incorporating the average of a larger number of points, giving a single observation less weight in the prediction. However, this smoothing can cause bias by masking some of the structure in $f(x)$. In Chapter 5, (*TODO* add link), we introduce several approaches for estimating test error rates, which can be used identify optimal value of $K$.
+
+We can use the `caret` package to fit a number of $k$-values with the KNN algorithm, and see which produces the best R^2. This example doesn't take into account the bias introduced by a larger $k$-value, and how that might perform on a test dataset.
+
+A $k$ of 5 produces the best fit.
+
+```{r}
+# TODO plot 3d with decision boundaries for multiple k
+library(caret)
+k_values = data.frame(k = c(seq(1:10)))
+
+knn_airquality <- train(data = tidy_airquality %>% filter(!is.na(ozone)), ozone ~ temp + wind, method = "knn",tuneGrid = k_values, metric = "Rsquared")
+knn_results <- knn_airquality$results %>% as_tibble()
+knn_results
+```
+
+In what setting will a parametric approach outperform a non-parametric approach such as KNN? The parametric approach will outperform the non-parametric approach if the parametric form that has been selected is close to the true form of $f$.
+
+Let's take our ozone example and compare KNN to linear regression. The linear model produces an $R^2$ of `0.57`, compared to KNN's `0.64`. Is KNN's lack of interpretability worth the `0.07` gain in $R^2$? Probably not.
+
+```{r}
+# TODO split into training / test and compare KNN vs Linear
+```
+
+Interestingly, the plot below demonstrates a shortcoming of linear regression as well, and the value of domain knowledge in approaching modeling. `ozone` values should have a minimum value of `0`, and yet, our linear regression model predicts negative values for certain observations. One good thing of the KNN approach is that, due to its nature of averaging out observations, it's impossible for it to run into the same scenario.
+
+```{r}
+# TODO clean plot
+knn_results %>% filter(Rsquared == max(Rsquared))
+lm_airquality <- lm(data = tidy_airquality, ozone ~ temp + wind)
+
+lm_airquality %>% broom::glance()
+
+tidy_airquality %>%
+  gather_predictions(knn_airquality, lm_airquality) %>%
+  ggplot(aes(x = ozone, y = pred, colour = model)) +
+  geom_point() +
+  geom_abline()
+```
+
+When the relationship is truly linear, it is common for a linear regression to outperform KNN. However, as the relationship grows more non-linear, KNN might end up as a better approach. KNN being nonparametric doesn't make any assumptions about the true form of $f(x)$, and will often outperform (not always) linear regression in non-linear scenarios.
+
+When does KNN exhibit poor performance? This happens when the number of predictors grows. In a $p=1$ setting with 100 observtions, KNN can probably accurately estimate $f(X)$. If we increase it to $p=20$, we run in to the *curse of dimensionality*. As $p$ increases, the $K$ observations that are nearest to a given test observation $x_0$ may be very far away from $x_0$ in $p$-dimensional space. This will lead to a poor KNN fit. As a rule of thumb, **parametric methods tend to outperform non-parametric approaches when there is a small number of observations per predictor.**
+
+Linear regression also has the benefit of interpretability. We might forego a bit of prediction accuracy for the sake of a simple model with interpretable coefficients and available p-values.
+
+## Lab: Linear Regression
+
+Use `library()` to load libraries.
+
+```{r}
+library(MASS, exclude = "select")
+library(ISLR)
+```
+
+We will be running a linear regression on `MASS::Boston` dataset.
+
+First thing to do is convert to a tibble, which provides data types, reasonable printing methods, and tidy structure.
+
+```{r}
+boston <- MASS::Boston %>% as_tibble()
+boston
+```
+
+We are interested in predicting `medv` (median house value) using 13 predictors, such as `rm` (number of rooms per house), `age` (average age of houses), and `lstat`(percent of households with low socioeconomic status).
+
+### Fitting a linear regression
+
+We will use the `lm` function to fit a simple linear regression, which takes the form `lm(data = data, y ~ x)`.
+
+```{r}
+boston_lm <- lm(data = boston, medv ~ lstat)
+```
+
+Printing `boston_lm` provides some basic information about the model.
+
+```{r}
+boston_lm
+```
 
 
+If we want to work with data surrounding the model, compare it to other models, or reference components of it, we need to use the [`broom`](https://cran.r-project.org/web/packages/broom/vignettes/broom.html) package.
+
+`broom::tidy` converts the model into a data.frame representation.
+
+```{r}
+library(broom)
+broom::tidy(boston_lm)
+```
+
+`broom::glance` will provide a summary in data.frame form.
+
+```{r}
+broom::glance(boston_lm)
+```
+
+`broom` is powerful for easy output, accessing elements of a model, and comparing multiple models.
+
+This is where ISLR misses the mark. It shows `attach()`, which we discussed as a bad idea in Chapter 1, and only offers the base R methods on inspecting a model object. It goes into inspecting model elements via the use of `names()`, `coef()`, and more, which provide much less utility than `broom`.
+
+To get confidence interval of coefficients, we can use `conf.int` argument in `broom::tidy`.
+
+```{r}
+broom::tidy(boston_lm, conf.int = TRUE, conf.level = 0.95)
+```
+
+We can use `modelr::add_predictions()` or `broom::augment()` to add predictions and confidence intervals for our model.
+
+```{r}
+# TODO decide on best practices for adding predictions; development effort on `modelr`
+```
+
+`modelr::add_predictions()` adds a `pred` column to each observation.
+
+```{r}
+boston %>%
+  add_predictions(boston_lm)
+```
+
+`broom::augment()` adds fitted values as well as standard errors and residuals.
+
+```{r}
+augment(boston_lm)
+```
+
+We can use the data from `augment()` to plot our regression with `95%` confidence intervals for our predicted values.
+
+```{r}
+augment(boston_lm) %>%
+  ggplot(aes(x = lstat)) +
+  geom_point(aes(y = medv), pch=21) +
+  geom_line(aes(y = .fitted)) +
+  geom_ribbon(aes(ymin = .fitted - 1.96 * .se.fit, ymax = .fitted + 1.96 * .se.fit), alpha = 1/3) +
+  theme_minimal()
+```
+
+The fit is decent, but there appears to be some non-linearity in the data.
+
+```{r}
+plot(boston_lm)
+```
+
+Let's plot some diagnostics surrounding our model.
+
+#### Diagnostic Plots
+
+We could plot the residual in its original form, but this maintains the scale of the $Y$ response. Two methods exist to scale it in an interpretable fashion, which both scale it using an estimate of the variance of the residual.
+
+*Standardized residuals* scale the residuals in a comparable way by dividing the residual by the regression residual standard error.
+
+However, this allows high-leverage points to be factored in to the standard error. If a particular $y_i$ has high leverage, it will drag the regression line significantly, which affects the estimate of the residual itself.
+
+*Studentized residuals* leave out the residual of $y_i$ when calculating the standard error of a residual for a given observation. Observations with low-leverage will have similar standardized/studentized values, while those with high-leverage will be more affected. By isolating an observation's leverage from its particular standard error calculation, we can observe how much of an outlier it truly is.
+
+For more context, these class notes from [Wharton Statistics Department](http://www-stat.wharton.upenn.edu/~waterman/Teaching/701f99/Class04/class04.pdf) are helpful.
 
 
+`augment` calculates standardized residuals, but not student. We will add a column to calculate it, as shown in this example doc from [Jeffrey Arnold](https://twitter.com/jrnld), [Outliers and Robust Regression] (https://uw-pols503.github.io/2016/outliers_robust_regression.html).
 
 
+In this case, the two types of residuals are virtually the same. I added green points of the standardized residual for comparison. I also scaled the size of points by their leverage (`.cooksd` column). Finally, I shaded the boundary area between `-3` and `3` for the studentized residual. This is a rule of thumb for outlier detection, but observations with magnitude greater than `3` warrant a model inspection. These could be errors in recording of the data or evidence that the model assumptions are not appropriate.
+
+```{r}
+augment(boston_lm) %>%
+  # calculate student residual
+  mutate(.student.resid = .resid / .sigma * sqrt(1 - .hat)) %>%
+  ggplot(aes(x = lstat, y = .student.resid)) +
+  geom_point(aes(y = .std.resid, size=.cooksd), colour = "khaki2") +
+  geom_point(alpha = 2/3, aes(size = .cooksd), colour = "dodgerblue4") +
+  geom_hline(yintercept = 0, size = 1.5, colour = "grey") +
+  geom_ribbon(aes(ymin = -3, ymax = 3),  alpha = 1/4) +
+  theme_minimal()
+```
+
+This plot shows a fan-shape for the residuals, which adds evidence of non-linearity in the relationship. We also see high-leverage points on both ends of the x-axis, which significantly drag our regression line. Several points are outside of our outlier zone. All of these above add evidence that our simple linear regression is not appropriate for this dataset.
+
+### Multiple Linear Regression
+
+Let's fit a model with all the predictor variables.
+
+```{r}
+boston_mlm <- lm(data = boston, medv ~ .)
+broom::tidy(boston_mlm, conf.int = TRUE) %>%
+  arrange(desc(p.value))
+```
+
+How does the model perform?
+
+```{r}
+broom::glance(boston_mlm)
+```
+
+The VIF for each predictor is mostly low.
+
+```{r}
+car::vif(boston_mlm) %>% as_tibble(rownames = "variable")
+```
+
+To remove predictors, such as those with high p-values, we modify the `lm()` call. Let's remove age, which has a p-value of 0.95.
+
+```{r}
+boston_mlm <- lm(data = boston, medv ~ . - age)
+broom::glance(boston_mlm)
+```
