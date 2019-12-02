@@ -24,7 +24,7 @@
 <meta name="author" content="Beau Lucas" />
 
 
-<meta name="date" content="2019-11-25" />
+<meta name="date" content="2019-12-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -178,7 +178,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="3.5" data-path="linear-regression.html"><a href="linear-regression.html#exercises-1"><i class="fa fa-check"></i><b>3.5</b> Exercises</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="classification.html"><a href="classification.html"><i class="fa fa-check"></i><b>4</b> Classification</a></li>
+<li class="chapter" data-level="4" data-path="classification.html"><a href="classification.html"><i class="fa fa-check"></i><b>4</b> Classification</a><ul>
+<li class="chapter" data-level="4.1" data-path="classification.html"><a href="classification.html#packages-used-in-this-chapter-2"><i class="fa fa-check"></i><b>4.1</b> Packages used in this chapter</a></li>
+<li class="chapter" data-level="4.2" data-path="classification.html"><a href="classification.html#an-overview-of-classification"><i class="fa fa-check"></i><b>4.2</b> An Overview of Classification</a></li>
+<li class="chapter" data-level="4.3" data-path="classification.html"><a href="classification.html#why-not-linear-regression"><i class="fa fa-check"></i><b>4.3</b> Why Not Linear Regression?</a></li>
+<li class="chapter" data-level="4.4" data-path="classification.html"><a href="classification.html#logistic-regression"><i class="fa fa-check"></i><b>4.4</b> Logistic Regression</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="classification.html"><a href="classification.html#the-logistic-model"><i class="fa fa-check"></i><b>4.4.1</b> The Logistic Model</a></li>
+<li class="chapter" data-level="4.4.2" data-path="classification.html"><a href="classification.html#estimating-the-regression-coefficients-1"><i class="fa fa-check"></i><b>4.4.2</b> Estimating the Regression Coefficients</a></li>
+<li class="chapter" data-level="4.4.3" data-path="classification.html"><a href="classification.html#making-predictions"><i class="fa fa-check"></i><b>4.4.3</b> Making Predictions</a></li>
+<li class="chapter" data-level="4.4.4" data-path="classification.html"><a href="classification.html#multiple-logistic-regression"><i class="fa fa-check"></i><b>4.4.4</b> Multiple Logistic Regression</a></li>
+</ul></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/beaulucas/tidy_islr" target="blank">GitHub Repository</a></li>
 
@@ -445,14 +455,14 @@ company_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(tmp)
 <p><code>readr</code> provides a nice summary of the imported tibble. Calling the tibble by name will also give a breakdown of column names, data types, and number of observations.</p>
 <pre class="sourceCode r"><code class="sourceCode r">company_data</code></pre>
 <pre><code>## # A tibble: 100 x 3
-##       x     y z        
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;    
-## 1  24.9  49.3 microsoft
-## 2  25.5  49.3 microsoft
-## 3  23.1  50.8 microsoft
-## 4  24.5  48.1 microsoft
-## 5  25.0  48.5 microsoft
-## 6  24.7  51.1 microsoft
+##       x     y z    
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;
+## 1  26.0  49.9 apple
+## 2  24.6  49.2 apple
+## 3  25.1  51.3 apple
+## 4  22.4  49.5 apple
+## 5  23.7  51.6 apple
+## 6  25.1  52.0 apple
 ## # … with 94 more rows</code></pre>
 </div>
 <div id="additional-graphical-and-numerical-summaries" class="section level4">

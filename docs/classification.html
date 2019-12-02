@@ -24,7 +24,7 @@
 <meta name="author" content="Beau Lucas" />
 
 
-<meta name="date" content="2019-11-25" />
+<meta name="date" content="2019-12-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -47,6 +47,7 @@
 
 
 
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 <style type="text/css">
@@ -180,6 +181,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4" data-path="classification.html"><a href="classification.html"><i class="fa fa-check"></i><b>4</b> Classification</a><ul>
 <li class="chapter" data-level="4.1" data-path="classification.html"><a href="classification.html#packages-used-in-this-chapter-2"><i class="fa fa-check"></i><b>4.1</b> Packages used in this chapter</a></li>
 <li class="chapter" data-level="4.2" data-path="classification.html"><a href="classification.html#an-overview-of-classification"><i class="fa fa-check"></i><b>4.2</b> An Overview of Classification</a></li>
+<li class="chapter" data-level="4.3" data-path="classification.html"><a href="classification.html#why-not-linear-regression"><i class="fa fa-check"></i><b>4.3</b> Why Not Linear Regression?</a></li>
+<li class="chapter" data-level="4.4" data-path="classification.html"><a href="classification.html#logistic-regression"><i class="fa fa-check"></i><b>4.4</b> Logistic Regression</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="classification.html"><a href="classification.html#the-logistic-model"><i class="fa fa-check"></i><b>4.4.1</b> The Logistic Model</a></li>
+<li class="chapter" data-level="4.4.2" data-path="classification.html"><a href="classification.html#estimating-the-regression-coefficients-1"><i class="fa fa-check"></i><b>4.4.2</b> Estimating the Regression Coefficients</a></li>
+<li class="chapter" data-level="4.4.3" data-path="classification.html"><a href="classification.html#making-predictions"><i class="fa fa-check"></i><b>4.4.3</b> Making Predictions</a></li>
+<li class="chapter" data-level="4.4.4" data-path="classification.html"><a href="classification.html#multiple-logistic-regression"><i class="fa fa-check"></i><b>4.4.4</b> Multiple Logistic Regression</a></li>
+</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/beaulucas/tidy_islr" target="blank">GitHub Repository</a></li>
@@ -206,34 +214,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <hr />
 <div id="packages-used-in-this-chapter-2" class="section level2">
 <h2><span class="header-section-number">4.1</span> Packages used in this chapter</h2>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ──────────────────────────────── tidyverse 1.2.1 ──</code></pre>
-<pre><code>## ✔ ggplot2 3.2.0          ✔ purrr   0.3.2     
-## ✔ tibble  2.1.3          ✔ dplyr   0.8.3     
-## ✔ tidyr   0.8.3.9000     ✔ stringr 1.4.0     
-## ✔ readr   1.3.1          ✔ forcats 0.4.0</code></pre>
-<pre><code>## ── Conflicts ─────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(knitr)
-<span class="kw">library</span>(kableExtra)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;kableExtra&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
-## 
-##     group_rows</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(skimr)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;skimr&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:kableExtra&#39;:
-## 
-##     kable</code></pre>
-<pre><code>## The following object is masked from &#39;package:knitr&#39;:
-## 
-##     kable</code></pre>
-<pre><code>## The following object is masked from &#39;package:stats&#39;:
-## 
-##     filter</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
+<span class="kw">library</span>(tidymodels)
+<span class="kw">library</span>(knitr)
+<span class="kw">library</span>(kableExtra)
+<span class="kw">library</span>(skimr)</code></pre>
 <p>Linear regression in chapter 3 was concerned with predicting a quantitative response variable. What if the response variable is <em>qualitative</em>? Eye color is an example of a qualitative variable, which takes discrete value such as <code>blue</code>, <code>brown</code>, <code>green</code>. These are also referred to as <em>categorical</em>.</p>
 <p>The approach of predicting qualitative responses is known as <em>classification</em>. Often, we predict the probability of the occurences of each category of a qualitative variable, and then make a decision based off of that.</p>
 <p>In this chapter we discuss three of the most widely-used classifiers:</p>
@@ -255,14 +240,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Similar to regression, we have a set of training observations that use to build a classifier. We also want the classifier to perform well on both training and test observations.</p>
 <p>We will use the dataset <code>ISLR::Default</code>. First, let’s convert it to tidy format.</p>
 <pre class="sourceCode r"><code class="sourceCode r">default &lt;-<span class="st"> </span>ISLR<span class="op">::</span>Default <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>()</code></pre>
-<p>We are interested in the ability to predict whether an individual will default on their credit card payment, based on their credit card balance and annual income.</p>
-<p>First, some summary statistics:</p>
+<p>We are interested in the ability to predict whether an individual will default on their credit card payment, based on their credit card <code>balance</code> and annual income.</p>
+<p>If we look at the summary statistics, we see the data is clean, and that very few people default on their balances.</p>
 <pre class="sourceCode r"><code class="sourceCode r">default <span class="op">%&gt;%</span><span class="st"> </span>skimr<span class="op">::</span><span class="kw">skim</span>()</code></pre>
 <pre><code>## Skim summary statistics
 ##  n obs: 10000 
 ##  n variables: 4 
 ## 
-## ── Variable type:factor ─────────────────────────────────────────────────
+## ── Variable type:factor ─────────────────────────────────
 ##  variable missing complete     n n_unique                 top_counts
 ##   default       0    10000 10000        2  No: 9667, Yes: 333, NA: 0
 ##   student       0    10000 10000        2 No: 7056, Yes: 2944, NA: 0
@@ -270,18 +255,158 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##    FALSE
 ##    FALSE
 ## 
-## ── Variable type:numeric ────────────────────────────────────────────────
+## ── Variable type:numeric ────────────────────────────────
 ##  variable missing complete     n     mean       sd     p0      p25
 ##   balance       0    10000 10000   835.37   483.71   0      481.73
 ##    income       0    10000 10000 33516.98 13336.64 771.97 21340.46
 ##       p50      p75     p100     hist
 ##    823.64  1166.31  2654.32 ▅▆▇▆▃▁▁▁
 ##  34552.64 43807.73 73554.23 ▁▆▆▆▇▅▁▁</code></pre>
+<p>The scatterplot signals a strong relationship between <code>balance</code> and <code>default</code>.</p>
 <pre class="sourceCode r"><code class="sourceCode r">default <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> balance, <span class="dt">y =</span> income, <span class="dt">fill =</span> default)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_hex</span>(<span class="dt">alpha =</span> <span class="dv">2</span><span class="op">/</span><span class="dv">3</span>)</code></pre>
-<p><img src="tidy_islr_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-73-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>The boxplot captures the stark difference in <code>balance</code> between those who default and do not.</p>
+<pre class="sourceCode r"><code class="sourceCode r">default <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> balance, <span class="dt">fill =</span> default)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_boxplot</span>()</code></pre>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-74-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+<div id="why-not-linear-regression" class="section level2">
+<h2><span class="header-section-number">4.3</span> Why Not Linear Regression?</h2>
+<p>Imagine we were trying to predict the medical outcome of a patient on the basis of their symptoms. Let’s say there are three possible diagnoses: <code>stroke</code>, <code>overdose</code>, and <code>seizure</code>. We could encode these into a quantitative variable <span class="math inline">\(Y\)</span>. that takes values from 1 to 3. Using least squares, we could then fit a regression model to predict <span class="math inline">\(Y\)</span>.</p>
+<p>Unfortunately, this coding implies an ordering of the outcomes. It also insists that the difference between levels is quantitative, and equivalent across all sequences of levels.</p>
+<p>Thus, changing the order of encodings would change relationship among the conditions, producing fundamentally different linear models.</p>
+<p>There could be a case where a response variables took on a natural ordering, such as <code>mild</code>, <code>moderate</code>, <code>severe</code>. We would also need to believe that the gap between each level is equivalent. Unfortunately, there is no natural way to convert a qualitative response variable with more than two levels into a quantitative response that is appropriate for linear regression.</p>
+<p>For cases of <em>binary</em> qualitative response, we can utilize the dummy variable solution seen in Chapter 3. In this case, the order of the encodings is arbitrary.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> add latex for encoding</span></code></pre>
+<p>Linear regression does work for this binary response scenario. However, it is possible for linear regression to produce estimates outside of the <code>[0, 1]</code> interval, which affects their interpretability as probabilities.</p>
+<p>When the qualitative response has more than two levels, we need to use classification methods that are appropriate.</p>
+</div>
+<div id="logistic-regression" class="section level2">
+<h2><span class="header-section-number">4.4</span> Logistic Regression</h2>
+<p>Let’s consider the <code>default</code> dataset. Rather than modeling this response <span class="math inline">\(Y\)</span> directly, logistic regression models the <em>probability</em> that <span class="math inline">\(Y\)</span> belongs to a particular category.</p>
+<p>If we estimate using linear regression, we see that some estimated probabilities are negative. We are using the <code>tidymodels</code> package.</p>
+<pre class="sourceCode r"><code class="sourceCode r">default &lt;-<span class="st"> </span>default <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">default_bool =</span> <span class="kw">if_else</span>(default <span class="op">==</span><span class="st"> &quot;Yes&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>))
+lm_default &lt;-<span class="st"> </span><span class="kw">linear_reg</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> default, default_bool <span class="op">~</span><span class="st"> </span>balance)
 
+default <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">bind_cols</span>(<span class="kw">predict</span>(lm_default, default)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> balance)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span>  .pred)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> default_bool, <span class="dt">colour =</span> default_bool)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">guides</span>(<span class="dt">colour=</span><span class="ot">FALSE</span>)</code></pre>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-76-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>Below is the classification using logistic regression, where are probabilities fall between <code>0</code> and <code>1</code>.</p>
+<pre class="sourceCode r"><code class="sourceCode r">logi_default &lt;-<span class="st"> </span><span class="kw">logistic_reg</span>(<span class="dt">mode =</span> <span class="st">&quot;classification&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> default, <span class="kw">as.factor</span>(default_bool) <span class="op">~</span><span class="st"> </span>balance)
+
+default <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">bind_cols</span>(<span class="kw">predict</span>(logi_default, default, <span class="dt">type =</span> <span class="st">&quot;prob&quot;</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> balance)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span>  .pred_<span class="dv">1</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> default_bool, <span class="dt">colour =</span> default_bool)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">guides</span>(<span class="dt">colour=</span><span class="ot">FALSE</span>)</code></pre>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-77-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>Logistic regression in this example is modelling the probability of default, given the value of <code>balance</code>.</p>
+<div>
+<p style="text-align:center">
+Pr(<code>default</code> = <code>Yes</code>|<code>balance</code>)
+</p>
+</div>
+<p>These values, which we abbreviate as <em>p</em>(<code>balance</code>), range between <code>0</code> and <code>1</code>. Logistic regression will always produce an <em>S-shaped</em> curve. Regardless of the value of <span class="math inline">\(X\)</span>, we will receive a sensible prediction.</p>
+<p>From this, we can make a classification prediction for <code>default</code>. Depending how conservative we are, the threshold for this could vary. Depending on the domain and context of the classification, a decision boundary around <code>0.5</code> or <code>0.1</code> might be appropriate.</p>
+<div id="the-logistic-model" class="section level3">
+<h3><span class="header-section-number">4.4.1</span> The Logistic Model</h3>
+<p>The problem of using a linear regression model is evident in the chart above, where probabilities can fall below <code>0</code> or greater than <code>1</code>.</p>
+<p>To avoid this, we must model <span class="math inline">\(p(X)\)</span> using a function that gives outputs between <code>0</code> and <code>1</code> for all values of <span class="math inline">\(X\)</span>. In logistic regression, we use the <em>logistic function</em>,</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(p(X) = \frac{e^{\beta_0+\beta_1X}}{1+e^{\beta_0+\beta_1X}}\)</span>
+</p>
+<p class="vocab" style="text-align:right">
+<em>logistic function</em>
+</p>
+</div>
+<p>To fit the model, we use a method called <em>maximum likelihood</em>.</p>
+<p>If we manipulate the logistic function, we find that</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(\frac{p(X)}{1-p(X)} = e^{\beta_0+\beta_1X}\)</span>
+</p>
+<p class="vocab" style="text-align:right">
+<em>odds</em>
+</p>
+</div>
+<p>This is called the <em>odds</em>, and takes any value from <span class="math inline">\(0\)</span> to <span class="math inline">\(\infty\)</span>. This is the same type of odds used in sporting events (“9:1 odds to win this match”, etc). If <span class="math inline">\(p(X) = 0.9\)</span>, then odds are <span class="math inline">\(\frac{0.9}{1-0.9} = 9\)</span>.</p>
+<p>If we take the logarithm of the odds, we arrive at</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(log(\frac{p(X)}{1-p(X)}) = \beta_0+\beta_1X\)</span>
+</p>
+<p class="vocab" style="text-align:right">
+<em>log-odds  logit</em>
+</p>
+</div>
+<p>The left-hande side is called the <em>log-odds</em> or <em>logit</em>. The logistic regression model has a logit that is linear in <span class="math inline">\(X\)</span>.</p>
+<p>The contrast to linear regression is that increasing <span class="math inline">\(X\)</span> by one-unit changes the log odds by <span class="math inline">\(\beta_1\)</span> (or the odds by <span class="math inline">\(e^{\beta_1}\)</span>. However, since <span class="math inline">\(p(X)\)</span> and <span class="math inline">\(X\)</span> relationship is not a straight line (see plot above), <span class="math inline">\(\beta_1\)</span> does not correspond to the the change in <span class="math inline">\(p(X)\)</span> associated with a one-unit increase in <span class="math inline">\(X\)</span>. The amount that <span class="math inline">\(p(X)\)</span> changes depends on the current value of <span class="math inline">\(X\)</span>. See how the slope approaches <code>0</code> more and more slowly as <code>balance</code> increases.</p>
+<p>Regardless of how much <span class="math inline">\(p(X)\)</span> moves, if <span class="math inline">\(\beta_1\)</span> is positive then increasing <span class="math inline">\(X\)</span> will be associated with increasing <span class="math inline">\(p(X)\)</span>. The opposite is also true.</p>
+</div>
+<div id="estimating-the-regression-coefficients-1" class="section level3">
+<h3><span class="header-section-number">4.4.2</span> Estimating the Regression Coefficients</h3>
+<p>The coefficients in the logistic regression equation must be estimated used training data. Linear regression used the least squares approach to estimate the coefficients. It is possible to use non-linear least squares to fit the model, but <em>maximum likelihood</em> is preferred.</p>
+<p>Maximum likelihood seeks to to find estimates for <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> such that the predicted probability <span class="math inline">\(\hat{p}(x_i)\)</span> of default for each individual corresponds as closely as possible to to the individual’s observed default status. We want estimates that produce low probabilities for individuals who did not default, and high probabilities for those who did.</p>
+<p>We can formalize this with a <em>likelihood function</em>:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#TODO add likelihood function, links, etc</span></code></pre>
+<p>We can examine the coefficients and other information from our logistic regression model.</p>
+<pre class="sourceCode r"><code class="sourceCode r">logi_default <span class="op">%&gt;%</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">tidy</span>()</code></pre>
+<pre><code>## # A tibble: 2 x 5
+##   term         estimate std.error statistic   p.value
+##   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept) -10.7      0.361        -29.5 3.62e-191
+## 2 balance       0.00550  0.000220      25.0 1.98e-137</code></pre>
+<p>If we look at the terms of our logistic regression, we see that the coefficient for <code>balance</code> is positive. This means that higher <code>balance</code> increases <span class="math inline">\(p(Default)\)</span>. A one-unit increase in <code>balance</code> will increase the log odds of defaulting by ~0.0055.</p>
+<p>The test-statistic also behaves similarly. Coefficients with large statistics indicate evidence against the null hypothesis <span class="math inline">\(H_0: \beta_1 = 0\)</span>. For logistic regression, the null hypothesis implies that <span class="math inline">\(p(X) = \frac{e^{\beta_0}}{1+e^{\beta_0}}\)</span>, which means that the probability of defaulting does not depend on <code>balance.</code></p>
+<p>Given the miniscule p-value associated with our <code>balance</code> coefficient, we can confidently reject <span class="math inline">\(H_0\)</span>. The intercept (<span class="math inline">\(\beta_0\)</span>) is typically not of interest; it’s main purpose is to adjust the average fitted probabilities to the proportion of ones in the data.</p>
+</div>
+<div id="making-predictions" class="section level3">
+<h3><span class="header-section-number">4.4.3</span> Making Predictions</h3>
+<p>Once we have the coefficients, we simply compute the probability of <code>default</code> for any given observation.</p>
+<p>Let’s take an individual with a <code>balance</code> of <code>$1000</code>. Using our model terms, we can compute the probability. Let’s extract the terms from the model and plug in a <code>balance</code> of <code>$1000</code>.</p>
+<pre class="sourceCode r"><code class="sourceCode r">logi_coef &lt;-<span class="st"> </span>logi_default <span class="op">%&gt;%</span>
+<span class="st">  </span>broom<span class="op">::</span><span class="kw">tidy</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="co"># widen it and clean up names</span>
+<span class="st">  </span><span class="kw">select</span>(term, estimate) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> term, <span class="dt">values_from =</span> estimate) <span class="op">%&gt;%</span>
+<span class="st">  </span>janitor<span class="op">::</span><span class="kw">clean_names</span>()
+
+logi_coef <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prob_1000 =</span> <span class="kw">exp</span>(intercept <span class="op">+</span><span class="st"> </span>balance <span class="op">*</span><span class="st"> </span><span class="dv">1000</span>) <span class="op">/</span>
+<span class="st">           </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw">exp</span>(intercept <span class="op">+</span><span class="st"> </span>balance <span class="op">*</span><span class="st"> </span><span class="dv">1000</span>)))</code></pre>
+<pre><code>## # A tibble: 1 x 3
+##   intercept balance prob_1000
+##       &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;
+## 1     -10.7 0.00550   0.00575</code></pre>
+<p>We find the probability to be less than <code>1%</code>.</p>
+<p>We can also incorporate qualitative predictors with the logistic regression model. Here we encode <code>student</code> in to the model.</p>
+<pre class="sourceCode r"><code class="sourceCode r">logi_default_student &lt;-<span class="st"> </span><span class="kw">logistic_reg</span>(<span class="dt">mode =</span> <span class="st">&quot;classification&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> default, <span class="kw">as.factor</span>(default_bool) <span class="op">~</span><span class="st"> </span>student)
+
+logi_default_student <span class="op">%&gt;%</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">tidy</span>()</code></pre>
+<pre><code>## # A tibble: 2 x 5
+##   term        estimate std.error statistic  p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)   -3.50     0.0707    -49.6  0       
+## 2 studentYes     0.405    0.115       3.52 0.000431</code></pre>
+<p>This model indicates that students have a higher rate of defaulting compared to non-students.</p>
+</div>
+<div id="multiple-logistic-regression" class="section level3">
+<h3><span class="header-section-number">4.4.4</span> Multiple Logistic Regression</h3>
+
+</div>
 </div>
 </div>
             </section>
