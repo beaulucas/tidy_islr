@@ -24,7 +24,7 @@
 <meta name="author" content="Beau Lucas" />
 
 
-<meta name="date" content="2019-10-25" />
+<meta name="date" content="2019-11-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="statistical-learning.html">
-
+<link rel="next" href="classification.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -47,6 +47,7 @@
 
 
 
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 <style type="text/css">
@@ -133,26 +134,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
 <li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#an-overview-of-statistical-learning"><i class="fa fa-check"></i><b>1.1</b> An Overview of Statistical Learning</a></li>
 <li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#data-sets-used-in-labs-and-exercises"><i class="fa fa-check"></i><b>1.2</b> Data Sets Used in Labs and Exercises</a></li>
-<li class="chapter" data-level="1.3" data-path="intro.html"><a href="intro.html#book-website"><i class="fa fa-check"></i><b>1.3</b> Book Website</a></li>
+<li class="chapter" data-level="1.3" data-path="intro.html"><a href="intro.html#book-resources"><i class="fa fa-check"></i><b>1.3</b> Book Resources:</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="statistical-learning.html"><a href="statistical-learning.html"><i class="fa fa-check"></i><b>2</b> Statistical Learning</a><ul>
-<li class="chapter" data-level="2.1" data-path="statistical-learning.html"><a href="statistical-learning.html#what-is-statistical-learning"><i class="fa fa-check"></i><b>2.1</b> What is Statistical Learning?</a><ul>
-<li class="chapter" data-level="2.1.1" data-path="statistical-learning.html"><a href="statistical-learning.html#why-estimate-f"><i class="fa fa-check"></i><b>2.1.1</b> Why Estimate <em><span class="math inline">\(f\)</span></em>?</a></li>
-<li class="chapter" data-level="2.1.2" data-path="statistical-learning.html"><a href="statistical-learning.html#how-do-we-estimate-f"><i class="fa fa-check"></i><b>2.1.2</b> How do we estimate <em><span class="math inline">\(f\)</span></em>?</a></li>
-<li class="chapter" data-level="2.1.3" data-path="statistical-learning.html"><a href="statistical-learning.html#the-trade-off-between-prediction-accuracy-and-model-interpretability"><i class="fa fa-check"></i><b>2.1.3</b> The Trade-Off Between Prediction Accuracy and Model Interpretability</a></li>
-<li class="chapter" data-level="2.1.4" data-path="statistical-learning.html"><a href="statistical-learning.html#supervised-versus-unsupervised-learning"><i class="fa fa-check"></i><b>2.1.4</b> Supervised Versus Unsupervised Learning</a></li>
-<li class="chapter" data-level="2.1.5" data-path="statistical-learning.html"><a href="statistical-learning.html#regression-versus-classification-problems"><i class="fa fa-check"></i><b>2.1.5</b> Regression Versus Classification Problems</a></li>
+<li class="chapter" data-level="2.1" data-path="statistical-learning.html"><a href="statistical-learning.html#packages-used-in-this-chapter"><i class="fa fa-check"></i><b>2.1</b> Packages used in this chapter</a></li>
+<li class="chapter" data-level="2.2" data-path="statistical-learning.html"><a href="statistical-learning.html#what-is-statistical-learning"><i class="fa fa-check"></i><b>2.2</b> What is Statistical Learning?</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="statistical-learning.html"><a href="statistical-learning.html#why-estimate-f"><i class="fa fa-check"></i><b>2.2.1</b> Why Estimate <em><span class="math inline">\(f\)</span></em>?</a></li>
+<li class="chapter" data-level="2.2.2" data-path="statistical-learning.html"><a href="statistical-learning.html#how-do-we-estimate-f"><i class="fa fa-check"></i><b>2.2.2</b> How do we estimate <em><span class="math inline">\(f\)</span></em>?</a></li>
+<li class="chapter" data-level="2.2.3" data-path="statistical-learning.html"><a href="statistical-learning.html#the-trade-off-between-prediction-accuracy-and-model-interpretability"><i class="fa fa-check"></i><b>2.2.3</b> The Trade-Off Between Prediction Accuracy and Model Interpretability</a></li>
+<li class="chapter" data-level="2.2.4" data-path="statistical-learning.html"><a href="statistical-learning.html#supervised-versus-unsupervised-learning"><i class="fa fa-check"></i><b>2.2.4</b> Supervised Versus Unsupervised Learning</a></li>
+<li class="chapter" data-level="2.2.5" data-path="statistical-learning.html"><a href="statistical-learning.html#regression-versus-classification-problems"><i class="fa fa-check"></i><b>2.2.5</b> Regression Versus Classification Problems</a></li>
 </ul></li>
-<li class="chapter" data-level="2.2" data-path="statistical-learning.html"><a href="statistical-learning.html#assessing-model-accuracy"><i class="fa fa-check"></i><b>2.2</b> Assessing Model Accuracy</a><ul>
-<li class="chapter" data-level="2.2.1" data-path="statistical-learning.html"><a href="statistical-learning.html#measuring-the-quality-of-fit"><i class="fa fa-check"></i><b>2.2.1</b> Measuring the Quality of Fit</a></li>
-<li class="chapter" data-level="2.2.2" data-path="statistical-learning.html"><a href="statistical-learning.html#the-bias-variance-trade-off"><i class="fa fa-check"></i><b>2.2.2</b> The Bias-Variance Trade-Off</a></li>
-<li class="chapter" data-level="2.2.3" data-path="statistical-learning.html"><a href="statistical-learning.html#the-classification-setting"><i class="fa fa-check"></i><b>2.2.3</b> The Classification Setting</a></li>
+<li class="chapter" data-level="2.3" data-path="statistical-learning.html"><a href="statistical-learning.html#assessing-model-accuracy"><i class="fa fa-check"></i><b>2.3</b> Assessing Model Accuracy</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="statistical-learning.html"><a href="statistical-learning.html#measuring-the-quality-of-fit"><i class="fa fa-check"></i><b>2.3.1</b> Measuring the Quality of Fit</a></li>
+<li class="chapter" data-level="2.3.2" data-path="statistical-learning.html"><a href="statistical-learning.html#the-bias-variance-trade-off"><i class="fa fa-check"></i><b>2.3.2</b> The Bias-Variance Trade-Off</a></li>
+<li class="chapter" data-level="2.3.3" data-path="statistical-learning.html"><a href="statistical-learning.html#the-classification-setting"><i class="fa fa-check"></i><b>2.3.3</b> The Classification Setting</a></li>
 </ul></li>
-<li class="chapter" data-level="2.3" data-path="statistical-learning.html"><a href="statistical-learning.html#lab-introduction-to-r"><i class="fa fa-check"></i><b>2.3</b> Lab: Introduction to R</a></li>
-<li class="chapter" data-level="2.4" data-path="statistical-learning.html"><a href="statistical-learning.html#exercises"><i class="fa fa-check"></i><b>2.4</b> Exercises</a></li>
+<li class="chapter" data-level="2.4" data-path="statistical-learning.html"><a href="statistical-learning.html#lab-introduction-to-r"><i class="fa fa-check"></i><b>2.4</b> Lab: Introduction to R</a></li>
+<li class="chapter" data-level="2.5" data-path="statistical-learning.html"><a href="statistical-learning.html#exercises"><i class="fa fa-check"></i><b>2.5</b> Exercises</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>3</b> Linear Regression</a><ul>
-<li class="chapter" data-level="3.1" data-path="linear-regression.html"><a href="linear-regression.html#packages-used-in-this-chapter"><i class="fa fa-check"></i><b>3.1</b> Packages used in this chapter</a></li>
+<li class="chapter" data-level="3.1" data-path="linear-regression.html"><a href="linear-regression.html#packages-used-in-this-chapter-1"><i class="fa fa-check"></i><b>3.1</b> Packages used in this chapter</a></li>
 <li class="chapter" data-level="3.2" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression"><i class="fa fa-check"></i><b>3.2</b> Simple Linear Regression</a><ul>
 <li class="chapter" data-level="3.2.1" data-path="linear-regression.html"><a href="linear-regression.html#estimating-the-coefficients"><i class="fa fa-check"></i><b>3.2.1</b> Estimating the Coefficients</a></li>
 <li class="chapter" data-level="3.2.2" data-path="linear-regression.html"><a href="linear-regression.html#assessing-the-accuracy-of-the-coefficient-estimate"><i class="fa fa-check"></i><b>3.2.2</b> Assessing the Accuracy of the Coefficient Estimate</a></li>
@@ -165,8 +167,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.3.4" data-path="linear-regression.html"><a href="linear-regression.html#qualitative-predictors-with-more-than-two-levels"><i class="fa fa-check"></i><b>3.3.4</b> Qualitative Predictors with More than Two Levels</a></li>
 <li class="chapter" data-level="3.3.5" data-path="linear-regression.html"><a href="linear-regression.html#extensions-of-the-linear-model"><i class="fa fa-check"></i><b>3.3.5</b> Extensions of the Linear Model</a></li>
 <li class="chapter" data-level="3.3.6" data-path="linear-regression.html"><a href="linear-regression.html#potential-problems"><i class="fa fa-check"></i><b>3.3.6</b> Potential Problems</a></li>
+<li class="chapter" data-level="3.3.7" data-path="linear-regression.html"><a href="linear-regression.html#the-marketing-plan"><i class="fa fa-check"></i><b>3.3.7</b> The Marketing Plan</a></li>
+<li class="chapter" data-level="3.3.8" data-path="linear-regression.html"><a href="linear-regression.html#comparison-of-linear-regression-with-k-nearest-neighbors"><i class="fa fa-check"></i><b>3.3.8</b> Comparison of Linear Regression with <em>K</em>-Nearest Neighbors</a></li>
 </ul></li>
+<li class="chapter" data-level="3.4" data-path="linear-regression.html"><a href="linear-regression.html#lab-linear-regression"><i class="fa fa-check"></i><b>3.4</b> Lab: Linear Regression</a><ul>
+<li class="chapter" data-level="3.4.1" data-path="linear-regression.html"><a href="linear-regression.html#fitting-a-linear-regression"><i class="fa fa-check"></i><b>3.4.1</b> Fitting a linear regression</a></li>
+<li class="chapter" data-level="3.4.2" data-path="linear-regression.html"><a href="linear-regression.html#multiple-linear-regression-1"><i class="fa fa-check"></i><b>3.4.2</b> Multiple Linear Regression</a></li>
+<li class="chapter" data-level="3.4.3" data-path="linear-regression.html"><a href="linear-regression.html#interaction-terms"><i class="fa fa-check"></i><b>3.4.3</b> Interaction Terms</a></li>
+<li class="chapter" data-level="3.4.4" data-path="linear-regression.html"><a href="linear-regression.html#non-linear-transformations-of-the-predictors"><i class="fa fa-check"></i><b>3.4.4</b> Non-linear Transformations of the Predictors</a></li>
 </ul></li>
+<li class="chapter" data-level="3.5" data-path="linear-regression.html"><a href="linear-regression.html#exercises-1"><i class="fa fa-check"></i><b>3.5</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="classification.html"><a href="classification.html"><i class="fa fa-check"></i><b>4</b> Classification</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/beaulucas/tidy_islr" target="blank">GitHub Repository</a></li>
 
@@ -191,10 +203,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Chapter 3</span> Linear Regression</h1>
 <hr />
 <p>Linear regression is a simple yet very powerful approach in statistical learning. It is important to have a strong understanding of it before moving on to more complex learning methods.</p>
-<div id="packages-used-in-this-chapter" class="section level2">
+<div id="packages-used-in-this-chapter-1" class="section level2">
 <h2><span class="header-section-number">3.1</span> Packages used in this chapter</h2>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
-<span class="kw">library</span>(modelr)</code></pre>
+<span class="kw">library</span>(modelr)
+<span class="kw">library</span>(knitr)
+<span class="kw">library</span>(kableExtra)</code></pre>
 </div>
 <div id="simple-linear-regression" class="section level2">
 <h2><span class="header-section-number">3.2</span> Simple Linear Regression</h2>
@@ -263,10 +277,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><span class="math inline">\(\beta_0\)</span> is the intercept term (value of <span class="math inline">\(Y\)</span> when <span class="math inline">\(X = 0\)</span>). <span class="math inline">\(\beta_1\)</span> is the slope (how much does <span class="math inline">\(Y\)</span> change with one-unit change of <span class="math inline">\(X\)</span>). <span class="math inline">\(\epsilon\)</span> is the error term that captures everything our model doesn’t (unknown variables, measurement error, unknown true relationship).</p>
 <p>The population regression line captures the best linear approximation to the true relationship between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>. In real data, we often don’t know the true relationship and have to rely on a set of observations. Using the observations to estimate the coefficients via least squares produces the <em>least squares line</em>. Let’s simulate and visualize this relationship:</p>
 <ul>
-<li>simulate <code>n = 200</code> observations
-<ul>
+<li>simulate <code>n = 200</code> observations</li>
 <li>compare the population regression line (<code>sim_y</code>) to a number of possible least squares lines (generated from 10 different training sets of the data)</li>
-</ul></li>
 </ul>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># f(x), or Y = 2 + 2x + error</span>
 
@@ -315,7 +327,7 @@ preds &lt;-<span class="st"> </span><span class="kw">unnest</span>(by_iter, pred
     <span class="dt">title =</span> <span class="st">&quot;Each least squares line provides a reasonable estimate&quot;</span>,
     <span class="dt">y =</span> <span class="st">&quot;y&quot;</span>
   )</code></pre>
-<p><img src="tidy_islr_files/figure-html/unnamed-chunk-10-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-11-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>The chart above demonstrates the population regression line (red) surrounded by ten different estimates of the least squares line. Notice how every least squares line (shades of blue) is different. This is because each one is generated from a random sample pulled from the simulated data. For a real-world comparison, the simulated data would be the entire population data which is often impossible to obtain. The observations used to generate the least squares line would be the sample data we have access to. In the same way a sample mean can provide a reasonable estimate of the population mean, fitting a least squares line can provide a reasonable estimate of the population regression line.</p>
 <p>This comparison of linear regression to estimating population means touches on the topic of bias. An estimate of <span class="math inline">\(\mu\)</span> using the the sample mean <span class="math inline">\(\hat\mu\)</span> is unbiased. On average, the sample mean will not systemically over or underestimate <span class="math inline">\(\mu\)</span>. If we were to take a large enough estimates of <span class="math inline">\(\mu\)</span>, each produced by a particular set of observations, then this average would exactly equal <span class="math inline">\(\mu\)</span>. This concept applies to our estimates of <span class="math inline">\(\beta_0, \beta_1\)</span> as well.</p>
 <p>A question that can be asked is how close on average the sample mean <span class="math inline">\(\hat\mu\)</span> is to <span class="math inline">\(\mu\)</span>. We can compute the <em>standard error</em> of <span class="math inline">\(\hat\mu\)</span> to answer this.</p>
@@ -649,7 +661,7 @@ lm_credit <span class="op">%&gt;%</span><span class="st"> </span>broom<span clas
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> balance, <span class="dt">colour =</span> student), <span class="dt">fill =</span> <span class="st">&quot;grey&quot;</span>, <span class="dt">pch =</span> <span class="dv">21</span>, <span class="dt">alpha =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">2</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_minimal</span>()</code></pre>
-<p><img src="tidy_islr_files/figure-html/unnamed-chunk-18-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-19-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>It’s a pretty good fit, and because there is no interaction terms, the lines are parallel. Notice how many more observations there are to fit on for the non-students.</p>
 <p>Now, let’s add an interaction term.</p>
 <pre class="sourceCode r"><code class="sourceCode r">lm_credit_int &lt;-<span class="st"> </span><span class="kw">lm</span>(balance <span class="op">~</span><span class="st"> </span>income <span class="op">+</span><span class="st"> </span>student <span class="op">+</span><span class="st"> </span>income <span class="op">*</span><span class="st"> </span>student, <span class="dt">data =</span> tidy_credit)
@@ -667,7 +679,7 @@ lm_credit_int <span class="op">%&gt;%</span><span class="st"> </span>broom<span 
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> balance, <span class="dt">colour =</span> student), <span class="dt">fill =</span> <span class="st">&quot;grey&quot;</span>, <span class="dt">pch =</span> <span class="dv">21</span>, <span class="dt">alpha =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">2</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_minimal</span>()</code></pre>
-<p><img src="tidy_islr_files/figure-html/unnamed-chunk-20-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-21-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>The model now takes into account how <code>income</code> and <code>student</code> interact with each other. Interpreting the chart suggests that increases in <code>income</code> among students has a smaller effect on balance than it does to non-students.</p>
 <p>Does it fit better?</p>
 <pre class="sourceCode r"><code class="sourceCode r">models &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">without_interaction =</span> lm_credit, <span class="dt">with_interaction =</span> lm_credit_int)
@@ -701,7 +713,7 @@ tidy_auto <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> horsepower, <span class="dt">y =</span> mpg)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">3</span>, <span class="dt">pch =</span> <span class="dv">21</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> pred, <span class="dt">colour =</span> model), <span class="dt">size =</span> <span class="fl">1.5</span>)</code></pre>
-<p><img src="tidy_islr_files/figure-html/unnamed-chunk-22-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-23-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>The second-order polynomial does a good job of fitting the data, while the fifth-order seems to be unnecessary. The model performance reflects that:</p>
 <pre class="sourceCode r"><code class="sourceCode r">models &lt;-<span class="st"> </span><span class="kw">list</span>(
   <span class="dt">linear =</span> lm_auto,
@@ -742,7 +754,7 @@ purrr<span class="op">::</span><span class="kw">map_df</span>(models, broom<span
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">3</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">size =</span> <span class="fl">1.5</span>, <span class="dt">colour=</span><span class="st">&quot;grey&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>model, <span class="dt">nrow=</span><span class="dv">3</span>)</code></pre>
-<p><img src="tidy_islr_files/figure-html/unnamed-chunk-24-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-25-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>If the residual plot indicates that there non-linear associations in the data, a simple approach is to use non-linear transofmrations of the predictors.</p>
 </div>
 <div id="correlation-of-error-terms" class="section level4">
@@ -778,7 +790,7 @@ tidy_cats <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> bwt, <span class="dt">y =</span> hwt <span class="op">-</span><span class="st"> </span>pred)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&quot;lm&quot;</span>, <span class="dt">level =</span> <span class="fl">0.99</span>)</code></pre>
-<p><img src="tidy_islr_files/figure-html/unnamed-chunk-26-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-27-1.png" width="576" style="display: block; margin: auto;" /></p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> add OLS method to this</span>
 <span class="co"># get weights of each response</span>
 
@@ -812,7 +824,7 @@ tidy_cats <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> awake, <span class="dt">y =</span> bodywt, <span class="dt">colour =</span> name)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
 <span class="st">  </span>gghighlight<span class="op">::</span><span class="kw">gghighlight</span>(bodywt<span class="op">&gt;</span><span class="dv">2000</span>)</code></pre>
-<p><img src="tidy_islr_files/figure-html/unnamed-chunk-28-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-29-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>Let’s fit a linear model to predict body weight from how long the animal is awake.</p>
 <p>Notice how the data that maintains the elephant observations significantly affects the slope, drawing the regression line away from the majority of observations.</p>
 <pre class="sourceCode r"><code class="sourceCode r">lm_sleep &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> msleep, bodywt <span class="op">~</span><span class="st"> </span>awake)
@@ -824,7 +836,7 @@ msleep <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> pred, <span class="dt">colour =</span> model), <span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_colour_viridis_d</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_minimal</span>()</code></pre>
-<p><img src="tidy_islr_files/figure-html/unnamed-chunk-29-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-30-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>The model excluding the elephant observations has a significantly higher <span class="math inline">\(R^2\)</span>, which indicates a better fit.</p>
 <pre class="sourceCode r"><code class="sourceCode r">models &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">with_outliers =</span> lm_sleep,
                <span class="dt">without_outliers =</span> lm_sleep_filtered)
@@ -840,7 +852,7 @@ purrr<span class="op">::</span><span class="kw">map_df</span>(models, broom<span
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> awake, <span class="dt">y =</span> <span class="kw">log</span>(bodywt))) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>()</code></pre>
-<p><img src="tidy_islr_files/figure-html/unnamed-chunk-31-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-32-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>The model that uses <code>log(bodywt)</code> as the response also has better performance than both models above.</p>
 <pre class="sourceCode r"><code class="sourceCode r">lm_sleep_log &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> msleep, <span class="kw">log</span>(bodywt) <span class="op">~</span><span class="st"> </span>awake)
 lm_sleep_log <span class="op">%&gt;%</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">glance</span>() <span class="op">%&gt;%</span>
@@ -860,7 +872,7 @@ lm_sleep_log <span class="op">%&gt;%</span><span class="st"> </span>broom<span c
 
 tidy_airquality <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ozone, <span class="dt">y =</span> temp)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span>gghighlight<span class="op">::</span><span class="kw">gghighlight</span>(ozone <span class="op">&gt;</span><span class="st"> </span><span class="dv">100</span> <span class="op">&amp;</span><span class="st"> </span>temp <span class="op">&lt;</span><span class="st"> </span><span class="dv">80</span>)</code></pre>
-<p><img src="tidy_islr_files/figure-html/unnamed-chunk-33-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-34-1.png" width="576" style="display: block; margin: auto;" /></p>
 <pre class="sourceCode r"><code class="sourceCode r">lm_temp &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_airquality, temp <span class="op">~</span><span class="st"> </span>ozone)
 lm_temp_filtered &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_airquality <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="op">!</span>(ozone <span class="op">&gt;</span><span class="st"> </span><span class="dv">100</span> <span class="op">&amp;</span><span class="st"> </span>temp <span class="op">&lt;</span><span class="st"> </span><span class="dv">80</span>)), temp <span class="op">~</span><span class="st"> </span>ozone)</code></pre>
 <p>Notice the slight change in the fit. This observation isn’t that extreme, but still produces a visible difference in fit. More extreme observations would move this line even further, potentially causing an improper fit.</p>
@@ -869,7 +881,7 @@ lm_temp_filtered &lt;-<span class="st"> </span><span class="kw">lm</span>(<span 
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ozone, <span class="dt">y =</span> pred, <span class="dt">colour =</span> model)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> temp), <span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="dt">colour =</span> <span class="st">&quot;grey&quot;</span>)</code></pre>
-<p><img src="tidy_islr_files/figure-html/unnamed-chunk-35-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-36-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>The model without the strange observation performs slightly better. In reality, I would probably include it as going from an <span class="math inline">\(R^2\)</span> of <code>0.488</code> to <code>0.506</code> isn’t worth the manual effort.</p>
 <pre class="sourceCode r"><code class="sourceCode r">models &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">with_leverage =</span> lm_temp,
                <span class="dt">without_leverage =</span> lm_temp_filtered)
@@ -896,7 +908,7 @@ purrr<span class="op">::</span><span class="kw">map_df</span>(models, broom<span
 <p><code>Collinearity</code> is when two or more predictor variables are closely related to one another.</p>
 <p>If we look at our <code>tidy_credit</code> tibble, we see that <code>rating</code> and <code>limit</code> are very highly correlated with one another.</p>
 <pre class="sourceCode r"><code class="sourceCode r">tidy_credit <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> rating, <span class="dt">y =</span> limit)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre>
-<p><img src="tidy_islr_files/figure-html/unnamed-chunk-37-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-38-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>The effects of collinearity can make it difficult to separate out the individual effects of collinear variables on the response. Since <code>limit</code> and <code>rating</code> move together, it can be hard to determine how each one separately is associated with the response, <code>balance</code>.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> add contour plot</span>
 <span class="co"># clean up what this link did: https://yetanotheriteration.netlify.com/2018/01/high-collinearity-effect-in-regressions/</span></code></pre>
@@ -916,18 +928,495 @@ purrr<span class="op">::</span><span class="kw">map_df</span>(models, broom<span
 ## 5 Balance ~ Rating + Li… rating       2.20e+0   0.952       2.31  2.13e-  2
 ## 6 Balance ~ Rating + Li… limit        2.45e-2   0.0638      0.384 7.01e-  1</code></pre>
 <p>The growth in the standard error caused by collinearity caises the t-statistic (<span class="math inline">\(B_j\)</span> divided by it’s standard error) to decline. As a result, we may fail to reject <span class="math inline">\(H_0: \beta_j = 0\)</span>. This means that the <em>power</em> of the hypothesis test – the probability of correctly detecting a non-zero coefficient – is reduced by collinearity. Thus, it is desirable to identify and address collinearity problems while fitting the model.</p>
-<p>A simple way is to look at the correlation matrix of the predoctors.</p>
+<p>A simple way is to look at the correlation matrix of the predictors.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(corrr)
-tidy_credit <span class="op">%&gt;%</span>
+tidy_credit_corr &lt;-<span class="st"> </span>tidy_credit <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select_if</span>(is.numeric) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>id) <span class="op">%&gt;%</span>
 <span class="st">  </span>corrr<span class="op">::</span><span class="kw">correlate</span>() <span class="op">%&gt;%</span>
 <span class="st">  </span>corrr<span class="op">:::</span><span class="kw">stretch</span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x))</code></pre>
-<p><img src="tidy_islr_files/figure-html/unnamed-chunk-40-1.png" width="576" style="display: block; margin: auto;" /></p>
+<span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(r))
 
+<span class="co"># remove duplicate combinations of x, y</span>
+tidy_credit_corr &lt;-<span class="st"> </span>tidy_credit_corr <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sort_var =</span> <span class="kw">map2_chr</span>(x, y, <span class="op">~</span><span class="kw">toString</span>(<span class="kw">sort</span>(<span class="kw">c</span>(.x, .y))))) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">distinct</span>(sort_var, <span class="dt">.keep_all =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>sort_var)
+
+tidy_credit_corr <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(<span class="kw">desc</span>(<span class="kw">abs</span>(r))) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(<span class="kw">abs</span>(r) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.05</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">kable</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+x
+</th>
+<th style="text-align:left;">
+y
+</th>
+<th style="text-align:right;">
+r
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+limit
+</td>
+<td style="text-align:left;">
+rating
+</td>
+<td style="text-align:right;">
+0.9968797
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+rating
+</td>
+<td style="text-align:left;">
+balance
+</td>
+<td style="text-align:right;">
+0.8636252
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+limit
+</td>
+<td style="text-align:left;">
+balance
+</td>
+<td style="text-align:right;">
+0.8616973
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+income
+</td>
+<td style="text-align:left;">
+limit
+</td>
+<td style="text-align:right;">
+0.7920883
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+income
+</td>
+<td style="text-align:left;">
+rating
+</td>
+<td style="text-align:right;">
+0.7913776
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+income
+</td>
+<td style="text-align:left;">
+balance
+</td>
+<td style="text-align:right;">
+0.4636565
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+income
+</td>
+<td style="text-align:left;">
+age
+</td>
+<td style="text-align:right;">
+0.1753384
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+rating
+</td>
+<td style="text-align:left;">
+age
+</td>
+<td style="text-align:right;">
+0.1031650
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+limit
+</td>
+<td style="text-align:left;">
+age
+</td>
+<td style="text-align:right;">
+0.1008879
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cards
+</td>
+<td style="text-align:left;">
+balance
+</td>
+<td style="text-align:right;">
+0.0864563
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+rating
+</td>
+<td style="text-align:left;">
+cards
+</td>
+<td style="text-align:right;">
+0.0532390
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cards
+</td>
+<td style="text-align:left;">
+education
+</td>
+<td style="text-align:right;">
+-0.0510842
+</td>
+</tr>
+</tbody>
+</table>
+<p>Here we can see the strongest correlation is between <code>limit</code> and <code>rating</code>, <code>rating</code> and <code>balance</code>, which makes sense. Card issuers give higher <code>limit</code> to those with higher <code>rating</code>, and <code>rating</code> is directly affted by <code>balance</code>. As we move down the table, weaker correlations appear, such as <code>cards</code> and <code>education</code>.</p>
+<p>Such tables allow one to identify potential collinearity problems between two predictors. However, it is possible for collinearity to exist between three or more variables even if there is no correlation between any of the pairs in that group. This is called <em>multicollinearity</em>. In this case, we compute the <em>variance inflation factor</em> (VIF). The VIF is the ratio of the variance of <span class="math inline">\(\hat\beta_j\)</span> when fitting the full model divided by the variance of <span class="math inline">\(\hat\beta_j\)</span> if fit on its own.</p>
+<p>VIF can also be thought of as checking if a predictor can be explained by all the other predictors in the dataset. In this case, that predictor provides no novel information, but can add a significant amount of variance. Such predictors with high VIF are a candidate for removal from the model.</p>
+<p>Here is a video (Python) explaining how to use VIF to tackle multicollinearity:</p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=qmt7ZZoiDwc">Variance Inflation Factor (VIF) for Detecting Multicolinearity in Python</a></li>
+</ul>
+<p>A rule of thumb is that a VIF value exceeding 10 indicates a problematic amount of collinearity.</p>
+<p>The VIF for each variable can be computed using the formula</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(VIF(\hat\beta_j) = \frac{1}{1-R^2_{X_j|X_-j}}\)</span>
+</p>
+<p class="vocab" style="text-align:right">
+<em>leverage statistic</em>
+</p>
+</div>
+<p>where <span class="math inline">\(R^2_{X_j|X_-j}\)</span> is the <span class="math inline">\(R^2\)</span> from a regression of <span class="math inline">\(X_j\)</span> onto all of the other predictors. If a variable <span class="math inline">\(X_j\)</span> has a high <span class="math inline">\(R^2\)</span> when regressed onto all other predictor variables (other predictor variables can explain a large amount of <span class="math inline">\(X_j\)</span>’s variance), the VIF will be high.</p>
+<p>In R, we can use the <code>car</code> package to calculate <code>GVIF</code> for a <code>lm</code> object.</p>
+<pre class="sourceCode r"><code class="sourceCode r">car<span class="op">::</span><span class="kw">vif</span>(<span class="kw">lm</span>(<span class="dt">data =</span> tidy_credit <span class="op">%&gt;%</span>
+<span class="st">              </span><span class="kw">select</span>(<span class="op">-</span>id), balance <span class="op">~</span><span class="st"> </span>.)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">as_tibble</span>(<span class="dt">rownames =</span> <span class="st">&quot;variable&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(GVIF))</code></pre>
+<pre><code>## # A tibble: 10 x 4
+##   variable   GVIF    Df `GVIF^(1/(2*Df))`
+##   &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;             &lt;dbl&gt;
+## 1 rating   236.       1             15.4 
+## 2 limit    234.       1             15.3 
+## 3 income     2.79     1              1.67
+## 4 cards      1.45     1              1.20
+## 5 age        1.05     1              1.03
+## 6 married    1.04     1              1.02
+## # … with 4 more rows</code></pre>
+<p>As we can see here, the most problematic variables are <code>rating</code> and <code>limit</code>, which both exceed VIFs of 200. It seems that <code>rating</code> and <code>limit</code> can be explained by the other predictors in the dataset.</p>
+<p>There are two simple solutions for this. The first is to drop problematic variables from the regression.</p>
+<p>Let’s drop <code>rating</code> and see what happens.</p>
+<pre class="sourceCode r"><code class="sourceCode r">car<span class="op">::</span><span class="kw">vif</span>(<span class="kw">lm</span>(<span class="dt">data =</span> tidy_credit <span class="op">%&gt;%</span>
+<span class="st">              </span><span class="kw">select</span>(<span class="op">-</span>id, <span class="op">-</span>rating), balance <span class="op">~</span><span class="st"> </span>.)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">as_tibble</span>(<span class="dt">rownames =</span> <span class="st">&quot;variable&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(GVIF))</code></pre>
+<pre><code>## # A tibble: 9 x 4
+##   variable   GVIF    Df `GVIF^(1/(2*Df))`
+##   &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;             &lt;dbl&gt;
+## 1 income     2.77     1              1.67
+## 2 limit      2.71     1              1.65
+## 3 age        1.05     1              1.03
+## 4 married    1.03     1              1.02
+## 5 ethnicity  1.03     2              1.01
+## 6 student    1.02     1              1.01
+## # … with 3 more rows</code></pre>
+<p>Just like that, <code>limit</code> goes from VIF &gt;200 down to ~2.7. Is the fit compromised? The model without rating has an <span class="math inline">\(R^2\)</span> of <code>0.954</code>, while the model containing it has <code>0.955</code>. Such negligible change in <span class="math inline">\(R_2\)</span> shows the redundant information provided by the variable. Reducing the multicollinearity gives us an equivalent level fit while reducing the chance for a significant predictor to end up with an insignificant coefficient in our model. This is especially important when extending a pre-existing model on to a new, unknown sample.</p>
+<p>Another solution would be to combine collinear variables into a single predictor. For example, taking the average of standardized versions of <code>limit</code> and <code>rating</code> and creating a new variable that measures <em>credit worthiness</em>.</p>
 </div>
 </div>
+<div id="the-marketing-plan" class="section level3">
+<h3><span class="header-section-number">3.3.7</span> The Marketing Plan</h3>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span></code></pre>
+<p>We return to the seven questions we set out to answer regarding <code>Advertising</code> data.</p>
+</div>
+<div id="comparison-of-linear-regression-with-k-nearest-neighbors" class="section level3">
+<h3><span class="header-section-number">3.3.8</span> Comparison of Linear Regression with <em>K</em>-Nearest Neighbors</h3>
+<p>Linear regression is an example of a <em>parametric</em> approach because it assumes a linear functional form for <span class="math inline">\(f(X)\)</span>. The advantages are:</p>
+<ul>
+<li>estimating small number of coefficients is easy</li>
+<li>coefficients have simple intrepretations</li>
+<li>tests of statistical significance are easily performed</li>
+</ul>
+<p>However, the strong assumptions of the form of <span class="math inline">\(f(X)\)</span> come at a cost. If the functional form is far from the truth, then the model will perform poorly in terms of prediction accuracy.</p>
+<p><em>Non-parametric</em> methods do not explicitly assume a parametric form for <span class="math inline">\(f(X)\)</span>, and thereby provide an alternative and more flexible approach for performing regression. Let’s consider one of the simplest and best-known non-parametric methods, <em>K-nearest neighbors regression</em> (KNN regression).</p>
+<p>Given a value for <span class="math inline">\(K\)</span> and a prediction point <span class="math inline">\(x_0\)</span>, KNN regression first identifies the <span class="math inline">\(K\)</span> training observations that are closest to <span class="math inline">\(x_0\)</span>, represented by <span class="math inline">\(\mathcal{N}_0\)</span>. It then estimates <span class="math inline">\(f(x_0)\)</span> using the average of all the training response in <span class="math inline">\(\mathcal{N}_0\)</span>. In other words,</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(\hat{f}(x_0) = \frac{1}{K}\sum_{x_i\in\mathcal{N_0}y_i\)</span>
+</p>
+<p class="vocab" style="text-align:right">
+</p>
+</div>
+<p>When <span class="math inline">\(K\)</span> is small, the KNN fits close to the training observations, and provides a rough step function. As <span class="math inline">\(K\)</span> increases, the prediction is averaged over a larger number of observations, producing small regions of constant prediction and smoother fits. The optimal value for <span class="math inline">\(K\)</span> depends on the <em>bias-variance tradeoff</em>.</p>
+<p>A small value of <span class="math inline">\(K\)</span> provides the most flexible fit, which will have low bias but high variance. The high variance comes from the prediction in a particular region being dependant on a small number of observations. In contrast, larger values of <span class="math inline">\(K\)</span> provide a smoother and less variable fit; incorporating the average of a larger number of points, giving a single observation less weight in the prediction. However, this smoothing can cause bias by masking some of the structure in <span class="math inline">\(f(x)\)</span>. In Chapter 5, (<em>TODO</em> add link), we introduce several approaches for estimating test error rates, which can be used identify optimal value of <span class="math inline">\(K\)</span>.</p>
+<p>We can use the <code>caret</code> package to fit a number of <span class="math inline">\(k\)</span>-values with the KNN algorithm, and see which produces the best R^2. This example doesn’t take into account the bias introduced by a larger <span class="math inline">\(k\)</span>-value, and how that might perform on a test dataset.</p>
+<p>A <span class="math inline">\(k\)</span> of 5 produces the best fit.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> plot 3d with decision boundaries for multiple k</span>
+<span class="kw">library</span>(caret)
+k_values =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">k =</span> <span class="kw">c</span>(<span class="kw">seq</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)))
+
+knn_airquality &lt;-<span class="st"> </span><span class="kw">train</span>(<span class="dt">data =</span> tidy_airquality <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(ozone)), ozone <span class="op">~</span><span class="st"> </span>temp <span class="op">+</span><span class="st"> </span>wind, <span class="dt">method =</span> <span class="st">&quot;knn&quot;</span>,<span class="dt">tuneGrid =</span> k_values, <span class="dt">metric =</span> <span class="st">&quot;Rsquared&quot;</span>)
+knn_results &lt;-<span class="st"> </span>knn_airquality<span class="op">$</span>results <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>()
+knn_results</code></pre>
+<pre><code>## # A tibble: 10 x 7
+##       k  RMSE Rsquared   MAE RMSESD RsquaredSD MAESD
+##   &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
+## 1     1  21.7    0.591  14.6   3.74     0.0986  2.36
+## 2     2  20.4    0.631  14.2   4.07     0.111   2.48
+## 3     3  19.5    0.662  13.9   3.53     0.0939  2.24
+## 4     4  19.0    0.681  13.8   3.81     0.0918  2.24
+## 5     5  18.9    0.681  13.7   3.45     0.0797  2.00
+## 6     6  18.4    0.695  13.3   3.30     0.0691  1.86
+## # … with 4 more rows</code></pre>
+<p>In what setting will a parametric approach outperform a non-parametric approach such as KNN? The parametric approach will outperform the non-parametric approach if the parametric form that has been selected is close to the true form of <span class="math inline">\(f\)</span>.</p>
+<p>Let’s take our ozone example and compare KNN to linear regression. The linear model produces an <span class="math inline">\(R^2\)</span> of <code>0.57</code>, compared to KNN’s <code>0.64</code>. Is KNN’s lack of interpretability worth the <code>0.07</code> gain in <span class="math inline">\(R^2\)</span>? Probably not.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> split into training / test and compare KNN vs Linear</span></code></pre>
+<p>Interestingly, the plot below demonstrates a shortcoming of linear regression as well, and the value of domain knowledge in approaching modeling. <code>ozone</code> values should have a minimum value of <code>0</code>, and yet, our linear regression model predicts negative values for certain observations. One good thing of the KNN approach is that, due to its nature of averaging out observations, it’s impossible for it to run into the same scenario.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> clean plot</span>
+knn_results <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(Rsquared <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(Rsquared))</code></pre>
+<pre><code>## # A tibble: 1 x 7
+##       k  RMSE Rsquared   MAE RMSESD RsquaredSD MAESD
+##   &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
+## 1     7  18.1    0.704  13.1   3.27     0.0618  1.80</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">lm_airquality &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_airquality, ozone <span class="op">~</span><span class="st"> </span>temp <span class="op">+</span><span class="st"> </span>wind)
+
+lm_airquality <span class="op">%&gt;%</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">glance</span>()</code></pre>
+<pre><code>## # A tibble: 1 x 11
+##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     0.569         0.561  21.9      74.5 2.31e-21     3  -521. 1050. 1061.
+## # … with 2 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">tidy_airquality <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">gather_predictions</span>(knn_airquality, lm_airquality) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ozone, <span class="dt">y =</span> pred, <span class="dt">colour =</span> model)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_abline</span>()</code></pre>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-47-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>When the relationship is truly linear, it is common for a linear regression to outperform KNN. However, as the relationship grows more non-linear, KNN might end up as a better approach. KNN being nonparametric doesn’t make any assumptions about the true form of <span class="math inline">\(f(x)\)</span>, and will often outperform (not always) linear regression in non-linear scenarios.</p>
+<p>When does KNN exhibit poor performance? This happens when the number of predictors grows. In a <span class="math inline">\(p=1\)</span> setting with 100 observtions, KNN can probably accurately estimate <span class="math inline">\(f(X)\)</span>. If we increase it to <span class="math inline">\(p=20\)</span>, we run in to the <em>curse of dimensionality</em>. As <span class="math inline">\(p\)</span> increases, the <span class="math inline">\(K\)</span> observations that are nearest to a given test observation <span class="math inline">\(x_0\)</span> may be very far away from <span class="math inline">\(x_0\)</span> in <span class="math inline">\(p\)</span>-dimensional space. This will lead to a poor KNN fit. As a rule of thumb, <strong>parametric methods tend to outperform non-parametric approaches when there is a small number of observations per predictor.</strong></p>
+<p>Linear regression also has the benefit of interpretability. We might forego a bit of prediction accuracy for the sake of a simple model with interpretable coefficients and available p-values.</p>
+</div>
+</div>
+<div id="lab-linear-regression" class="section level2">
+<h2><span class="header-section-number">3.4</span> Lab: Linear Regression</h2>
+<p>Use <code>library()</code> to load libraries.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(MASS, <span class="dt">exclude =</span> <span class="st">&quot;select&quot;</span>)
+<span class="kw">library</span>(ISLR)</code></pre>
+<p>We will be running a linear regression on <code>MASS::Boston</code> dataset.</p>
+<p>First thing to do is convert to a tibble, which provides data types, reasonable printing methods, and tidy structure.</p>
+<pre class="sourceCode r"><code class="sourceCode r">boston &lt;-<span class="st"> </span>MASS<span class="op">::</span>Boston <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>()
+boston</code></pre>
+<pre><code>## # A tibble: 506 x 14
+##      crim    zn indus  chas   nox    rm   age   dis   rad   tax ptratio
+##     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;   &lt;dbl&gt;
+## 1 0.00632    18  2.31     0 0.538  6.58  65.2  4.09     1   296    15.3
+## 2 0.0273      0  7.07     0 0.469  6.42  78.9  4.97     2   242    17.8
+## 3 0.0273      0  7.07     0 0.469  7.18  61.1  4.97     2   242    17.8
+## 4 0.0324      0  2.18     0 0.458  7.00  45.8  6.06     3   222    18.7
+## 5 0.0690      0  2.18     0 0.458  7.15  54.2  6.06     3   222    18.7
+## 6 0.0298      0  2.18     0 0.458  6.43  58.7  6.06     3   222    18.7
+## # … with 500 more rows, and 3 more variables: black &lt;dbl&gt;, lstat &lt;dbl&gt;,
+## #   medv &lt;dbl&gt;</code></pre>
+<p>We are interested in predicting <code>medv</code> (median house value) using 13 predictors, such as <code>rm</code> (number of rooms per house), <code>age</code> (average age of houses), and <code>lstat</code>(percent of households with low socioeconomic status).</p>
+<div id="fitting-a-linear-regression" class="section level3">
+<h3><span class="header-section-number">3.4.1</span> Fitting a linear regression</h3>
+<p>We will use the <code>lm</code> function to fit a simple linear regression, which takes the form <code>lm(data = data, y ~ x)</code>.</p>
+<pre class="sourceCode r"><code class="sourceCode r">boston_lm &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> boston, medv <span class="op">~</span><span class="st"> </span>lstat)</code></pre>
+<p>Printing <code>boston_lm</code> provides some basic information about the model.</p>
+<pre class="sourceCode r"><code class="sourceCode r">boston_lm</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = medv ~ lstat, data = boston)
+## 
+## Coefficients:
+## (Intercept)        lstat  
+##       34.55        -0.95</code></pre>
+<p>If we want to work with data surrounding the model, compare it to other models, or reference components of it, we need to use the <a href="https://cran.r-project.org/web/packages/broom/vignettes/broom.html"><code>broom</code></a> package.</p>
+<p><code>broom::tidy</code> converts the model into a data.frame representation.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(broom)
+broom<span class="op">::</span><span class="kw">tidy</span>(boston_lm)</code></pre>
+<pre><code>## # A tibble: 2 x 5
+##   term        estimate std.error statistic   p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)   34.6      0.563       61.4 3.74e-236
+## 2 lstat         -0.950    0.0387     -24.5 5.08e- 88</code></pre>
+<p><code>broom::glance</code> will provide a summary in data.frame form.</p>
+<pre class="sourceCode r"><code class="sourceCode r">broom<span class="op">::</span><span class="kw">glance</span>(boston_lm)</code></pre>
+<pre><code>## # A tibble: 1 x 11
+##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     0.544         0.543  6.22      602. 5.08e-88     2 -1641. 3289. 3302.
+## # … with 2 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
+<p><code>broom</code> is powerful for easy output, accessing elements of a model, and comparing multiple models.</p>
+<p>This is where ISLR misses the mark. It shows <code>attach()</code>, which we discussed as a bad idea in Chapter 1, and only offers the base R methods on inspecting a model object. It goes into inspecting model elements via the use of <code>names()</code>, <code>coef()</code>, and more, which provide much less utility than <code>broom</code>.</p>
+<p>To get confidence interval of coefficients, we can use <code>conf.int</code> argument in <code>broom::tidy</code>.</p>
+<pre class="sourceCode r"><code class="sourceCode r">broom<span class="op">::</span><span class="kw">tidy</span>(boston_lm, <span class="dt">conf.int =</span> <span class="ot">TRUE</span>, <span class="dt">conf.level =</span> <span class="fl">0.95</span>)</code></pre>
+<pre><code>## # A tibble: 2 x 7
+##   term        estimate std.error statistic   p.value conf.low conf.high
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)   34.6      0.563       61.4 3.74e-236    33.4     35.7  
+## 2 lstat         -0.950    0.0387     -24.5 5.08e- 88    -1.03    -0.874</code></pre>
+<p>We can use <code>modelr::add_predictions()</code> or <code>broom::augment()</code> to add predictions and confidence intervals for our model.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> decide on best practices for adding predictions; development effort on `modelr`</span></code></pre>
+<p><code>modelr::add_predictions()</code> adds a <code>pred</code> column to each observation.</p>
+<pre class="sourceCode r"><code class="sourceCode r">boston <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_predictions</span>(boston_lm)</code></pre>
+<pre><code>## # A tibble: 506 x 15
+##      crim    zn indus  chas   nox    rm   age   dis   rad   tax ptratio
+##     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;   &lt;dbl&gt;
+## 1 0.00632    18  2.31     0 0.538  6.58  65.2  4.09     1   296    15.3
+## 2 0.0273      0  7.07     0 0.469  6.42  78.9  4.97     2   242    17.8
+## 3 0.0273      0  7.07     0 0.469  7.18  61.1  4.97     2   242    17.8
+## 4 0.0324      0  2.18     0 0.458  7.00  45.8  6.06     3   222    18.7
+## 5 0.0690      0  2.18     0 0.458  7.15  54.2  6.06     3   222    18.7
+## 6 0.0298      0  2.18     0 0.458  6.43  58.7  6.06     3   222    18.7
+## # … with 500 more rows, and 4 more variables: black &lt;dbl&gt;, lstat &lt;dbl&gt;,
+## #   medv &lt;dbl&gt;, pred &lt;dbl&gt;</code></pre>
+<p><code>broom::augment()</code> adds fitted values as well as standard errors and residuals.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">augment</span>(boston_lm)</code></pre>
+<pre><code>## # A tibble: 506 x 9
+##    medv lstat .fitted .se.fit .resid    .hat .sigma   .cooksd .std.resid
+##   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
+## 1  24    4.98    29.8   0.406 -5.82  0.00426   6.22 0.00189       -0.939
+## 2  21.6  9.14    25.9   0.308 -4.27  0.00246   6.22 0.000582      -0.688
+## 3  34.7  4.03    30.7   0.433  3.97  0.00486   6.22 0.00100        0.641
+## 4  33.4  2.94    31.8   0.467  1.64  0.00564   6.22 0.000198       0.264
+## 5  36.2  5.33    29.5   0.396  6.71  0.00406   6.21 0.00238        1.08 
+## 6  28.7  5.21    29.6   0.399 -0.904 0.00413   6.22 0.0000440     -0.146
+## # … with 500 more rows</code></pre>
+<p>We can use the data from <code>augment()</code> to plot our regression with <code>95%</code> confidence intervals for our predicted values.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">augment</span>(boston_lm) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> lstat)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> medv), <span class="dt">pch=</span><span class="dv">21</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> .fitted)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_ribbon</span>(<span class="kw">aes</span>(<span class="dt">ymin =</span> .fitted <span class="op">-</span><span class="st"> </span><span class="fl">1.96</span> <span class="op">*</span><span class="st"> </span>.se.fit, <span class="dt">ymax =</span> .fitted <span class="op">+</span><span class="st"> </span><span class="fl">1.96</span> <span class="op">*</span><span class="st"> </span>.se.fit), <span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_minimal</span>()</code></pre>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-58-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>The fit is decent, but there appears to be some non-linearity in the data.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(boston_lm)</code></pre>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-59-1.png" width="576" style="display: block; margin: auto;" /><img src="tidy_islr_files/figure-html/unnamed-chunk-59-2.png" width="576" style="display: block; margin: auto;" /><img src="tidy_islr_files/figure-html/unnamed-chunk-59-3.png" width="576" style="display: block; margin: auto;" /><img src="tidy_islr_files/figure-html/unnamed-chunk-59-4.png" width="576" style="display: block; margin: auto;" /></p>
+<p>Let’s plot some diagnostics surrounding our model.</p>
+<div id="diagnostic-plots" class="section level4">
+<h4><span class="header-section-number">3.4.1.1</span> Diagnostic Plots</h4>
+<p>We could plot the residual in its original form, but this maintains the scale of the <span class="math inline">\(Y\)</span> response. Two methods exist to scale it in an interpretable fashion, which both scale it using an estimate of the variance of the residual.</p>
+<p><em>Standardized residuals</em> scale the residuals in a comparable way by dividing the residual by the regression residual standard error.</p>
+<p>However, this allows high-leverage points to be factored in to the standard error. If a particular <span class="math inline">\(y_i\)</span> has high leverage, it will drag the regression line significantly, which affects the estimate of the residual itself.</p>
+<p><em>Studentized residuals</em> leave out the residual of <span class="math inline">\(y_i\)</span> when calculating the standard error of a residual for a given observation. Observations with low-leverage will have similar standardized/studentized values, while those with high-leverage will be more affected. By isolating an observation’s leverage from its particular standard error calculation, we can observe how much of an outlier it truly is.</p>
+<p>For more context, these class notes from <a href="http://www-stat.wharton.upenn.edu/~waterman/Teaching/701f99/Class04/class04.pdf">Wharton Statistics Department</a> are helpful.</p>
+<p><code>augment</code> calculates standardized residuals, but not student. We will add a column to calculate it, as shown in this example doc from <a href="https://twitter.com/jrnld">Jeffrey Arnold</a>, [Outliers and Robust Regression] (<a href="https://uw-pols503.github.io/2016/outliers_robust_regression.html" class="uri">https://uw-pols503.github.io/2016/outliers_robust_regression.html</a>).</p>
+<p>In this case, the two types of residuals are virtually the same. I added green points of the standardized residual for comparison. I also scaled the size of points by their leverage (<code>.cooksd</code> column). Finally, I shaded the boundary area between <code>-3</code> and <code>3</code> for the studentized residual. This is a rule of thumb for outlier detection, but observations with magnitude greater than <code>3</code> warrant a model inspection. These could be errors in recording of the data or evidence that the model assumptions are not appropriate.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">augment</span>(boston_lm) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="co"># calculate student residual</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">.student.resid =</span> .resid <span class="op">/</span><span class="st"> </span>.sigma <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>.hat)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> lstat, <span class="dt">y =</span> .student.resid)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> .std.resid, <span class="dt">size=</span>.cooksd), <span class="dt">colour =</span> <span class="st">&quot;khaki2&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="dv">2</span><span class="op">/</span><span class="dv">3</span>, <span class="kw">aes</span>(<span class="dt">size =</span> .cooksd), <span class="dt">colour =</span> <span class="st">&quot;dodgerblue4&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">size =</span> <span class="fl">1.5</span>, <span class="dt">colour =</span> <span class="st">&quot;grey&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_ribbon</span>(<span class="kw">aes</span>(<span class="dt">ymin =</span> <span class="dv">-3</span>, <span class="dt">ymax =</span> <span class="dv">3</span>),  <span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">4</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_minimal</span>()</code></pre>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-60-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>This plot shows a fan-shape for the residuals, which adds evidence of non-linearity in the relationship. We also see high-leverage points on both ends of the x-axis, which significantly drag our regression line. Several points are outside of our outlier zone. All of these above add evidence that our simple linear regression is not appropriate for this dataset.</p>
+</div>
+</div>
+<div id="multiple-linear-regression-1" class="section level3">
+<h3><span class="header-section-number">3.4.2</span> Multiple Linear Regression</h3>
+<p>Let’s fit a model with all the predictor variables.</p>
+<pre class="sourceCode r"><code class="sourceCode r">boston_mlm &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> boston, medv <span class="op">~</span><span class="st"> </span>.)
+broom<span class="op">::</span><span class="kw">tidy</span>(boston_mlm, <span class="dt">conf.int =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(p.value))</code></pre>
+<pre><code>## # A tibble: 14 x 7
+##   term   estimate std.error statistic  p.value conf.low conf.high
+##   &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+## 1 age    0.000692   0.0132     0.0524 0.958     -0.0253   0.0266 
+## 2 indus  0.0206     0.0615     0.334  0.738     -0.100    0.141  
+## 3 chas   2.69       0.862      3.12   0.00193    0.994    4.38   
+## 4 tax   -0.0123     0.00376   -3.28   0.00111   -0.0197  -0.00495
+## 5 crim  -0.108      0.0329    -3.29   0.00109   -0.173   -0.0434 
+## 6 zn     0.0464     0.0137     3.38   0.000778   0.0194   0.0734 
+## # … with 8 more rows</code></pre>
+<p>How does the model perform?</p>
+<pre class="sourceCode r"><code class="sourceCode r">broom<span class="op">::</span><span class="kw">glance</span>(boston_mlm)</code></pre>
+<pre><code>## # A tibble: 1 x 11
+##   r.squared adj.r.squared sigma statistic   p.value    df logLik   AIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt;
+## 1     0.741         0.734  4.75      108. 6.72e-135    14 -1499. 3028.
+## # … with 3 more variables: BIC &lt;dbl&gt;, deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
+<p>The VIF for each predictor is mostly low.</p>
+<pre class="sourceCode r"><code class="sourceCode r">car<span class="op">::</span><span class="kw">vif</span>(boston_mlm) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>(<span class="dt">rownames =</span> <span class="st">&quot;variable&quot;</span>)</code></pre>
+<pre><code>## # A tibble: 13 x 2
+##   variable value
+##   &lt;chr&gt;    &lt;dbl&gt;
+## 1 crim      1.79
+## 2 zn        2.30
+## 3 indus     3.99
+## 4 chas      1.07
+## 5 nox       4.39
+## 6 rm        1.93
+## # … with 7 more rows</code></pre>
+<p>To remove predictors, such as those with high p-values, we modify the <code>lm()</code> call. Let’s remove age, which has a p-value of 0.95.</p>
+<pre class="sourceCode r"><code class="sourceCode r">boston_mlm &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> boston, medv <span class="op">~</span><span class="st"> </span>. <span class="op">-</span><span class="st"> </span>age)
+broom<span class="op">::</span><span class="kw">glance</span>(boston_mlm)</code></pre>
+<pre><code>## # A tibble: 1 x 11
+##   r.squared adj.r.squared sigma statistic   p.value    df logLik   AIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt;
+## 1     0.741         0.734  4.74      117. 6.08e-136    13 -1499. 3026.
+## # … with 3 more variables: BIC &lt;dbl&gt;, deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
+<p>We could also incorporate a <code>dplyr::select()</code> call in the <code>data</code> argument for a more readable solution.</p>
+<pre class="sourceCode r"><code class="sourceCode r">boston_mlm &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> boston <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>age), medv <span class="op">~</span><span class="st"> </span>.)</code></pre>
+</div>
+<div id="interaction-terms" class="section level3">
+<h3><span class="header-section-number">3.4.3</span> Interaction Terms</h3>
+<p>We can incorporate interaction terms in <code>lm()</code> using the <code>term1:term2</code> syntax.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">lm</span>(<span class="dt">data =</span> boston, medv <span class="op">~</span><span class="st"> </span>lstat <span class="op">+</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>lstat<span class="op">:</span>age)
+<span class="co"># equivalent</span>
+<span class="kw">lm</span>(<span class="dt">data =</span> boston, medv <span class="op">~</span><span class="st"> </span>lstat<span class="op">*</span>age)</code></pre>
+</div>
+<div id="non-linear-transformations-of-the-predictors" class="section level3">
+<h3><span class="header-section-number">3.4.4</span> Non-linear Transformations of the Predictors</h3>
+<p><code>lm()</code> can also accomodate non-linear transformations of the predictors.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> is this best way</span>
+lm_boston_squared &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> boston, medv <span class="op">~</span><span class="st"> </span>lstat <span class="op">+</span><span class="st"> </span><span class="kw">I</span>(lstat<span class="op">^</span><span class="dv">2</span>))
+lm_boston &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> boston, medv <span class="op">~</span><span class="st"> </span>lstat)</code></pre>
+<p>We can use <code>anova()</code> with <code>broom::tidy()</code> to measure if it fits better than linear fit.</p>
+<pre class="sourceCode r"><code class="sourceCode r">broom<span class="op">::</span><span class="kw">tidy</span>(<span class="kw">anova</span>(lm_boston, lm_boston_squared))</code></pre>
+<pre><code>## # A tibble: 2 x 6
+##   res.df    rss    df sumsq statistic   p.value
+##    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1    504 19472.    NA   NA        NA  NA       
+## 2    503 15347.     1 4125.      135.  7.63e-28</code></pre>
+<p>In this case, the full model with the quadratic term fits better.</p>
+</div>
+</div>
+<div id="exercises-1" class="section level2">
+<h2><span class="header-section-number">3.5</span> Exercises</h2>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> exercises</span></code></pre>
+
 </div>
 </div>
             </section>
@@ -935,8 +1424,8 @@ tidy_credit <span class="op">%&gt;%</span>
           </div>
         </div>
       </div>
-<a href="statistical-learning.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="statistical-learning.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="classification.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -3,6 +3,7 @@ output: html_document
 editor_options: 
   chunk_output_type: console
 ---
+
 # Linear Regression
 
 -----
@@ -829,7 +830,6 @@ where $R^2_{X_j|X_-j}$ is the $R^2$ from a regression of $X_j$ onto all of the o
 In R, we can use the `car` package to calculate `GVIF` for a `lm` object.
 
 ```{r}
-car::vif(credit_model)
 car::vif(lm(data = tidy_credit %>%
               select(-id), balance ~ .)) %>%
   as_tibble(rownames = "variable") %>%
@@ -1086,4 +1086,44 @@ To remove predictors, such as those with high p-values, we modify the `lm()` cal
 ```{r}
 boston_mlm <- lm(data = boston, medv ~ . - age)
 broom::glance(boston_mlm)
+```
+
+We could also incorporate a `dplyr::select()` call in the `data` argument for a more readable solution.
+
+```{r}
+boston_mlm <- lm(data = boston %>% select(-age), medv ~ .)
+```
+
+### Interaction Terms
+
+We can incorporate interaction terms in `lm()` using the `term1:term2` syntax.
+
+```{r, eval = FALSE}
+lm(data = boston, medv ~ lstat + age + lstat:age)
+# equivalent
+lm(data = boston, medv ~ lstat*age)
+```
+
+### Non-linear Transformations of the Predictors
+
+`lm()` can also accomodate non-linear transformations of the predictors.
+
+```{r}
+# TODO is this best way
+lm_boston_squared <- lm(data = boston, medv ~ lstat + I(lstat^2))
+lm_boston <- lm(data = boston, medv ~ lstat)
+```
+
+We can use `anova()` with `broom::tidy()` to measure if it fits better than linear fit.
+
+```{r}
+broom::tidy(anova(lm_boston, lm_boston_squared))
+```
+
+In this case, the full model with the quadratic term fits better.
+
+## Exercises
+
+```{r}
+# TODO exercises
 ```

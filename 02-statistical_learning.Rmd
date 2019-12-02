@@ -2,6 +2,13 @@
 
 -----
 
+## Packages used in this chapter
+
+```{r}
+library(tidyverse)
+library(knitr)
+```
+
 ## What is Statistical Learning?
 
 Methods to estimate functions that connect inputs to outputs.

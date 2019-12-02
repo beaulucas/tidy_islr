@@ -1,0 +1,236 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Classification
+
+-----
+
+## Packages used in this chapter
+
+```{r}
+library(tidyverse)
+library(tidymodels)
+library(knitr)
+library(kableExtra)
+library(skimr)
+```
+
+Linear regression in chapter 3 was concerned with predicting a quantitative response variable. What if the response variable is *qualitative*? Eye color is an example of a qualitative variable,  which takes discrete value such as `blue`, `brown`, `green`. These are also referred to as *categorical*.
+
+The approach of predicting qualitative responses is known as *classification*. Often, we predict the probability of the occurences of each category of a qualitative variable, and then make a decision based off of that.
+
+In this chapter we discuss three of the most widely-used classifiers:
+
+* [logistic regression](https://en.wikipedia.org/wiki/Logistic_regression)
+* [linear discriminant analysis](https://en.wikipedia.org/wiki/Linear_discriminant_analysis)
+* [*k*-nearest neighbors](https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm)
+
+We discuss more computer-intensive methods in later chapters.
+
+## An Overview of Classification
+
+Classification is a common scenario.
+
+1. Person arrives at ER exhibiting particular symptoms. What illness does he have?
+2. Money is wired to an external account at a bank. Is this fraud?
+3. Email is sent to your account. Is it legit, or spam?
+
+Similar to regression, we have a set of training observations that use to build a classifier. We also want the classifier to perform well on both training and test observations.
+
+We will use the dataset `ISLR::Default`. First, let's convert it to tidy format.
+
+```{r}
+default <- ISLR::Default %>% as_tibble()
+```
+
+We are interested in the ability to predict whether an individual will default on their credit card payment, based on their credit card `balance` and annual income.
+
+If we look at the summary statistics, we see the data is clean, and that very few people default on their balances.
+
+```{r}
+default %>% skimr::skim()
+```
+
+The scatterplot signals a strong relationship between `balance` and `default`.
+
+```{r}
+default %>%
+  ggplot(aes(x = balance, y = income, fill = default)) + 
+  geom_hex(alpha = 2/3)
+```
+
+The boxplot captures the stark difference in `balance` between those who default and do not.
+
+```{r}
+default %>%
+  ggplot(aes(y = balance, fill = default)) +
+  geom_boxplot()
+```
+
+## Why Not Linear Regression?
+
+Imagine we were trying to predict the medical outcome of a patient on the basis of their symptoms. Let's say there are three possible diagnoses: `stroke`, `overdose`, and `seizure`. We could encode these into a quantitative variable $Y$.  that takes values from 1 to 3. Using least squares, we could then fit a regression model to predict $Y$.
+
+Unfortunately, this coding implies an ordering of the outcomes. It also insists that the difference between levels is quantitative, and equivalent across all sequences of levels.
+
+Thus, changing the order of encodings would change relationship among the conditions, producing fundamentally different linear models.
+
+There could be a case where a response variables took on a natural ordering, such as `mild`, `moderate`, `severe`. We would also need to believe that the gap between each level is equivalent. Unfortunately, there is no natural way to convert a qualitative response variable with more than two levels into a quantitative response that is appropriate for linear regression.
+
+For cases of *binary* qualitative response, we can utilize the dummy variable solution seen in Chapter 3. In this case, the order of the encodings is arbitrary.
+
+```{r}
+# TODO add latex for encoding
+```
+
+Linear regression does work for this binary response scenario. However, it is possible for linear regression to produce estimates outside of the `[0, 1]` interval, which affects their interpretability as probabilities.
+
+When the qualitative response has more than two levels, we need to use classification methods that are appropriate.
+
+## Logistic Regression
+
+Let's consider the `default` dataset. Rather than modeling this response $Y$ directly, logistic regression models the *probability* that $Y$ belongs to a particular category.
+
+If we estimate using linear regression, we see that some estimated probabilities are negative. We are using the `tidymodels` package.
+
+```{r}
+default <- default %>%
+  mutate(default_bool = if_else(default == "Yes", 1, 0))
+lm_default <- linear_reg() %>%
+  fit(data = default, default_bool ~ balance)
+
+default %>%
+  bind_cols(predict(lm_default, default)) %>%
+  ggplot(aes(x = balance)) +
+  geom_line(aes(y =  .pred)) +
+  geom_point(aes(y = default_bool, colour = default_bool)) +
+  guides(colour=FALSE)
+```
+
+Below is the classification using logistic regression, where are probabilities fall between `0` and `1`.
+
+```{r}
+logi_default <- logistic_reg(mode = "classification") %>%
+  fit(data = default, as.factor(default_bool) ~ balance)
+
+default %>%
+  bind_cols(predict(logi_default, default, type = "prob")) %>%
+  ggplot(aes(x = balance)) +
+  geom_line(aes(y =  .pred_1)) +
+  geom_point(aes(y = default_bool, colour = default_bool)) +
+  guides(colour=FALSE)
+```
+
+Logistic regression in this example is modelling the probability of default, given the value of `balance`.
+
+<div>
+<p style="text-align:center">Pr(`default` = `Yes`|`balance`)</p>
+</div>
+
+These values, which we abbreviate as *p*(`balance`), range between `0` and `1`. Logistic regression will always produce an *S-shaped* curve. Regardless of the value of $X$, we will receive a sensible prediction.
+
+From this, we can make a classification prediction for `default`. Depending how conservative we are, the threshold for this could vary. Depending on the domain and context of the classification, a decision boundary around `0.5` or `0.1` might be appropriate.
+
+### The Logistic Model
+
+The problem of using a linear regression model is evident in the chart above, where probabilities can fall below `0` or greater than `1`.
+
+To avoid this, we must model $p(X)$ using a function that gives outputs between `0` and `1` for all values of $X$. In logistic regression, we use the *logistic function*,
+
+<div>
+<p style="text-align:center">$p(X) = \frac{e^{\beta_0+\beta_1X}}{1+e^{\beta_0+\beta_1X}}$</p>
+<p class="vocab" style="text-align:right">*logistic function*</p>
+</div>
+
+To fit the model, we use a method called *maximum likelihood*. 
+
+If we manipulate the logistic function, we find that
+
+<div>
+<p style="text-align:center">$\frac{p(X)}{1-p(X)} = e^{\beta_0+\beta_1X}$</p>
+<p class="vocab" style="text-align:right">*odds*</p>
+</div>
+
+This is called the *odds*, and takes any value from $0$ to $\infty$. This is the same type of odds used in sporting events ("9:1 odds to win this match", etc). If $p(X) = 0.9$, then odds are $\frac{0.9}{1-0.9} = 9$.
+
+If we take the logarithm of the odds, we arrive at
+
+<div>
+<p style="text-align:center">$log(\frac{p(X)}{1-p(X)}) = \beta_0+\beta_1X$</p>
+<p class="vocab" style="text-align:right">*log-odds \ logit*</p>
+</div>
+
+The left-hande side is called the *log-odds* or *logit*. The logistic regression model has a logit that is linear in $X$.
+
+The contrast to linear regression is that increasing $X$ by one-unit changes the log odds by $\beta_1$ (or the odds by $e^{\beta_1}$. However, since $p(X)$ and $X$ relationship is not a straight line (see plot above), $\beta_1$ does not correspond to the the change in $p(X)$ associated with a one-unit increase in $X$. The amount that $p(X)$ changes depends on the current value of $X$. See how the slope approaches `0` more and more slowly as `balance` increases. 
+
+Regardless of how much $p(X)$ moves, if $\beta_1$ is positive then increasing $X$ will be associated with increasing $p(X)$. The opposite is also true. 
+
+### Estimating the Regression Coefficients
+
+The coefficients in the logistic regression equation must be estimated used training data. Linear regression used the least squares approach to estimate the coefficients. It is possible to use non-linear least squares to fit the model, but *maximum likelihood* is preferred. 
+
+Maximum likelihood seeks to to find estimates for $\beta_0$ and $\beta_1$ such that the predicted probability $\hat{p}(x_i)$ of default for each individual corresponds as closely as possible to to the individual's observed default status. We want estimates that produce low probabilities for individuals who did not default, and high probabilities for those who did.
+
+We can formalize this with a *likelihood function*:
+
+```{r}
+#TODO add likelihood function, links, etc
+```
+
+We can examine the coefficients and other information from our logistic regression model. 
+
+```{r}
+logi_default %>% broom::tidy()
+```
+
+If we look at the terms of our logistic regression, we see that the coefficient for `balance` is positive. This means that higher `balance` increases $p(Default)$. A one-unit increase in `balance` will increase the log odds of defaulting by ~0.0055. 
+
+The test-statistic also behaves similarly. Coefficients with large statistics indicate evidence against the null hypothesis $H_0: \beta_1 = 0$. For logistic regression, the null hypothesis implies that $p(X) = \frac{e^{\beta_0}}{1+e^{\beta_0}}$, which means that the probability of defaulting does not depend on `balance.`
+
+Given the miniscule p-value associated with our `balance` coefficient, we can confidently reject $H_0$. The intercept ($\beta_0$) is typically not of interest; it's main purpose is to adjust the average fitted probabilities to the proportion of ones in the data.
+
+### Making Predictions
+
+Once we have the coefficients, we simply compute the probability of `default` for any given observation.
+
+Let's take an individual with a `balance` of `$1000`. Using our model terms, we can compute the probability. Let's extract the terms from the model and plug in a `balance` of `$1000`.
+
+```{r}
+logi_coef <- logi_default %>%
+  broom::tidy() %>%
+  # widen it and clean up names
+  select(term, estimate) %>%
+  pivot_wider(names_from = term, values_from = estimate) %>%
+  janitor::clean_names()
+
+logi_coef %>%
+  mutate(prob_1000 = exp(intercept + balance * 1000) /
+           (1 + exp(intercept + balance * 1000)))
+```
+
+We find the probability to be less than `1%`.
+
+We can also incorporate qualitative predictors with the logistic regression model. Here we encode `student` in to the model.
+
+```{r}
+logi_default_student <- logistic_reg(mode = "classification") %>%
+  fit(data = default, as.factor(default_bool) ~ student)
+
+logi_default_student %>% broom::tidy()
+```
+
+This model indicates that students have a higher rate of defaulting compared to non-students.
+
+### Multiple Logistic Regression
+
+
+
+
+
+
+
+

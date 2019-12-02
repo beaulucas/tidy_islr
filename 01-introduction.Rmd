@@ -1,3 +1,9 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
 # Introduction {#intro}
 
 -----
@@ -12,22 +18,10 @@ All data sets used in this book can be found in `ISLR` and `MASS` packages, with
 
 We will utilize the `tidyverse` ecosystem to tackle the exercises and labs, as the `R` code found in the original textbook is outdated. 
 
-```{r libraryd packages}
-library(ISLR)
-library(MASS)
-library(tidyverse)
-library(knitr)
-library(kableExtra)
-library(modelr)
-library(broom)
-```
-
-## Book Website
+## Book Resources:
 
 The website and free PDF for the book can be found here:
 
-[www.statlearning.com](http://www-bcf.usc.edu/~gareth/ISL/)
+* [Website w/ free PDF](http://faculty.marshall.usc.edu/gareth-james/ISL/)
+* [YouTube Lectures](https://www.youtube.com/channel/UC4OWDcPB1peiBXDfCSZ3h-w)
 
-And here are the YouTube lectures an R labs:
-
-[Youtube - Statistical Learning](https://www.youtube.com/channel/UC4OWDcPB1peiBXDfCSZ3h-w)
