@@ -227,10 +227,333 @@ This model indicates that students have a higher rate of defaulting compared to 
 
 ### Multiple Logistic Regression
 
+We now consider the scenario of multiple predictors.
+
+We can rewrite $p(X)$ as
+
+<div>
+<p style="text-align:center">$p(X) = \frac{e^{\beta_0+\beta_1X_1+...+\beta_pX_p}}{1+e^{\beta_0+\beta_1X_1+...+\beta_pX_p}}$</p>
+<p class="vocab" style="text-align:right">/p>
+</div>
+
+And again use the maximum likelihood method to estimate the coefficients.
+
+Let's estimate `balance` using `balance`, `income` and `student`.
+
+```{r}
+multiple_logi_default<- logistic_reg(mode = "classification") %>%
+  fit(data = default, as.factor(default_bool) ~ balance + student + income)
+
+multiple_logi_default %>% broom::tidy()
+```
+
+Notice that being a student now *decreases* the chances of default, whereas in our previous model (which only contained `student` as a predictor), it increased the chances.
+
+Why is that? This model is showing that, for a fixed value of `income` and `balance`, students actually default less. This is because `student` and `balance` are correlated.
+
+```{r}
+default %>%
+  ggplot(aes(y = balance, fill = student)) +
+  geom_boxplot()
+```
+
+If we plot the distribution of `balance` across `student`, we see that students tend to carry larger credit card balances. 
+
+This example illustrates the dangers of drawing insights from single predictor regressions when other predictors may be relevant. The results from using one predictor can be substantially different compared to using multiple predictors. This phenomenon is known as *confounding*.
+
+### Logistic Regression for >2 Response Classes
+
+Sometimes we wish to classify a response variable that has more than two classes. This could be the medical example where a patient outcomes falls into `stroke`, `overdose`, and `seizure`. It is possible to extend the two-class logistic regression model into multiple-class, but this is not used often in practice.
+
+A method that is popular for multi-class classification is *discriminant analysis*.
+
+## Linear Discriminant Analysis
+
+Logistic regression models the distribution of response $Y$ given the predictor(s) $X$. In discriminant analysis, we model the distribution of the predictors $X$ in each of the response classes, and then use Bayes' theorem to flip these around into estimates for $Pr(Y = k|X = x)$. 
+
+Why do we need this method?
+
+* Well-separated classes produce unstable parameter estimates for logistic regression models
+
+* If $n$ is small and distribution of predictors $X$ is normall across the classes, the linear discriminant model is more stable than logistic regression
+
+### Using Bayes' Theorem for Classification
+
+Consider the scenario where we want to classify an observation into one of $K$ classes, where $K >= 2$. 
+
+* Let $\pi_k$ represent the overall or *prior* probability that a randomly chosen observation comes from the $k$th class
+* Let $f_k(x) = Pr(X = x|Y = k)$ denote the *density function* of $X$ for an observation that comes from the $k$th class.
+
+In other words, $f_k(x)$ being large means that there is a high probability that an observation in the $k$th class has $X \approx x$.
+
+We can use Bayes' theorem
+
+$$
+\operatorname{Pr}(Y=k | X=x)=\frac{\pi_{k} f_{k}(x)}{\sum_{l=1}^{K} \pi_{l} f_{l}(x)}
+$$
+
+And call the left-hand side $p_k(X)$. We can plug in estimates of $\pi_k$ and $f_k(X)$ into Bayes' theorem above to get the probability of a certain class, given an observation.
+
+* Solving for $\pi_k$ is easy if we have a random sample of $Y$s from the population. We simply calculate the fraction of observations that fall into a $k$ class.
+* Estimating $f_k(X)$ is more challenging unless we assume simple forms for these densities
+
+We refer to $p_k(x)$ as the posterior probability that an observation $X = x$ belongs to the $k$th class. This is the probability that the observation belongs to the $k$th class, *given* the predictor value for that observation.
+
+The Bayes' classifier classifies an observation to the class for which $p_k(X)$ is largest. If we can find a way to estimate $f_k(X)$, we can develop a classifier that approximates the Bayes classifier.
+
+### Linear Discriminant Analysis for p = 1
+
+Let's assume we have one predictor. We need to obtain an estimate for $f_k(x)$ (the density function for $X$ given a class $k$). This will obtain a value for $p_k(x)$. We will then classify this observation for which $p_k(x)$ is greatest.
+
+To estimate $f_k(x)$, we need to make some assumptions about its form.
+
+Let's assume $f_k(x)$ is *normal* or *Gaussian*. The normal density takes the form
+
+$$
+f_{k}(x)=\frac{1}{\sqrt{2 \pi} \sigma_{k}} \exp \left(-\frac{1}{2 \sigma_{k}^{2}}\left(x-\mu_{k}\right)^{2}\right)
+$$
+
+Plugging this back in to $p_k(x)$, we obtain
+
+$$
+p_{k}(x)=\frac{\pi_{k} \frac{1}{\sqrt{2 \pi} \sigma} \exp \left(-\frac{1}{2 \sigma^{2}}\left(x-\mu_{k}\right)^{2}\right)}{\sum_{l=1}^{K} \pi_{l} \frac{1}{\sqrt{2 \pi} \sigma} \exp \left(-\frac{1}{2 \sigma^{2}}\left(x-\mu_{l}\right)^{2}\right)}
+$$
+
+Taking the log and rearranging results in 
+
+$$
+\delta_{k}(x)=x \cdot \frac{\mu_{k}}{\sigma^{2}}-\frac{\mu_{k}^{2}}{2 \sigma^{2}}+\log \left(\pi_{k}\right)
+$$
+
+In this case, the Bayes decision boundary corresponds to 
+
+$$
+x=\frac{\mu_{1}^{2}-\mu_{2}^{2}}{2\left(\mu_{1}-\mu_{2}\right)}=\frac{\mu_{1}+\mu_{2}}{2}
+$$
+
+We can simulate some data to show a simple example.
+
+In this data we have two classes:
+
+* $\mu_1 = -1.25, \mu_2 = 1.25, \sigma_1^2 = \sigma_2^2 = 1$
+
+```{r}
 
 
+var_1 = 1
+var_2 = var_1
+f_1 = tibble(fun = "f_1", x = rnorm(n = 10000, mean = -1.25, sd = var_1))
+f_2 = tibble(fun = "f_2", x = rnorm(n = 10000, mean = 1.25, sd = var_2))
+f_x = bind_rows(f_1, f_2)
 
+# add summary statistics
 
+f_x <- f_x %>%
+  group_by(fun) %>%
+  mutate(pi = n(),
+         var = var(x),
+         mu = mean(x)) %>%
+  ungroup() %>%
+  mutate(pi = pi / n())
+
+decision_boundary <- f_x %>%
+  group_by(fun) %>%
+  summarise(mu = mean(x)) %>%
+  summarise(decision_boundary = sum(mu) / 2) %>%
+  pull()
+f_x %>%
+  ggplot(aes(x = x, colour = fun)) +
+  geom_density() +
+  geom_vline(xintercept = decision_boundary, linetype = "dashed")
+```
+
+These two densities overlap, and so given $X = x$, we still have uncertaintly about which class the observation belongs to. If both classes are equally likely for a random observation $\pi_1 = \pi_2$, then we see the Bayes classifier assigns the observation to class 1 if $x < 0$ and class 2 otherwise.
+
+Even if we are sure that $X$ is drawn from a Gaussian distribution within each class, we still need to estimate $\mu_1,...,\mu_k$, $\pi_1,...,\pi_k$, and $\sigma^2$. The *linear discriminant analysis* method approximates these by plugging in estimates as follows
+
+<div>
+<p style="text-align:center">$\hat{\mu}_k = \frac{1}{n_k}\sum_{i:y_i=k}{x_i}$</p>
+<p class="vocab" style="text-align:right">*</p>
+</div>
+
+<div>
+<p style="text-align:center">$\hat{\sigma}^2 = \frac{1}{n-K}\sum_{k=1}^{K}\sum_{i:y_i=k}{(x_i-\hat{\mu}_k)^2}$</p>
+<p class="vocab" style="text-align:right">*</p>
+</div>
+
+The estimate for $\hat{\mu}_k$ is the average of all training observations from the $k$th class. The estimate for $\hat{\sigma}^2$ is the weighted average of the sample variances for each of the K classes.
+
+To estimate $\hat{\pi}_k$, we simply take the proportion of training observations that belong to the $k$th class
+
+<div>
+<p style="text-align:center">$\hat{\pi}_k = n_k/n$</p>
+<p class="vocab" style="text-align:right">*</p>
+</div>
+
+From these estimates, we can achieve a decision boundary
+
+$$
+\hat{\delta}_{k}(x)=x \cdot \frac{\hat{\mu}_{k}}{\hat{\sigma}^{2}}-\frac{\hat{\mu}_{k}^{2}}{2 \hat{\sigma}^{2}}+\log \left(\hat{\pi}_{k}\right)
+$$
+
+This classifier has *linear* in the name due to the fact that the *discriminant function* above are linear functions of $x$.
+
+Let's take a sample from our earlier distribution and see how it performs.
+
+```{r}
+library(discrim)
+f_sample = f_x %>% sample_frac(size = 0.01)
+
+lda_f <- discrim::discrim_linear() %>%
+  fit(data = f_sample, as.factor(fun) ~ x)
+
+preds <- predict(lda_f, f_sample, type = "class")
+
+f_sample <- f_sample %>% bind_cols(preds)
+# TODO figure out how to truly extract decision boundary from MASS::lda
+est_decision <- f_sample %>% arrange(x) %>% filter(.pred_class == 'f_2') %>%
+  slice(1) %>% pull(x)
+
+ggplot(f_sample, aes(x = x, fill = fun)) +
+  geom_histogram() +
+  geom_vline(xintercept = est_decision, linetype = "dashed") +
+  geom_vline(xintercept = 0)
+```
+
+Notice the estimated decision boundary (dashed line) being very close to the Bayes decision boundary.
+
+#### Measuring Performance
+
+```{r, eval = FALSE}
+# TODO show lda performance compared to true value
+```
+
+### Linear Discriminant Analysis for p > 1
+
+We can extend LDA classifier to multiple predictors.
+
+The multivariate Gaussian distribution assumes that each predictor follows a one-dimensional normal distribution, with some correlation between each pair of predictors.
+
+* [Andrew Ng on Multivariate Gaussian Distribution](https://www.youtube.com/watch?v=JjB58InuTqM)
+
+To indicate that a $p$-dimensional random variable $X$ has a multi-variate Gaussian distribution, we write $ X \sim N(\mu, \Sigma)$
+
+* $E(X) = \mu$ is the mean of $X$ (a vector with $p$ components)
+* $Cov(X) = \Sigma$ is the $p*p$ covariance matrix of $X$.
+
+The multivariate Gaussian density is defined as
+
+$$
+f(x)=\frac{1}{(2 \pi)^{p / 2}|\mathbf{\Sigma}|^{1 / 2}} \exp \left(-\frac{1}{2}(x-\mu)^{T} \mathbf{\Sigma}^{-1}(x-\mu)\right)
+$$
+
+In the case of $p>1$ predictors, the LDA classifier assumes that the observations in the $k$th class are drawn from a multivariate Gaussian distribution $N(\mu_k, \Sigma)$, where $\mu_k$ is a class-specific mean vector, and $\Sigma$ is the covariance matrix that is common to all $K$ classes.
+
+Plugging the density function for the $k$th class, $f_k(X = x)$, into 
+
+$$
+\operatorname{Pr}(Y=k | X=x)=\frac{\pi_{k} f_{k}(x)}{\sum_{l=1}^{K} \pi_{l} f_{l}(x)}
+$$
+
+and performing some algebra reveals that the Bayes classifier will assign observation $X = x$ by identifying the class for which
+
+$$
+\delta_{k}(x)=x^{T} \boldsymbol{\Sigma}^{-1} \mu_{k}-\frac{1}{2} \mu_{k}^{T} \boldsymbol{\Sigma}^{-1} \mu_{k}+\log \pi_{k}
+$$
+
+is largest.
+
+#### Performing LDA on Default data
+
+If we run an LDA model on our `default` dataset, predicting the probability of `default` based off of `student` and `balance`, we achieve a respectable `3.0%` error rate.
+
+```{r}
+set.seed(1)
+default_split <- initial_split(default, prop = 3/4)
+train_default <- training(default_split)
+test_default <- testing(default_split)
+
+lda_default <- discrim::discrim_linear() %>%
+  fit(data = train_default, default ~ student + balance)
+
+preds <- predict(lda_default, test_default, type = "class")
+
+# error rate
+test_default %>%
+  bind_cols(preds) %>%
+  metrics(truth = default, estimate = .pred_class)
+```
+
+While this may seem impressive, let's remember that only `3.6%` of observations in the dataset end up in default. This means that if we assigned a *null* classifier, which simply predicted every observation to not end in default, our error rate would be `3.6%`. This is worse, but not by much, compared to our LDA error rate.
+
+```{r}
+# null error rate
+test_default %>%
+  group_by(default) %>%
+  count() %>%
+  ungroup() %>%
+  mutate(prop = n / sum(n))
+```
+
+Binary decision makers can make to types of errors:
+
+* Incorrectly assigning an individual who defaults to the "no default" category
+* Incorrectly assigning an individual who doesn't default to the "default" category.
+
+We can identify the breakdown by using a *confusion matrix*
+
+```{r}
+cm <- test_default %>%
+  bind_cols(preds) %>%
+  conf_mat(truth = default, estimate = .pred_class)
+
+cm
+```
+
+We see that our LDA only predicted `31` people to default. Of these, `23` actually defaulted. So, only `8` of out of the `~7500` people who did not default were incorrectly labeled.
+
+However, of the `90` people in our test set who defaulted, we only predicted this correctly for `23` of them. That means `~75%` of individuals who default were incorrectly classified. Having an error rate this high for the problematic class (those who default) is unacceptable.
+
+Class-specific performance is an important concept. *Sensitivity* and *specificity* characterize the performance of a classifier or screening test. In this case, the sensitivity is the percentage of true defaults who are identified (a low `~25%`). The specificity is the percentage of non-defaulters who are correctly identified (`7492/7500 ~ 99.9%`).
+
+Remember that LDA is trying to approximate the Bayes classifier, which has the lowest *total* error rate out of all classifiers (assuming Gaussian assumption is correct). The classifier will yield the smallest total number of misclassifications, regardless of which class the errors came from. In this credit card scenario, the credit card company might wish to avoid incorrectly misclassifying a user who defaults. In this case, they value sensitivity. For them, the cost of misclassifying a defaulter is higher than the cost of misclassifying a non-defaulter (which they still desire to avoid).
+
+It's possible to modify LDA for such circumstances. Given the Bayes classifier works by assigning an observation to a class in which the posterior probability $p_k(X)$ is greatest (in the two-class scenario, this decision boundary is at `0.5`), we can modify the probability threshold to suit our needs. If we wish to increase our sensitivity, we can lower this threshold.
+
+Imagine we lowered the threshold to `0.2`. Sure, we would classify more people as defaulters than before (decreasing our specificity) but we would also catch more defaulters we previously missed (increasing our sensitivity).
+
+```{r}
+preds <- predict(lda_default, test_default, type = "prob")
+
+# error rate
+test_default %>%
+  bind_cols(preds) %>%
+  mutate(.pred_class = as.factor(if_else(.pred_Yes > 0.2, "Yes", "No"))) %>%
+  conf_mat(truth = default, estimate = .pred_class)
+```
+
+Now our sensitivy has increased. Of the `90` people who defaulted, we correctly identified `53, or ~58.8%` of them (up from `~25%` previously).
+
+This came at a cost, as our specificity decreased. This time, we predicted `106` people to default. Of those, `53` actually defaulted. This means that `53` of the `7500` people who didn't default were incorrectly labelled. This gives us a specificity of (`7447/7500 ~ 99.2%`)
+
+Despite the overall increase in error rate, the lower threshold may be chosen, depending on the context of the problem. To make a decision, an extensive amount of *domain knowledge* is required.
+
+The *ROC curve* is a popular graphic for displaying the two types of errors for all possible thresholds. "ROC" stands for *receiver operating characteristics*.
+
+The overall performance of a classifier, summarized over all possible thresholds, is given by the *area under the (ROC) curve* (AUC). An ideal ROC curve will hug the top left corner. Think of it this way: ideal ROC curves are able to increase sensitivity at a much higher rate than reduction in specificity.
+
+We can use `yardstick::` (part of `tidymodels::`) to plot an ROC curve.
+
+```{r}
+test_default %>%
+  bind_cols(preds) %>%
+  roc_curve(default, .pred_Yes) %>%
+  autoplot()
+```
+
+We can think of the *sensitivity* as the true positive, and *1 - specificity* as the false positive.
+
+### Quadratic Discriminant Analysis
 
 
 

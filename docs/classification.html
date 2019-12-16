@@ -24,7 +24,7 @@
 <meta name="author" content="Beau Lucas" />
 
 
-<meta name="date" content="2019-12-02" />
+<meta name="date" content="2019-12-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -187,6 +187,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.4.2" data-path="classification.html"><a href="classification.html#estimating-the-regression-coefficients-1"><i class="fa fa-check"></i><b>4.4.2</b> Estimating the Regression Coefficients</a></li>
 <li class="chapter" data-level="4.4.3" data-path="classification.html"><a href="classification.html#making-predictions"><i class="fa fa-check"></i><b>4.4.3</b> Making Predictions</a></li>
 <li class="chapter" data-level="4.4.4" data-path="classification.html"><a href="classification.html#multiple-logistic-regression"><i class="fa fa-check"></i><b>4.4.4</b> Multiple Logistic Regression</a></li>
+<li class="chapter" data-level="4.4.5" data-path="classification.html"><a href="classification.html#logistic-regression-for-2-response-classes"><i class="fa fa-check"></i><b>4.4.5</b> Logistic Regression for &gt;2 Response Classes</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="classification.html"><a href="classification.html#linear-discriminant-analysis"><i class="fa fa-check"></i><b>4.5</b> Linear Discriminant Analysis</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="classification.html"><a href="classification.html#using-bayes-theorem-for-classification"><i class="fa fa-check"></i><b>4.5.1</b> Using Bayes’ Theorem for Classification</a></li>
+<li class="chapter" data-level="4.5.2" data-path="classification.html"><a href="classification.html#linear-discriminant-analysis-for-p-1"><i class="fa fa-check"></i><b>4.5.2</b> Linear Discriminant Analysis for p = 1</a></li>
+<li class="chapter" data-level="4.5.3" data-path="classification.html"><a href="classification.html#linear-discriminant-analysis-for-p-1-1"><i class="fa fa-check"></i><b>4.5.3</b> Linear Discriminant Analysis for p &gt; 1</a></li>
+<li class="chapter" data-level="4.5.4" data-path="classification.html"><a href="classification.html#quadratic-discriminant-analysis"><i class="fa fa-check"></i><b>4.5.4</b> Quadratic Discriminant Analysis</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -247,7 +254,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  n obs: 10000 
 ##  n variables: 4 
 ## 
-## ── Variable type:factor ─────────────────────────────────
+## ── Variable type:factor ────────────────────────────────────────
 ##  variable missing complete     n n_unique                 top_counts
 ##   default       0    10000 10000        2  No: 9667, Yes: 333, NA: 0
 ##   student       0    10000 10000        2 No: 7056, Yes: 2944, NA: 0
@@ -255,7 +262,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##    FALSE
 ##    FALSE
 ## 
-## ── Variable type:numeric ────────────────────────────────
+## ── Variable type:numeric ───────────────────────────────────────
 ##  variable missing complete     n     mean       sd     p0      p25
 ##   balance       0    10000 10000   835.37   483.71   0      481.73
 ##    income       0    10000 10000 33516.98 13336.64 771.97 21340.46
@@ -405,6 +412,288 @@ logi_default_student <span class="op">%&gt;%</span><span class="st"> </span>broo
 </div>
 <div id="multiple-logistic-regression" class="section level3">
 <h3><span class="header-section-number">4.4.4</span> Multiple Logistic Regression</h3>
+<p>We now consider the scenario of multiple predictors.</p>
+<p>We can rewrite <span class="math inline">\(p(X)\)</span> as</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(p(X) = \frac{e^{\beta_0+\beta_1X_1+...+\beta_pX_p}}{1+e^{\beta_0+\beta_1X_1+...+\beta_pX_p}}\)</span>
+</p>
+<p class="vocab" style="text-align:right">
+/p&gt;
+</div>
+<p>And again use the maximum likelihood method to estimate the coefficients.</p>
+<p>Let’s estimate <code>balance</code> using <code>balance</code>, <code>income</code> and <code>student</code>.</p>
+<pre class="sourceCode r"><code class="sourceCode r">multiple_logi_default&lt;-<span class="st"> </span><span class="kw">logistic_reg</span>(<span class="dt">mode =</span> <span class="st">&quot;classification&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> default, <span class="kw">as.factor</span>(default_bool) <span class="op">~</span><span class="st"> </span>balance <span class="op">+</span><span class="st"> </span>student <span class="op">+</span><span class="st"> </span>income)
+
+multiple_logi_default <span class="op">%&gt;%</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">tidy</span>()</code></pre>
+<pre><code>## # A tibble: 4 x 5
+##   term            estimate  std.error statistic   p.value
+##   &lt;chr&gt;              &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept) -10.9        0.492        -22.1   4.91e-108
+## 2 balance       0.00574    0.000232      24.7   4.22e-135
+## 3 studentYes   -0.647      0.236         -2.74  6.19e-  3
+## 4 income        0.00000303 0.00000820     0.370 7.12e-  1</code></pre>
+<p>Notice that being a student now <em>decreases</em> the chances of default, whereas in our previous model (which only contained <code>student</code> as a predictor), it increased the chances.</p>
+<p>Why is that? This model is showing that, for a fixed value of <code>income</code> and <code>balance</code>, students actually default less. This is because <code>student</code> and <code>balance</code> are correlated.</p>
+<pre class="sourceCode r"><code class="sourceCode r">default <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> balance, <span class="dt">fill =</span> student)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_boxplot</span>()</code></pre>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-83-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>If we plot the distribution of <code>balance</code> across <code>student</code>, we see that students tend to carry larger credit card balances.</p>
+<p>This example illustrates the dangers of drawing insights from single predictor regressions when other predictors may be relevant. The results from using one predictor can be substantially different compared to using multiple predictors. This phenomenon is known as <em>confounding</em>.</p>
+</div>
+<div id="logistic-regression-for-2-response-classes" class="section level3">
+<h3><span class="header-section-number">4.4.5</span> Logistic Regression for &gt;2 Response Classes</h3>
+<p>Sometimes we wish to classify a response variable that has more than two classes. This could be the medical example where a patient outcomes falls into <code>stroke</code>, <code>overdose</code>, and <code>seizure</code>. It is possible to extend the two-class logistic regression model into multiple-class, but this is not used often in practice.</p>
+<p>A method that is popular for multi-class classification is <em>discriminant analysis</em>.</p>
+</div>
+</div>
+<div id="linear-discriminant-analysis" class="section level2">
+<h2><span class="header-section-number">4.5</span> Linear Discriminant Analysis</h2>
+<p>Logistic regression models the distribution of response <span class="math inline">\(Y\)</span> given the predictor(s) <span class="math inline">\(X\)</span>. In discriminant analysis, we model the distribution of the predictors <span class="math inline">\(X\)</span> in each of the response classes, and then use Bayes’ theorem to flip these around into estimates for <span class="math inline">\(Pr(Y = k|X = x)\)</span>.</p>
+<p>Why do we need this method?</p>
+<ul>
+<li><p>Well-separated classes produce unstable parameter estimates for logistic regression models</p></li>
+<li><p>If <span class="math inline">\(n\)</span> is small and distribution of predictors <span class="math inline">\(X\)</span> is normall across the classes, the linear discriminant model is more stable than logistic regression</p></li>
+</ul>
+<div id="using-bayes-theorem-for-classification" class="section level3">
+<h3><span class="header-section-number">4.5.1</span> Using Bayes’ Theorem for Classification</h3>
+<p>Consider the scenario where we want to classify an observation into one of <span class="math inline">\(K\)</span> classes, where <span class="math inline">\(K &gt;= 2\)</span>.</p>
+<ul>
+<li>Let <span class="math inline">\(\pi_k\)</span> represent the overall or <em>prior</em> probability that a randomly chosen observation comes from the <span class="math inline">\(k\)</span>th class</li>
+<li>Let <span class="math inline">\(f_k(x) = Pr(X = x|Y = k)\)</span> denote the <em>density function</em> of <span class="math inline">\(X\)</span> for an observation that comes from the <span class="math inline">\(k\)</span>th class.</li>
+</ul>
+<p>In other words, <span class="math inline">\(f_k(x)\)</span> being large means that there is a high probability that an observation in the <span class="math inline">\(k\)</span>th class has <span class="math inline">\(X \approx x\)</span>.</p>
+<p>We can use Bayes’ theorem</p>
+<p><span class="math display">\[
+\operatorname{Pr}(Y=k | X=x)=\frac{\pi_{k} f_{k}(x)}{\sum_{l=1}^{K} \pi_{l} f_{l}(x)}
+\]</span></p>
+<p>And call the left-hand side <span class="math inline">\(p_k(X)\)</span>. We can plug in estimates of <span class="math inline">\(\pi_k\)</span> and <span class="math inline">\(f_k(X)\)</span> into Bayes’ theorem above to get the probability of a certain class, given an observation.</p>
+<ul>
+<li>Solving for <span class="math inline">\(\pi_k\)</span> is easy if we have a random sample of <span class="math inline">\(Y\)</span>s from the population. We simply calculate the fraction of observations that fall into a <span class="math inline">\(k\)</span> class.</li>
+<li>Estimating <span class="math inline">\(f_k(X)\)</span> is more challenging unless we assume simple forms for these densities</li>
+</ul>
+<p>We refer to <span class="math inline">\(p_k(x)\)</span> as the posterior probability that an observation <span class="math inline">\(X = x\)</span> belongs to the <span class="math inline">\(k\)</span>th class. This is the probability that the observation belongs to the <span class="math inline">\(k\)</span>th class, <em>given</em> the predictor value for that observation.</p>
+<p>The Bayes’ classifier classifies an observation to the class for which <span class="math inline">\(p_k(X)\)</span> is largest. If we can find a way to estimate <span class="math inline">\(f_k(X)\)</span>, we can develop a classifier that approximates the Bayes classifier.</p>
+</div>
+<div id="linear-discriminant-analysis-for-p-1" class="section level3">
+<h3><span class="header-section-number">4.5.2</span> Linear Discriminant Analysis for p = 1</h3>
+<p>Let’s assume we have one predictor. We need to obtain an estimate for <span class="math inline">\(f_k(x)\)</span> (the density function for <span class="math inline">\(X\)</span> given a class <span class="math inline">\(k\)</span>). This will obtain a value for <span class="math inline">\(p_k(x)\)</span>. We will then classify this observation for which <span class="math inline">\(p_k(x)\)</span> is greatest.</p>
+<p>To estimate <span class="math inline">\(f_k(x)\)</span>, we need to make some assumptions about its form.</p>
+<p>Let’s assume <span class="math inline">\(f_k(x)\)</span> is <em>normal</em> or <em>Gaussian</em>. The normal density takes the form</p>
+<p><span class="math display">\[
+f_{k}(x)=\frac{1}{\sqrt{2 \pi} \sigma_{k}} \exp \left(-\frac{1}{2 \sigma_{k}^{2}}\left(x-\mu_{k}\right)^{2}\right)
+\]</span></p>
+<p>Plugging this back in to <span class="math inline">\(p_k(x)\)</span>, we obtain</p>
+<p><span class="math display">\[
+p_{k}(x)=\frac{\pi_{k} \frac{1}{\sqrt{2 \pi} \sigma} \exp \left(-\frac{1}{2 \sigma^{2}}\left(x-\mu_{k}\right)^{2}\right)}{\sum_{l=1}^{K} \pi_{l} \frac{1}{\sqrt{2 \pi} \sigma} \exp \left(-\frac{1}{2 \sigma^{2}}\left(x-\mu_{l}\right)^{2}\right)}
+\]</span></p>
+<p>Taking the log and rearranging results in</p>
+<p><span class="math display">\[
+\delta_{k}(x)=x \cdot \frac{\mu_{k}}{\sigma^{2}}-\frac{\mu_{k}^{2}}{2 \sigma^{2}}+\log \left(\pi_{k}\right)
+\]</span></p>
+<p>In this case, the Bayes decision boundary corresponds to</p>
+<p><span class="math display">\[
+x=\frac{\mu_{1}^{2}-\mu_{2}^{2}}{2\left(\mu_{1}-\mu_{2}\right)}=\frac{\mu_{1}+\mu_{2}}{2}
+\]</span></p>
+<p>We can simulate some data to show a simple example.</p>
+<p>In this data we have two classes:</p>
+<ul>
+<li><span class="math inline">\(\mu_1 = -1.25, \mu_2 = 1.25, \sigma_1^2 = \sigma_2^2 = 1\)</span></li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">var_<span class="dv">1</span> =<span class="st"> </span><span class="dv">1</span>
+var_<span class="dv">2</span> =<span class="st"> </span>var_<span class="dv">1</span>
+f_<span class="dv">1</span> =<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">fun =</span> <span class="st">&quot;f_1&quot;</span>, <span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dt">n =</span> <span class="dv">10000</span>, <span class="dt">mean =</span> <span class="fl">-1.25</span>, <span class="dt">sd =</span> var_<span class="dv">1</span>))
+f_<span class="dv">2</span> =<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">fun =</span> <span class="st">&quot;f_2&quot;</span>, <span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dt">n =</span> <span class="dv">10000</span>, <span class="dt">mean =</span> <span class="fl">1.25</span>, <span class="dt">sd =</span> var_<span class="dv">2</span>))
+f_x =<span class="st"> </span><span class="kw">bind_rows</span>(f_<span class="dv">1</span>, f_<span class="dv">2</span>)
+
+<span class="co"># add summary statistics</span>
+
+f_x &lt;-<span class="st"> </span>f_x <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(fun) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pi =</span> <span class="kw">n</span>(),
+         <span class="dt">var =</span> <span class="kw">var</span>(x),
+         <span class="dt">mu =</span> <span class="kw">mean</span>(x)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pi =</span> pi <span class="op">/</span><span class="st"> </span><span class="kw">n</span>())
+
+decision_boundary &lt;-<span class="st"> </span>f_x <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(fun) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mu =</span> <span class="kw">mean</span>(x)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">decision_boundary =</span> <span class="kw">sum</span>(mu) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">pull</span>()
+f_x <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">colour =</span> fun)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_density</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> decision_boundary, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>)</code></pre>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-84-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>These two densities overlap, and so given <span class="math inline">\(X = x\)</span>, we still have uncertaintly about which class the observation belongs to. If both classes are equally likely for a random observation <span class="math inline">\(\pi_1 = \pi_2\)</span>, then we see the Bayes classifier assigns the observation to class 1 if <span class="math inline">\(x &lt; 0\)</span> and class 2 otherwise.</p>
+<p>Even if we are sure that <span class="math inline">\(X\)</span> is drawn from a Gaussian distribution within each class, we still need to estimate <span class="math inline">\(\mu_1,...,\mu_k\)</span>, <span class="math inline">\(\pi_1,...,\pi_k\)</span>, and <span class="math inline">\(\sigma^2\)</span>. The <em>linear discriminant analysis</em> method approximates these by plugging in estimates as follows</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(\hat{\mu}_k = \frac{1}{n_k}\sum_{i:y_i=k}{x_i}\)</span>
+</p>
+<p class="vocab" style="text-align:right">
+*
+</p>
+</div>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(\hat{\sigma}^2 = \frac{1}{n-K}\sum_{k=1}^{K}\sum_{i:y_i=k}{(x_i-\hat{\mu}_k)^2}\)</span>
+</p>
+<p class="vocab" style="text-align:right">
+*
+</p>
+</div>
+<p>The estimate for <span class="math inline">\(\hat{\mu}_k\)</span> is the average of all training observations from the <span class="math inline">\(k\)</span>th class. The estimate for <span class="math inline">\(\hat{\sigma}^2\)</span> is the weighted average of the sample variances for each of the K classes.</p>
+<p>To estimate <span class="math inline">\(\hat{\pi}_k\)</span>, we simply take the proportion of training observations that belong to the <span class="math inline">\(k\)</span>th class</p>
+<div>
+<p style="text-align:center">
+<span class="math inline">\(\hat{\pi}_k = n_k/n\)</span>
+</p>
+<p class="vocab" style="text-align:right">
+*
+</p>
+</div>
+<p>From these estimates, we can achieve a decision boundary</p>
+<p><span class="math display">\[
+\hat{\delta}_{k}(x)=x \cdot \frac{\hat{\mu}_{k}}{\hat{\sigma}^{2}}-\frac{\hat{\mu}_{k}^{2}}{2 \hat{\sigma}^{2}}+\log \left(\hat{\pi}_{k}\right)
+\]</span></p>
+<p>This classifier has <em>linear</em> in the name due to the fact that the <em>discriminant function</em> above are linear functions of <span class="math inline">\(x\)</span>.</p>
+<p>Let’s take a sample from our earlier distribution and see how it performs.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(discrim)
+f_sample =<span class="st"> </span>f_x <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_frac</span>(<span class="dt">size =</span> <span class="fl">0.01</span>)
+
+lda_f &lt;-<span class="st"> </span>discrim<span class="op">::</span><span class="kw">discrim_linear</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> f_sample, <span class="kw">as.factor</span>(fun) <span class="op">~</span><span class="st"> </span>x)
+
+preds &lt;-<span class="st"> </span><span class="kw">predict</span>(lda_f, f_sample, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
+
+f_sample &lt;-<span class="st"> </span>f_sample <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">bind_cols</span>(preds)
+<span class="co"># </span><span class="al">TODO</span><span class="co"> figure out how to truly extract decision boundary from MASS::lda</span>
+est_decision &lt;-<span class="st"> </span>f_sample <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(x) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(.pred_class <span class="op">==</span><span class="st"> &#39;f_2&#39;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(x)
+
+<span class="kw">ggplot</span>(f_sample, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">fill =</span> fun)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_histogram</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> est_decision, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>)</code></pre>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-85-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>Notice the estimated decision boundary (dashed line) being very close to the Bayes decision boundary.</p>
+<div id="measuring-performance" class="section level4">
+<h4><span class="header-section-number">4.5.2.1</span> Measuring Performance</h4>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> show lda performance compared to true value</span></code></pre>
+</div>
+</div>
+<div id="linear-discriminant-analysis-for-p-1-1" class="section level3">
+<h3><span class="header-section-number">4.5.3</span> Linear Discriminant Analysis for p &gt; 1</h3>
+<p>We can extend LDA classifier to multiple predictors.</p>
+<p>The multivariate Gaussian distribution assumes that each predictor follows a one-dimensional normal distribution, with some correlation between each pair of predictors.</p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=JjB58InuTqM">Andrew Ng on Multivariate Gaussian Distribution</a></li>
+</ul>
+<p>To indicate that a <span class="math inline">\(p\)</span>-dimensional random variable <span class="math inline">\(X\)</span> has a multi-variate Gaussian distribution, we write $ X N(, )$</p>
+<ul>
+<li><span class="math inline">\(E(X) = \mu\)</span> is the mean of <span class="math inline">\(X\)</span> (a vector with <span class="math inline">\(p\)</span> components)</li>
+<li><span class="math inline">\(Cov(X) = \Sigma\)</span> is the <span class="math inline">\(p*p\)</span> covariance matrix of <span class="math inline">\(X\)</span>.</li>
+</ul>
+<p>The multivariate Gaussian density is defined as</p>
+<p><span class="math display">\[
+f(x)=\frac{1}{(2 \pi)^{p / 2}|\mathbf{\Sigma}|^{1 / 2}} \exp \left(-\frac{1}{2}(x-\mu)^{T} \mathbf{\Sigma}^{-1}(x-\mu)\right)
+\]</span></p>
+<p>In the case of <span class="math inline">\(p&gt;1\)</span> predictors, the LDA classifier assumes that the observations in the <span class="math inline">\(k\)</span>th class are drawn from a multivariate Gaussian distribution <span class="math inline">\(N(\mu_k, \Sigma)\)</span>, where <span class="math inline">\(\mu_k\)</span> is a class-specific mean vector, and <span class="math inline">\(\Sigma\)</span> is the covariance matrix that is common to all <span class="math inline">\(K\)</span> classes.</p>
+<p>Plugging the density function for the <span class="math inline">\(k\)</span>th class, <span class="math inline">\(f_k(X = x)\)</span>, into</p>
+<p><span class="math display">\[
+\operatorname{Pr}(Y=k | X=x)=\frac{\pi_{k} f_{k}(x)}{\sum_{l=1}^{K} \pi_{l} f_{l}(x)}
+\]</span></p>
+<p>and performing some algebra reveals that the Bayes classifier will assign observation <span class="math inline">\(X = x\)</span> by identifying the class for which</p>
+<p><span class="math display">\[
+\delta_{k}(x)=x^{T} \boldsymbol{\Sigma}^{-1} \mu_{k}-\frac{1}{2} \mu_{k}^{T} \boldsymbol{\Sigma}^{-1} \mu_{k}+\log \pi_{k}
+\]</span></p>
+<p>is largest.</p>
+<div id="performing-lda-on-default-data" class="section level4">
+<h4><span class="header-section-number">4.5.3.1</span> Performing LDA on Default data</h4>
+<p>If we run an LDA model on our <code>default</code> dataset, predicting the probability of <code>default</code> based off of <code>student</code> and <code>balance</code>, we achieve a respectable <code>3.0%</code> error rate.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+default_split &lt;-<span class="st"> </span><span class="kw">initial_split</span>(default, <span class="dt">prop =</span> <span class="dv">3</span><span class="op">/</span><span class="dv">4</span>)
+train_default &lt;-<span class="st"> </span><span class="kw">training</span>(default_split)
+test_default &lt;-<span class="st"> </span><span class="kw">testing</span>(default_split)
+
+lda_default &lt;-<span class="st"> </span>discrim<span class="op">::</span><span class="kw">discrim_linear</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> train_default, default <span class="op">~</span><span class="st"> </span>student <span class="op">+</span><span class="st"> </span>balance)
+
+preds &lt;-<span class="st"> </span><span class="kw">predict</span>(lda_default, test_default, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
+
+<span class="co"># error rate</span>
+test_default <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">bind_cols</span>(preds) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">metrics</span>(<span class="dt">truth =</span> default, <span class="dt">estimate =</span> .pred_class)</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   .metric  .estimator .estimate
+##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
+## 1 accuracy binary         0.97 
+## 2 kap      binary         0.369</code></pre>
+<p>While this may seem impressive, let’s remember that only <code>3.6%</code> of observations in the dataset end up in default. This means that if we assigned a <em>null</em> classifier, which simply predicted every observation to not end in default, our error rate would be <code>3.6%</code>. This is worse, but not by much, compared to our LDA error rate.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># null error rate</span>
+test_default <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(default) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">count</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   default     n  prop
+##   &lt;fct&gt;   &lt;int&gt; &lt;dbl&gt;
+## 1 No       2410 0.964
+## 2 Yes        90 0.036</code></pre>
+<p>Binary decision makers can make to types of errors:</p>
+<ul>
+<li>Incorrectly assigning an individual who defaults to the “no default” category</li>
+<li>Incorrectly assigning an individual who doesn’t default to the “default” category.</li>
+</ul>
+<p>We can identify the breakdown by using a <em>confusion matrix</em></p>
+<pre class="sourceCode r"><code class="sourceCode r">cm &lt;-<span class="st"> </span>test_default <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">bind_cols</span>(preds) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">conf_mat</span>(<span class="dt">truth =</span> default, <span class="dt">estimate =</span> .pred_class)
+
+cm</code></pre>
+<pre><code>##           Truth
+## Prediction   No  Yes
+##        No  2402   67
+##        Yes    8   23</code></pre>
+<p>We see that our LDA only predicted <code>31</code> people to default. Of these, <code>23</code> actually defaulted. So, only <code>8</code> of out of the <code>~7500</code> people who did not default were incorrectly labeled.</p>
+<p>However, of the <code>90</code> people in our test set who defaulted, we only predicted this correctly for <code>23</code> of them. That means <code>~75%</code> of individuals who default were incorrectly classified. Having an error rate this high for the problematic class (those who default) is unacceptable.</p>
+<p>Class-specific performance is an important concept. <em>Sensitivity</em> and <em>specificity</em> characterize the performance of a classifier or screening test. In this case, the sensitivity is the percentage of true defaults who are identified (a low <code>~25%</code>). The specificity is the percentage of non-defaulters who are correctly identified (<code>7492/7500 ~ 99.9%</code>).</p>
+<p>Remember that LDA is trying to approximate the Bayes classifier, which has the lowest <em>total</em> error rate out of all classifiers (assuming Gaussian assumption is correct). The classifier will yield the smallest total number of misclassifications, regardless of which class the errors came from. In this credit card scenario, the credit card company might wish to avoid incorrectly misclassifying a user who defaults. In this case, they value sensitivity. For them, the cost of misclassifying a defaulter is higher than the cost of misclassifying a non-defaulter (which they still desire to avoid).</p>
+<p>It’s possible to modify LDA for such circumstances. Given the Bayes classifier works by assigning an observation to a class in which the posterior probability <span class="math inline">\(p_k(X)\)</span> is greatest (in the two-class scenario, this decision boundary is at <code>0.5</code>), we can modify the probability threshold to suit our needs. If we wish to increase our sensitivity, we can lower this threshold.</p>
+<p>Imagine we lowered the threshold to <code>0.2</code>. Sure, we would classify more people as defaulters than before (decreasing our specificity) but we would also catch more defaulters we previously missed (increasing our sensitivity).</p>
+<pre class="sourceCode r"><code class="sourceCode r">preds &lt;-<span class="st"> </span><span class="kw">predict</span>(lda_default, test_default, <span class="dt">type =</span> <span class="st">&quot;prob&quot;</span>)
+
+<span class="co"># error rate</span>
+test_default <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">bind_cols</span>(preds) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">.pred_class =</span> <span class="kw">as.factor</span>(<span class="kw">if_else</span>(.pred_Yes <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.2</span>, <span class="st">&quot;Yes&quot;</span>, <span class="st">&quot;No&quot;</span>))) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">conf_mat</span>(<span class="dt">truth =</span> default, <span class="dt">estimate =</span> .pred_class)</code></pre>
+<pre><code>##           Truth
+## Prediction   No  Yes
+##        No  2357   37
+##        Yes   53   53</code></pre>
+<p>Now our sensitivy has increased. Of the <code>90</code> people who defaulted, we correctly identified <code>53, or ~58.8%</code> of them (up from <code>~25%</code> previously).</p>
+<p>This came at a cost, as our specificity decreased. This time, we predicted <code>106</code> people to default. Of those, <code>53</code> actually defaulted. This means that <code>53</code> of the <code>7500</code> people who didn’t default were incorrectly labelled. This gives us a specificity of (<code>7447/7500 ~ 99.2%</code>)</p>
+<p>Despite the overall increase in error rate, the lower threshold may be chosen, depending on the context of the problem. To make a decision, an extensive amount of <em>domain knowledge</em> is required.</p>
+<p>The <em>ROC curve</em> is a popular graphic for displaying the two types of errors for all possible thresholds. “ROC” stands for <em>receiver operating characteristics</em>.</p>
+<p>The overall performance of a classifier, summarized over all possible thresholds, is given by the <em>area under the (ROC) curve</em> (AUC). An ideal ROC curve will hug the top left corner. Think of it this way: ideal ROC curves are able to increase sensitivity at a much higher rate than reduction in specificity.</p>
+<p>We can use <code>yardstick::</code> (part of <code>tidymodels::</code>) to plot an ROC curve.</p>
+<pre class="sourceCode r"><code class="sourceCode r">test_default <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">bind_cols</span>(preds) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">roc_curve</span>(default, .pred_Yes) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">autoplot</span>()</code></pre>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-91-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>We can think of the <em>sensitivity</em> as the true positive, and <em>1 - specificity</em> as the false positive.</p>
+</div>
+</div>
+<div id="quadratic-discriminant-analysis" class="section level3">
+<h3><span class="header-section-number">4.5.4</span> Quadratic Discriminant Analysis</h3>
 
 </div>
 </div>
