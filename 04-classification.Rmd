@@ -555,5 +555,150 @@ We can think of the *sensitivity* as the true positive, and *1 - specificity* as
 
 ### Quadratic Discriminant Analysis
 
+LDA assumes that the observations within each class are drawn from a multivariate Gaussian distribution, with a class-specific mean vector and a covariance matrix that is common to all $K$ classes. *Quadratic discriminant analysis* (QDA) assumes that class has its own covariance matrix. 
 
+It assumes that each observation from the $k$th class has the form $X \sim N(\mu_k, \Sigma_k)$, where $\Sigma_k$ is a covariance matrix for the $k$th class. Under this assumption, the Bayes classifier assigns an observation $X=x$ to the class for which
+
+$$
+\begin{aligned} \delta_{k}(x) &=-\frac{1}{2}\left(x-\mu_{k}\right)^{T} \boldsymbol{\Sigma}_{k}^{-1}\left(x-\mu_{k}\right)-\frac{1}{2} \log \left|\boldsymbol{\Sigma}_{k}\right|+\log \pi_{k} \\ &=-\frac{1}{2} x^{T} \boldsymbol{\Sigma}_{k}^{-1} x+x^{T} \boldsymbol{\Sigma}_{k}^{-1} \mu_{k}-\frac{1}{2} \mu_{k}^{T} \boldsymbol{\Sigma}_{k}^{-1} \mu_{k}-\frac{1}{2} \log \left|\boldsymbol{\Sigma}_{k}\right|+\log \pi_{k} \end{aligned}
+$$
+
+is largest. In this case, we plug in estimates for $\Sigma_k$, $\mu_k$, and $\pi_k$. Notice the quantity $x$ appears as a quadratic function, hence the name.
+
+So why would one prefer LDA to QDA, or vice-versa? We again approach the bias-variance trade-off. With $p$ predictors, estimating a class-independent covariance matrix requires estimating $p(p+1)/2$ parameters. For example, a covariance matrix with `4` predictors would require estimating `4(4+1)/2 = 10` parameters. To estimate a covariance matrix for each class, the number of parameters is $Kp(p+1)/2$ paramters. With `50` predictors, this becomes some multiple of `1,275`, depending on $K$. The assumption of the common covariance matrix in LDA causes the model to become linear in $x$, which means there are $Kp$ linear coefficients to estimate. As a result, LDA is much less flexible clasifier than QDA, and has lower variance.
+
+```{r, eval = FALSE}
+# TODO understand the parameter calculation
+```
+
+The consequence of this is that if LDA's assumption of a common covariance matrix is significantly off, the LDA can suffer from high bias. In general, LDA tends to be a better bet than QDA when there are relatively few training observations and so reduction of variance is crucial. In contrast, with large data sets, QDA can be recommended as the variance of the classifier is not a major concern, or the assumption of a common covariance matrix for the $K$ classes is clearly not correct.
+
+Breaking the assumption of a common covariance matrix can "curve" the decision boundary, and so the use of a more flexible model (QDA) could yield better results.
+
+```{r}
+# TODO add QDA example
+```
+
+## A Comparison of Classification Methods
+
+Let's discuss the classification methods we have considered and the scenarios for which one might be superior.
+
+* Logistic regression
+* LDA
+* QDA
+* K-nearest neighbors
+
+There is a connection between LDA and logistic regression, particularyly in the two-class setting with $p=1$ predictor. The difference being that logistic regression estimates coefficients via maximum likelihood, and LDA uses the estimated mean and variance from a normal distribution.
+
+The similarity in fitting procedure means that LDA and logistic regression often give similar results. When the assumption that observations are drawn from a Gaussian distribution with a common covariance matrix in each class are in fact true, the LDA can perform better than logistic regression. If the assumptions are in fact false, logistic regression can outperform LDA.
+
+KNN, on the other hand, is completely non-parametric. KNN looks at observations "closest" to $x$, and assigns it to the class to which the plurality of these observations belong. No assumptions are made about the shape of the decision boundary. We can expect KNN to outperform both LDA and logistic regression when the decision boundary is highly non-linear. A downside of KNN, even when it does outperform, is its lack of interpretability. KNN does not tell us which predictors are important.
+
+QDA serves as a compromise between the non-parametric KNN method and the linear LDA and logistic regression approaches. The assumption of quadratic decision boundary allows it to accurately model a wider range of problems. It's reduced flexibility compared to KNN allows it to produce a lower variance with a limited number of training observations due to it making some assumptions about the form of the decision boundary.
+
+```{r}
+# TODO compare all on different dataset using tidymodels and broom
+```
+
+## Lab: Logistic Regression, LDA, QDA, and KNN
+
+### The Stock Market Data
+
+We will look at `ISLR::Smarket` dataset, which consists of S&P 500 returns from 2001 through 2005.
+
+```{r}
+smarket <- ISLR::Smarket %>% as_tibble() %>% janitor::clean_names()
+smarket
+```
+
+```{r}
+smarket %>% skimr::skim()
+```
+
+### Logistic Regression
+
+Let's run a logistic regression to predict `direction` using `lag1` through `lag5` and `volume`.
+
+Unlike ISLR, we will use the `parsnip::logistic_reg` function over `glm` due to its API design and machine learning workflow provided by its parent package, `tidymodels`. Models in the `{parsnip}` package also allow for choice of different computational engines. This reduces cognitive overhead by standardizing the high-level arguments for training a model without rembembering the specifications of different engine. In our case, we will be using the `glm` engine.
+
+```
+logistic_reg() is a way to generate a specification of a model before fitting and allows the model to be created using different packages in R, Stan, keras, or via Spark.
+```
+
+```{r}
+set.seed(1)
+logi_market <- logistic_reg(mode = "classification") %>%
+  fit(data = smarket %>% select(-year, -today), direction ~ .)
+
+logi_market %>% broom::tidy() %>% arrange(p.value)
+```
+
+The model shows that the smallest p-value is associated with `lag` (although the p-value is still relatively large). If we had to interpret the likely faulty model, the negative coefficient suggests that if the market was up yesterday, it's less likely to go up today. 
+
+We can still use the `predict()` function with our `{tidymodels}` workflow. The `type` parameter specifies whether we want probabilities or classifications returned. The object returned is a tibble with columns of the predicted probability of the observation being in each class.
+
+```{r}
+probs <- predict(object = logi_market, new_data = smarket, type = "prob")
+smarket %>%
+  bind_cols(probs)
+```
+
+ISLR recommends creating classification labels by hand, but we can also utilize `predict()` for this.
+
+```{r}
+preds <- predict(object = logi_market, new_data = smarket, type = "class")
+smarket %>%
+  bind_cols(preds)
+```
+
+Again, we can produce a confusion matrix using `conf_mat()` function of the `{yardstick}` package (used for measuring model performance, also part of `{tidymodels}`).
+
+We tell `conf_mat()` that the `direction` column is our source of truth, and our classifications are contained in the `.pred_class` column.
+
+```{r}
+cm_market <- smarket %>%
+  bind_cols(preds) %>%
+  conf_mat(truth = direction, estimate = .pred_class)
+
+cm_market
+```
+
+`conf_mat` objects also have a `summary()` method that computes various classification metrics.
+
+```{r}
+summary(cm_market) %>%
+  filter(.metric %in% c('accuracy', 'sens', 'spec'))
+```
+
+Our overall accuracy is around `~52%`. This may seem decent, but if we look at the original `smarket` data, we see that the `direction` value is evenly split (market goes up `51.8%` of the time). Still, it suggests that we are slightly better off than random guessing.
+
+However, we need to consider that this accuracy is on the *training data*, which is often overly optimistic. To get a better sense of our model performance, we need to train on a subset of the data, and test on the remaining subset.
+
+We will train on data from `2001` to `2004` and then test on data from `2005`.
+
+```{r}
+set.seed(40)
+# prepare training/test splits
+smarket_split <- initial_split(smarket, prop = 3/4)
+train_smarket <- training(smarket_split)
+test_smarket <- testing(smarket_split)
+
+# fit model and grab predictions
+logi_market <- logistic_reg(mode = "classification") %>%
+  fit(data = train_smarket %>% select(-year, -today), direction ~ .)
+preds <- predict(object = logi_market, new_data = test_smarket, type = "class")
+
+# build confusion matrix on test set
+test_cm <- test_smarket %>%
+  bind_cols(preds) %>%
+  conf_mat(truth = direction, estimate = .pred_class)
+
+# summary statistics
+summary(test_cm) %>%
+  filter(.metric %in% c('accuracy', 'sens', 'spec'))
+```
+
+In this scenario, the accuracy is `47.8%`. Certain iterations of this *could* produce a lower test error due to randomness + small sample size, but each iteration tends to be lower than the previous, no-split example. Obviously, this example shows that applying classification models doesn't always yield a robust model. Having the ability to predict the stock market with a dozen lines of code isn't realistic.
+
+### Linear Discriminant Analysis
 

@@ -24,7 +24,7 @@
 <meta name="author" content="Beau Lucas" />
 
 
-<meta name="date" content="2019-12-16" />
+<meta name="date" content="2019-12-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -194,6 +194,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.5.2" data-path="classification.html"><a href="classification.html#linear-discriminant-analysis-for-p-1"><i class="fa fa-check"></i><b>4.5.2</b> Linear Discriminant Analysis for p = 1</a></li>
 <li class="chapter" data-level="4.5.3" data-path="classification.html"><a href="classification.html#linear-discriminant-analysis-for-p-1-1"><i class="fa fa-check"></i><b>4.5.3</b> Linear Discriminant Analysis for p &gt; 1</a></li>
 <li class="chapter" data-level="4.5.4" data-path="classification.html"><a href="classification.html#quadratic-discriminant-analysis"><i class="fa fa-check"></i><b>4.5.4</b> Quadratic Discriminant Analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="classification.html"><a href="classification.html#a-comparison-of-classification-methods"><i class="fa fa-check"></i><b>4.6</b> A Comparison of Classification Methods</a></li>
+<li class="chapter" data-level="4.7" data-path="classification.html"><a href="classification.html#lab-logistic-regression-lda-qda-and-knn"><i class="fa fa-check"></i><b>4.7</b> Lab: Logistic Regression, LDA, QDA, and KNN</a><ul>
+<li class="chapter" data-level="4.7.1" data-path="classification.html"><a href="classification.html#the-stock-market-data"><i class="fa fa-check"></i><b>4.7.1</b> The Stock Market Data</a></li>
+<li class="chapter" data-level="4.7.2" data-path="classification.html"><a href="classification.html#logistic-regression-1"><i class="fa fa-check"></i><b>4.7.2</b> Logistic Regression</a></li>
+<li class="chapter" data-level="4.7.3" data-path="classification.html"><a href="classification.html#linear-discriminant-analysis-1"><i class="fa fa-check"></i><b>4.7.3</b> Linear Discriminant Analysis</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -462,14 +468,14 @@ company_data &lt;-<span class="st"> </span><span class="kw">read_tsv</span>(tmp)
 <p><code>readr</code> provides a nice summary of the imported tibble. Calling the tibble by name will also give a breakdown of column names, data types, and number of observations.</p>
 <pre class="sourceCode r"><code class="sourceCode r">company_data</code></pre>
 <pre><code>## # A tibble: 100 x 3
-##       x     y z        
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;    
-## 1  25.6  50.2 microsoft
-## 2  25.8  49.9 microsoft
-## 3  25.9  49.6 microsoft
-## 4  26.3  48.1 microsoft
-## 5  25.7  51.0 microsoft
-## 6  24.1  50.2 microsoft
+##       x     y z    
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;
+## 1  24.2  48.9 tesla
+## 2  24.7  48.3 tesla
+## 3  22.9  50.2 tesla
+## 4  24.1  50.9 tesla
+## 5  25.2  51.1 tesla
+## 6  24.5  49.3 tesla
 ## # … with 94 more rows</code></pre>
 </div>
 <div id="additional-graphical-and-numerical-summaries" class="section level4">

@@ -24,7 +24,7 @@
 <meta name="author" content="Beau Lucas" />
 
 
-<meta name="date" content="2019-12-16" />
+<meta name="date" content="2019-12-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -195,6 +195,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.5.3" data-path="classification.html"><a href="classification.html#linear-discriminant-analysis-for-p-1-1"><i class="fa fa-check"></i><b>4.5.3</b> Linear Discriminant Analysis for p &gt; 1</a></li>
 <li class="chapter" data-level="4.5.4" data-path="classification.html"><a href="classification.html#quadratic-discriminant-analysis"><i class="fa fa-check"></i><b>4.5.4</b> Quadratic Discriminant Analysis</a></li>
 </ul></li>
+<li class="chapter" data-level="4.6" data-path="classification.html"><a href="classification.html#a-comparison-of-classification-methods"><i class="fa fa-check"></i><b>4.6</b> A Comparison of Classification Methods</a></li>
+<li class="chapter" data-level="4.7" data-path="classification.html"><a href="classification.html#lab-logistic-regression-lda-qda-and-knn"><i class="fa fa-check"></i><b>4.7</b> Lab: Logistic Regression, LDA, QDA, and KNN</a><ul>
+<li class="chapter" data-level="4.7.1" data-path="classification.html"><a href="classification.html#the-stock-market-data"><i class="fa fa-check"></i><b>4.7.1</b> The Stock Market Data</a></li>
+<li class="chapter" data-level="4.7.2" data-path="classification.html"><a href="classification.html#logistic-regression-1"><i class="fa fa-check"></i><b>4.7.2</b> Logistic Regression</a></li>
+<li class="chapter" data-level="4.7.3" data-path="classification.html"><a href="classification.html#linear-discriminant-analysis-1"><i class="fa fa-check"></i><b>4.7.3</b> Linear Discriminant Analysis</a></li>
+</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/beaulucas/tidy_islr" target="blank">GitHub Repository</a></li>
@@ -254,7 +260,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  n obs: 10000 
 ##  n variables: 4 
 ## 
-## ── Variable type:factor ────────────────────────────────────────
+## ── Variable type:factor ─────────────────────────────
 ##  variable missing complete     n n_unique                 top_counts
 ##   default       0    10000 10000        2  No: 9667, Yes: 333, NA: 0
 ##   student       0    10000 10000        2 No: 7056, Yes: 2944, NA: 0
@@ -262,7 +268,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##    FALSE
 ##    FALSE
 ## 
-## ── Variable type:numeric ───────────────────────────────────────
+## ── Variable type:numeric ────────────────────────────
 ##  variable missing complete     n     mean       sd     p0      p25
 ##   balance       0    10000 10000   835.37   483.71   0      481.73
 ##    income       0    10000 10000 33516.98 13336.64 771.97 21340.46
@@ -694,6 +700,182 @@ test_default <span class="op">%&gt;%</span>
 </div>
 <div id="quadratic-discriminant-analysis" class="section level3">
 <h3><span class="header-section-number">4.5.4</span> Quadratic Discriminant Analysis</h3>
+<p>LDA assumes that the observations within each class are drawn from a multivariate Gaussian distribution, with a class-specific mean vector and a covariance matrix that is common to all <span class="math inline">\(K\)</span> classes. <em>Quadratic discriminant analysis</em> (QDA) assumes that class has its own covariance matrix.</p>
+<p>It assumes that each observation from the <span class="math inline">\(k\)</span>th class has the form <span class="math inline">\(X \sim N(\mu_k, \Sigma_k)\)</span>, where <span class="math inline">\(\Sigma_k\)</span> is a covariance matrix for the <span class="math inline">\(k\)</span>th class. Under this assumption, the Bayes classifier assigns an observation <span class="math inline">\(X=x\)</span> to the class for which</p>
+<p><span class="math display">\[
+\begin{aligned} \delta_{k}(x) &amp;=-\frac{1}{2}\left(x-\mu_{k}\right)^{T} \boldsymbol{\Sigma}_{k}^{-1}\left(x-\mu_{k}\right)-\frac{1}{2} \log \left|\boldsymbol{\Sigma}_{k}\right|+\log \pi_{k} \\ &amp;=-\frac{1}{2} x^{T} \boldsymbol{\Sigma}_{k}^{-1} x+x^{T} \boldsymbol{\Sigma}_{k}^{-1} \mu_{k}-\frac{1}{2} \mu_{k}^{T} \boldsymbol{\Sigma}_{k}^{-1} \mu_{k}-\frac{1}{2} \log \left|\boldsymbol{\Sigma}_{k}\right|+\log \pi_{k} \end{aligned}
+\]</span></p>
+<p>is largest. In this case, we plug in estimates for <span class="math inline">\(\Sigma_k\)</span>, <span class="math inline">\(\mu_k\)</span>, and <span class="math inline">\(\pi_k\)</span>. Notice the quantity <span class="math inline">\(x\)</span> appears as a quadratic function, hence the name.</p>
+<p>So why would one prefer LDA to QDA, or vice-versa? We again approach the bias-variance trade-off. With <span class="math inline">\(p\)</span> predictors, estimating a class-independent covariance matrix requires estimating <span class="math inline">\(p(p+1)/2\)</span> parameters. For example, a covariance matrix with <code>4</code> predictors would require estimating <code>4(4+1)/2 = 10</code> parameters. To estimate a covariance matrix for each class, the number of parameters is <span class="math inline">\(Kp(p+1)/2\)</span> paramters. With <code>50</code> predictors, this becomes some multiple of <code>1,275</code>, depending on <span class="math inline">\(K\)</span>. The assumption of the common covariance matrix in LDA causes the model to become linear in <span class="math inline">\(x\)</span>, which means there are <span class="math inline">\(Kp\)</span> linear coefficients to estimate. As a result, LDA is much less flexible clasifier than QDA, and has lower variance.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> understand the parameter calculation</span></code></pre>
+<p>The consequence of this is that if LDA’s assumption of a common covariance matrix is significantly off, the LDA can suffer from high bias. In general, LDA tends to be a better bet than QDA when there are relatively few training observations and so reduction of variance is crucial. In contrast, with large data sets, QDA can be recommended as the variance of the classifier is not a major concern, or the assumption of a common covariance matrix for the <span class="math inline">\(K\)</span> classes is clearly not correct.</p>
+<p>Breaking the assumption of a common covariance matrix can “curve” the decision boundary, and so the use of a more flexible model (QDA) could yield better results.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> add QDA example</span></code></pre>
+</div>
+</div>
+<div id="a-comparison-of-classification-methods" class="section level2">
+<h2><span class="header-section-number">4.6</span> A Comparison of Classification Methods</h2>
+<p>Let’s discuss the classification methods we have considered and the scenarios for which one might be superior.</p>
+<ul>
+<li>Logistic regression</li>
+<li>LDA</li>
+<li>QDA</li>
+<li>K-nearest neighbors</li>
+</ul>
+<p>There is a connection between LDA and logistic regression, particularyly in the two-class setting with <span class="math inline">\(p=1\)</span> predictor. The difference being that logistic regression estimates coefficients via maximum likelihood, and LDA uses the estimated mean and variance from a normal distribution.</p>
+<p>The similarity in fitting procedure means that LDA and logistic regression often give similar results. When the assumption that observations are drawn from a Gaussian distribution with a common covariance matrix in each class are in fact true, the LDA can perform better than logistic regression. If the assumptions are in fact false, logistic regression can outperform LDA.</p>
+<p>KNN, on the other hand, is completely non-parametric. KNN looks at observations “closest” to <span class="math inline">\(x\)</span>, and assigns it to the class to which the plurality of these observations belong. No assumptions are made about the shape of the decision boundary. We can expect KNN to outperform both LDA and logistic regression when the decision boundary is highly non-linear. A downside of KNN, even when it does outperform, is its lack of interpretability. KNN does not tell us which predictors are important.</p>
+<p>QDA serves as a compromise between the non-parametric KNN method and the linear LDA and logistic regression approaches. The assumption of quadratic decision boundary allows it to accurately model a wider range of problems. It’s reduced flexibility compared to KNN allows it to produce a lower variance with a limited number of training observations due to it making some assumptions about the form of the decision boundary.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> compare all on different dataset using tidymodels and broom</span></code></pre>
+</div>
+<div id="lab-logistic-regression-lda-qda-and-knn" class="section level2">
+<h2><span class="header-section-number">4.7</span> Lab: Logistic Regression, LDA, QDA, and KNN</h2>
+<div id="the-stock-market-data" class="section level3">
+<h3><span class="header-section-number">4.7.1</span> The Stock Market Data</h3>
+<p>We will look at <code>ISLR::Smarket</code> dataset, which consists of S&amp;P 500 returns from 2001 through 2005.</p>
+<pre class="sourceCode r"><code class="sourceCode r">smarket &lt;-<span class="st"> </span>ISLR<span class="op">::</span>Smarket <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span>janitor<span class="op">::</span><span class="kw">clean_names</span>()
+smarket</code></pre>
+<pre><code>## # A tibble: 1,250 x 9
+##    year   lag1   lag2   lag3   lag4   lag5 volume  today direction
+##   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;fct&gt;    
+## 1  2001  0.381 -0.192 -2.62  -1.06   5.01    1.19  0.959 Up       
+## 2  2001  0.959  0.381 -0.192 -2.62  -1.06    1.30  1.03  Up       
+## 3  2001  1.03   0.959  0.381 -0.192 -2.62    1.41 -0.623 Down     
+## 4  2001 -0.623  1.03   0.959  0.381 -0.192   1.28  0.614 Up       
+## 5  2001  0.614 -0.623  1.03   0.959  0.381   1.21  0.213 Up       
+## 6  2001  0.213  0.614 -0.623  1.03   0.959   1.35  1.39  Up       
+## # … with 1,244 more rows</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">smarket <span class="op">%&gt;%</span><span class="st"> </span>skimr<span class="op">::</span><span class="kw">skim</span>()</code></pre>
+<pre><code>## Skim summary statistics
+##  n obs: 1250 
+##  n variables: 9 
+## 
+## ── Variable type:factor ─────────────────────────────
+##   variable missing complete    n n_unique               top_counts ordered
+##  direction       0     1250 1250        2 Up: 648, Dow: 602, NA: 0   FALSE
+## 
+## ── Variable type:numeric ────────────────────────────
+##  variable missing complete    n      mean   sd      p0     p25      p50
+##      lag1       0     1250 1250    0.0038 1.14   -4.92   -0.64    0.039
+##      lag2       0     1250 1250    0.0039 1.14   -4.92   -0.64    0.039
+##      lag3       0     1250 1250    0.0017 1.14   -4.92   -0.64    0.038
+##      lag4       0     1250 1250    0.0016 1.14   -4.92   -0.64    0.038
+##      lag5       0     1250 1250    0.0056 1.15   -4.92   -0.64    0.038
+##     today       0     1250 1250    0.0031 1.14   -4.92   -0.64    0.038
+##    volume       0     1250 1250    1.48   0.36    0.36    1.26    1.42 
+##      year       0     1250 1250 2003.02   1.41 2001    2002    2003    
+##      p75    p100     hist
+##     0.6     5.73 ▁▁▂▇▅▁▁▁
+##     0.6     5.73 ▁▁▂▇▅▁▁▁
+##     0.6     5.73 ▁▁▂▇▅▁▁▁
+##     0.6     5.73 ▁▁▂▇▅▁▁▁
+##     0.6     5.73 ▁▁▂▇▅▁▁▁
+##     0.6     5.73 ▁▁▂▇▅▁▁▁
+##     1.64    3.15 ▁▁▇▇▂▁▁▁
+##  2004    2005    ▇▇▁▇▁▇▁▇</code></pre>
+</div>
+<div id="logistic-regression-1" class="section level3">
+<h3><span class="header-section-number">4.7.2</span> Logistic Regression</h3>
+<p>Let’s run a logistic regression to predict <code>direction</code> using <code>lag1</code> through <code>lag5</code> and <code>volume</code>.</p>
+<p>Unlike ISLR, we will use the <code>parsnip::logistic_reg</code> function over <code>glm</code> due to its API design and machine learning workflow provided by its parent package, <code>tidymodels</code>. Models in the <code>{parsnip}</code> package also allow for choice of different computational engines. This reduces cognitive overhead by standardizing the high-level arguments for training a model without rembembering the specifications of different engine. In our case, we will be using the <code>glm</code> engine.</p>
+<pre><code>logistic_reg() is a way to generate a specification of a model before fitting and allows the model to be created using different packages in R, Stan, keras, or via Spark.</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+logi_market &lt;-<span class="st"> </span><span class="kw">logistic_reg</span>(<span class="dt">mode =</span> <span class="st">&quot;classification&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> smarket <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>year, <span class="op">-</span>today), direction <span class="op">~</span><span class="st"> </span>.)
+
+logi_market <span class="op">%&gt;%</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">tidy</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(p.value)</code></pre>
+<pre><code>## # A tibble: 7 x 5
+##   term        estimate std.error statistic p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+## 1 lag1         -0.0731    0.0502    -1.46    0.145
+## 2 volume        0.135     0.158      0.855   0.392
+## 3 lag2         -0.0423    0.0501    -0.845   0.398
+## 4 (Intercept)  -0.126     0.241     -0.523   0.601
+## 5 lag3          0.0111    0.0499     0.222   0.824
+## 6 lag5          0.0103    0.0495     0.208   0.835
+## # … with 1 more row</code></pre>
+<p>The model shows that the smallest p-value is associated with <code>lag</code> (although the p-value is still relatively large). If we had to interpret the likely faulty model, the negative coefficient suggests that if the market was up yesterday, it’s less likely to go up today.</p>
+<p>We can still use the <code>predict()</code> function with our <code>{tidymodels}</code> workflow. The <code>type</code> parameter specifies whether we want probabilities or classifications returned. The object returned is a tibble with columns of the predicted probability of the observation being in each class.</p>
+<pre class="sourceCode r"><code class="sourceCode r">probs &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="dt">object =</span> logi_market, <span class="dt">new_data =</span> smarket, <span class="dt">type =</span> <span class="st">&quot;prob&quot;</span>)
+smarket <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">bind_cols</span>(probs)</code></pre>
+<pre><code>## # A tibble: 1,250 x 11
+##    year   lag1   lag2   lag3   lag4   lag5 volume  today direction
+##   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;fct&gt;    
+## 1  2001  0.381 -0.192 -2.62  -1.06   5.01    1.19  0.959 Up       
+## 2  2001  0.959  0.381 -0.192 -2.62  -1.06    1.30  1.03  Up       
+## 3  2001  1.03   0.959  0.381 -0.192 -2.62    1.41 -0.623 Down     
+## 4  2001 -0.623  1.03   0.959  0.381 -0.192   1.28  0.614 Up       
+## 5  2001  0.614 -0.623  1.03   0.959  0.381   1.21  0.213 Up       
+## 6  2001  0.213  0.614 -0.623  1.03   0.959   1.35  1.39  Up       
+## # … with 1,244 more rows, and 2 more variables: .pred_Down &lt;dbl&gt;,
+## #   .pred_Up &lt;dbl&gt;</code></pre>
+<p>ISLR recommends creating classification labels by hand, but we can also utilize <code>predict()</code> for this.</p>
+<pre class="sourceCode r"><code class="sourceCode r">preds &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="dt">object =</span> logi_market, <span class="dt">new_data =</span> smarket, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
+smarket <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">bind_cols</span>(preds)</code></pre>
+<pre><code>## # A tibble: 1,250 x 10
+##    year   lag1   lag2   lag3   lag4   lag5 volume  today direction
+##   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;fct&gt;    
+## 1  2001  0.381 -0.192 -2.62  -1.06   5.01    1.19  0.959 Up       
+## 2  2001  0.959  0.381 -0.192 -2.62  -1.06    1.30  1.03  Up       
+## 3  2001  1.03   0.959  0.381 -0.192 -2.62    1.41 -0.623 Down     
+## 4  2001 -0.623  1.03   0.959  0.381 -0.192   1.28  0.614 Up       
+## 5  2001  0.614 -0.623  1.03   0.959  0.381   1.21  0.213 Up       
+## 6  2001  0.213  0.614 -0.623  1.03   0.959   1.35  1.39  Up       
+## # … with 1,244 more rows, and 1 more variable: .pred_class &lt;fct&gt;</code></pre>
+<p>Again, we can produce a confusion matrix using <code>conf_mat()</code> function of the <code>{yardstick}</code> package (used for measuring model performance, also part of <code>{tidymodels}</code>).</p>
+<p>We tell <code>conf_mat()</code> that the <code>direction</code> column is our source of truth, and our classifications are contained in the <code>.pred_class</code> column.</p>
+<pre class="sourceCode r"><code class="sourceCode r">cm_market &lt;-<span class="st"> </span>smarket <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">bind_cols</span>(preds) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">conf_mat</span>(<span class="dt">truth =</span> direction, <span class="dt">estimate =</span> .pred_class)
+
+cm_market</code></pre>
+<pre><code>##           Truth
+## Prediction Down  Up
+##       Down  145 141
+##       Up    457 507</code></pre>
+<p><code>conf_mat</code> objects also have a <code>summary()</code> method that computes various classification metrics.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(cm_market) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(.metric <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;accuracy&#39;</span>, <span class="st">&#39;sens&#39;</span>, <span class="st">&#39;spec&#39;</span>))</code></pre>
+<pre><code>## # A tibble: 3 x 3
+##   .metric  .estimator .estimate
+##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
+## 1 accuracy binary         0.522
+## 2 sens     binary         0.241
+## 3 spec     binary         0.782</code></pre>
+<p>Our overall accuracy is around <code>~52%</code>. This may seem decent, but if we look at the original <code>smarket</code> data, we see that the <code>direction</code> value is evenly split (market goes up <code>51.8%</code> of the time). Still, it suggests that we are slightly better off than random guessing.</p>
+<p>However, we need to consider that this accuracy is on the <em>training data</em>, which is often overly optimistic. To get a better sense of our model performance, we need to train on a subset of the data, and test on the remaining subset.</p>
+<p>We will train on data from <code>2001</code> to <code>2004</code> and then test on data from <code>2005</code>.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">40</span>)
+<span class="co"># prepare training/test splits</span>
+smarket_split &lt;-<span class="st"> </span><span class="kw">initial_split</span>(smarket, <span class="dt">prop =</span> <span class="dv">3</span><span class="op">/</span><span class="dv">4</span>)
+train_smarket &lt;-<span class="st"> </span><span class="kw">training</span>(smarket_split)
+test_smarket &lt;-<span class="st"> </span><span class="kw">testing</span>(smarket_split)
+
+<span class="co"># fit model and grab predictions</span>
+logi_market &lt;-<span class="st"> </span><span class="kw">logistic_reg</span>(<span class="dt">mode =</span> <span class="st">&quot;classification&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> train_smarket <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>year, <span class="op">-</span>today), direction <span class="op">~</span><span class="st"> </span>.)
+preds &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="dt">object =</span> logi_market, <span class="dt">new_data =</span> test_smarket, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
+
+<span class="co"># build confusion matrix on test set</span>
+test_cm &lt;-<span class="st"> </span>test_smarket <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">bind_cols</span>(preds) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">conf_mat</span>(<span class="dt">truth =</span> direction, <span class="dt">estimate =</span> .pred_class)
+
+<span class="co"># summary statistics</span>
+<span class="kw">summary</span>(test_cm) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(.metric <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;accuracy&#39;</span>, <span class="st">&#39;sens&#39;</span>, <span class="st">&#39;spec&#39;</span>))</code></pre>
+<pre><code>## # A tibble: 3 x 3
+##   .metric  .estimator .estimate
+##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
+## 1 accuracy binary         0.478
+## 2 sens     binary         0.176
+## 3 spec     binary         0.791</code></pre>
+<p>In this scenario, the accuracy is <code>47.8%</code>. Certain iterations of this <em>could</em> produce a lower test error due to randomness + small sample size, but each iteration tends to be lower than the previous, no-split example. Obviously, this example shows that applying classification models doesn’t always yield a robust model. Having the ability to predict the stock market with a dozen lines of code isn’t realistic.</p>
+</div>
+<div id="linear-discriminant-analysis-1" class="section level3">
+<h3><span class="header-section-number">4.7.3</span> Linear Discriminant Analysis</h3>
 
 </div>
 </div>
