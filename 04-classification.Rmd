@@ -13,6 +13,8 @@ editor_options:
 ```{r}
 library(tidyverse)
 library(tidymodels)
+library(discrim)
+library(kknn)
 library(knitr)
 library(kableExtra)
 library(skimr)
@@ -602,22 +604,48 @@ QDA serves as a compromise between the non-parametric KNN method and the linear 
 
 ## Lab: Logistic Regression, LDA, QDA, and KNN
 
-### The Stock Market Data
+The dataset contains `683` observations and `11` variables, one of which is our response variable (`class`). There is a variable `id` which identifies the patient. All predictor variables are factors, some of them ordinal, some not. I don't know much more about the metadata, but I'm going to assume the predictor types are all accurate and the ordinal nature appropriate when present. If we trust the ordinality, then we can convert them into integers. Only one variable has missing data, `bare_nuclei`, with 16 missing observations. For cleaning, I'm going to remove the `id` column as well as the `NA` values of `bare_nuclei`.
 
-We will look at `ISLR::Smarket` dataset, which consists of S&P 500 returns from 2001 through 2005.
+### Churn Dataset
 
-```{r}
-smarket <- ISLR::Smarket %>% as_tibble() %>% janitor::clean_names()
-smarket
+We will be using the `parsnip::wa_churn` dataset to test our classification techniques.
+
+```
+These data were downloaded from the IBM Watson site (see below) in September 2018. The data contain a factor for whether a customer churned or not. Alternatively, the tenure column presumably contains information on how long the customer has had an account. A survival analysis can be done on this column using the churn outcome as the censoring information. A data dictionary can be found on the source website.
 ```
 
+Our interest for this dataset is predicting whether a customer will churn or not. If a customer is likely to churn, we can offer them an incentive to stay. These incentives cost us money, so we want to minimize the incentives given out to customers that won't churn. We will identify a balance between *sensitivity* and *specificity* that maximizes the ROI of our incentive.
+
+
 ```{r}
-smarket %>% skimr::skim()
+wa_churn %>% skimr::skim()
+```
+
+The dataset contains `7043` observations and `20` variables. The dataset consists mostly of factor variables, all with a small amount of unique levels. We are going to try out logistic regression, LDA, and K-nearest neighbors on this dataset. For now, we will only remove the `11` observations which have missing values for the `total_charges` column. We will also reorder the `churn` column levels so that a "success" corresponds with a customer churning.
+
+```{r}
+wa_churn <- wa_churn %>% filter(!is.na(total_charges)) %>%
+mutate(churn = fct_relevel(churn, "No", "Yes"))
+```
+
+Now let's take a look at the response variable.
+
+```{r}
+wa_churn %>% group_by(churn) %>% tally() %>% mutate(prop = n / sum(n))
+```
+
+In this dataset, `73.5%` of the observations do not churn. There is some skew, but nothing drastic. We will now prepare the data and apply binary classification techniques to see which model performs best.
+
+```{r}
+set.seed(40)
+split_churn <- initial_split(wa_churn, prop = 3/4)
+train_churn <- training(split_churn)
+test_churn <- testing(split_churn)
 ```
 
 ### Logistic Regression
 
-Let's run a logistic regression to predict `direction` using `lag1` through `lag5` and `volume`.
+Let's run a logistic regression to predict `churn` using the available variables.
 
 Unlike ISLR, we will use the `parsnip::logistic_reg` function over `glm` due to its API design and machine learning workflow provided by its parent package, `tidymodels`. Models in the `{parsnip}` package also allow for choice of different computational engines. This reduces cognitive overhead by standardizing the high-level arguments for training a model without rembembering the specifications of different engine. In our case, we will be using the `glm` engine.
 
@@ -626,79 +654,181 @@ logistic_reg() is a way to generate a specification of a model before fitting an
 ```
 
 ```{r}
-set.seed(1)
-logi_market <- logistic_reg(mode = "classification") %>%
-  fit(data = smarket %>% select(-year, -today), direction ~ .)
-
-logi_market %>% broom::tidy() %>% arrange(p.value)
+logi_churn <- logistic_reg(mode = "classification") %>%
+  fit(data = train_churn, churn ~ .)
+broom::tidy(logi_churn) %>% arrange(p.value)
 ```
 
-The model shows that the smallest p-value is associated with `lag` (although the p-value is still relatively large). If we had to interpret the likely faulty model, the negative coefficient suggests that if the market was up yesterday, it's less likely to go up today. 
+The model shows that the smallest p-value is associated with `tenure` and `contract`. This makes sense, as users locked into contracts will have a tougher time cancelling their service. We can interpret the negative coefficients as reducing the chance a customer churns. Notice how customers that utilize `paperless_billing` and electronic `payment_method` exhibit higher likelihood to churn. They are probably more tech-savvy, younger, and more likely to research other options.
 
-We can still use the `predict()` function with our `{tidymodels}` workflow. The `type` parameter specifies whether we want probabilities or classifications returned. The object returned is a tibble with columns of the predicted probability of the observation being in each class.
+
+#### Measuring model performance
+
+We can use the `predict()` function with our `{tidymodels}` workflow. The `type` parameter specifies whether we want probabilities or classifications returned. The object returned is a tibble with columns of the predicted probability of the observation being in each class.
 
 ```{r}
-probs <- predict(object = logi_market, new_data = smarket, type = "prob")
-smarket %>%
-  bind_cols(probs)
+logi_preds <- predict(object = logi_churn, new_data = test_churn,
+                      type = "class")
 ```
 
-ISLR recommends creating classification labels by hand, but we can also utilize `predict()` for this.
+Specifying `type = "class"` will generate classification predictions based off of a `0.5` threshold (this might not be optimal for the problem).
+
+Let's add them to our test set.
 
 ```{r}
-preds <- predict(object = logi_market, new_data = smarket, type = "class")
-smarket %>%
-  bind_cols(preds)
+test_metrics <- test_churn %>%
+  bind_cols(logi_preds)
 ```
 
-Again, we can produce a confusion matrix using `conf_mat()` function of the `{yardstick}` package (used for measuring model performance, also part of `{tidymodels}`).
+This adds a column, `.pred_class` at each observation.
+
+We can produce a confusion matrix using `conf_mat()` function of the `{yardstick}` package (used for measuring model performance, also part of `{tidymodels}`).
 
 We tell `conf_mat()` that the `direction` column is our source of truth, and our classifications are contained in the `.pred_class` column.
 
 ```{r}
-cm_market <- smarket %>%
-  bind_cols(preds) %>%
-  conf_mat(truth = direction, estimate = .pred_class)
+cm_churn <- test_metrics %>%
+  conf_mat(truth = churn, estimate = .pred_class)
 
-cm_market
+cm_churn
 ```
 
 `conf_mat` objects also have a `summary()` method that computes various classification metrics.
 
 ```{r}
-summary(cm_market) %>%
+summary(cm_churn) %>%
   filter(.metric %in% c('accuracy', 'sens', 'spec'))
 ```
 
-Our overall accuracy is around `~52%`. This may seem decent, but if we look at the original `smarket` data, we see that the `direction` value is evenly split (market goes up `51.8%` of the time). Still, it suggests that we are slightly better off than random guessing.
+Our overall accuracy is around `~80.1%`. This may seem high, but if we look at the original dataset, the data is skewed. A naive classifier would produce a `73.5%` accuracy (the proportion of yes/no churn values).Still, it suggests that we are better off than randomly guessing.
 
-However, we need to consider that this accuracy is on the *training data*, which is often overly optimistic. To get a better sense of our model performance, we need to train on a subset of the data, and test on the remaining subset.
+Can we account for the skew of data when assessing our model? If we utilize the `yardstick::metrics()` function on our test data fitted with class predictions, we can get a dataframe containing overall model performance.
 
-We will train on data from `2001` to `2004` and then test on data from `2005`.
+```{r}
+test_metrics %>%
+  metrics(truth = churn, estimate = .pred_class)
+```
+
+Notice the metric of `kap`. The [Kappa statistic](https://stats.stackexchange.com/questions/82162/cohens-kappa-in-plain-english) compares an observed accuracy with expected accuracy (random chance). This controls for the skewness of our model by comparing our model's accuracy with the naive classifier. In this case, our `kap` of `0.460` indicates that our model is `46%` better than the naive classifier.
+
+We will be using `kap` to evaluate how our logistic regression fits to other techniques.
+
+### Linear discriminant analysis
 
 ```{r}
 set.seed(40)
-# prepare training/test splits
-smarket_split <- initial_split(smarket, prop = 3/4)
-train_smarket <- training(smarket_split)
-test_smarket <- testing(smarket_split)
-
-# fit model and grab predictions
-logi_market <- logistic_reg(mode = "classification") %>%
-  fit(data = train_smarket %>% select(-year, -today), direction ~ .)
-preds <- predict(object = logi_market, new_data = test_smarket, type = "class")
-
-# build confusion matrix on test set
-test_cm <- test_smarket %>%
-  bind_cols(preds) %>%
-  conf_mat(truth = direction, estimate = .pred_class)
-
-# summary statistics
-summary(test_cm) %>%
-  filter(.metric %in% c('accuracy', 'sens', 'spec'))
+lda_churn <- discrim_linear() %>%
+  fit(data = train_churn, churn ~ .)
 ```
 
-In this scenario, the accuracy is `47.8%`. Certain iterations of this *could* produce a lower test error due to randomness + small sample size, but each iteration tends to be lower than the previous, no-split example. Obviously, this example shows that applying classification models doesn't always yield a robust model. Having the ability to predict the stock market with a dozen lines of code isn't realistic.
+Calling the `parsnip::` model object gives us information about the model fit. We can see the prior probabilities as well as the *coefficients of linear discriminants*. These provide the linear combination of the variables used to create the decision rule. If the combination is large, the model will predict an increase.
 
-### Linear Discriminant Analysis
+```{r}
+lda_churn$fit$scaling %>%
+  as_tibble(rownames = "term") %>%
+  arrange(LD1)
+```
 
+We see similar important terms as the logistic regression model. Customers on long contracts are less likely to churn.
+
+```{r}
+lda_preds <- predict(lda_churn, test_churn, type = "class") 
+
+test_churn %>%
+  bind_cols(lda_preds) %>%
+  metrics(truth = churn, estimate = .pred_class)
+```
+
+Here we achieve a `kap` of `42.9%`.
+
+### K-Nearest Neighbors
+
+Next, we will utilize the `parsnip::nearest_neighbor()` function.
+
+```{r}
+set.seed(40)
+knn_churn <- nearest_neighbor(mode = "classification") %>%
+  fit(data = train_churn, churn ~ .)
+knn_preds <- predict(object = knn_churn, new_data = test_churn)
+
+test_churn %>%
+  bind_cols(knn_preds) %>%
+  metrics(truth = churn, estimate = .pred_class)
+```
+
+K-nearest neighbors performs much worse, with a `kap` of `34.1%`.
+
+KNN's poor performance is most likely due to the predictor variables and true decision boundary not being highly non-linear. In this case, KNN's flexibility doesn't match the shape of the data.
+
+### Choosing the model
+
+Given logistic regression and LDA exhibiting similar performance metrics, we could use either model. However, logistic regression makes less assumptions about the underlying data.
+
+Let's take a look at the ROC curve using `yardstick::roc_curve()` function.
+
+```{r}
+# https://stats.stackexchange.com/questions/188416/discriminant-analysis-vs-logistic-regression
+logi_preds <- predict(logi_churn, test_churn, type = "prob")
+test_churn %>%
+  bind_cols(logi_preds) %>%
+  roc_curve(churn, .pred_Yes) %>%
+  autoplot()
+```
+
+Our sensitivity (ability to correctly identify those who will churn) has two visible inflection points where the slope changes, one around `~55%` and the other around `~80%`. What should we pick as our classifier threshold?
+
+### Evaluating the threshold
+
+Choosing a classification threshold greatly depends on the problem context.
+
+Imagine we want to hand out an incentive to customers we believe will churn. This incentive costs us money, but has a `100%` success rate of retaining a customer (turning them from a `Yes` to `No` churn). 
+
+Let's assume the cost of this incentive for us is `$75`, but the value of retaining the user is `$150`. We want to maximize the return we get from this incentive.
+
+In this case, every true positive will net us `$75` of profit, and every false positive will cost us `$75` (the customer doesn't churn, so giving the incentive was a waste). We want to find the optimal decision boundary where we maximize our return from this incentive.
+
+```{r}
+ltv = 150
+incentive = 75
+
+logi_class <- predict(logi_churn, test_churn, type = "class")
+costs <- test_churn %>%
+  bind_cols(logi_preds) %>%
+  bind_cols(logi_class) %>%
+  roc_curve(churn, .pred_Yes) %>%
+  mutate(profit  = sensitivity * (ltv - incentive),
+         cost = (1 - specificity) * incentive,
+         net = profit - cost)
+
+costs %>%
+  ggplot(aes(x = sensitivity, y = net)) +
+  geom_line() +
+  geom_line(aes(y = max(net)))
+```
+
+We can grab the optimal sensitivity and find the corresponding decision threshold.
+
+```{r}
+optimal_sens <- costs %>%
+  filter(net == max(net))
+optimal_sens
+```
+
+We find that our ideal sensitivity of `76.4%` corresponds with a specificity of `75.7%`. For whatever reason, `roc_curve()` gives the `.threshold` column the predicted `No` churn class (despite specifying an ROC curve with `.pred_Yes` column). Thus, if we eastimate a customer to have a churn percentage greater or equal to `1 - 0.308 = 0.692`, we can offer them this incentive.
+
+```{r}
+yes_threshold <- 1 - (optimal_sens$.threshold)
+test_churn %>%
+  bind_cols(logi_preds) %>%
+  filter(.pred_Yes >= yes_threshold) %>%
+  group_by(churn) %>% tally() %>%
+  mutate(revenue = if_else(churn == "No", n * -incentive, n * (ltv - incentive)))
+```
+
+This incentive program will cost us `~$23k` through false positives (handing out incentives to customers that won't churn), but will net us `~$26k` in revenue from true positives. It's a gross oversimplification, but we expect this program to yield us `~11%` profit margin. 
+
+## Conclusion
+
+We demonstrated how a classification model could be used to solve a real-world problem in which we want to maximize the value of sending incentives to customers that are likely to churn.
+
+## Exercises

@@ -24,7 +24,7 @@
 <meta name="author" content="Beau Lucas" />
 
 
-<meta name="date" content="2019-12-25" />
+<meta name="date" content="2020-01-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -197,10 +197,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="4.6" data-path="classification.html"><a href="classification.html#a-comparison-of-classification-methods"><i class="fa fa-check"></i><b>4.6</b> A Comparison of Classification Methods</a></li>
 <li class="chapter" data-level="4.7" data-path="classification.html"><a href="classification.html#lab-logistic-regression-lda-qda-and-knn"><i class="fa fa-check"></i><b>4.7</b> Lab: Logistic Regression, LDA, QDA, and KNN</a><ul>
-<li class="chapter" data-level="4.7.1" data-path="classification.html"><a href="classification.html#the-stock-market-data"><i class="fa fa-check"></i><b>4.7.1</b> The Stock Market Data</a></li>
+<li class="chapter" data-level="4.7.1" data-path="classification.html"><a href="classification.html#churn-dataset"><i class="fa fa-check"></i><b>4.7.1</b> Churn Dataset</a></li>
 <li class="chapter" data-level="4.7.2" data-path="classification.html"><a href="classification.html#logistic-regression-1"><i class="fa fa-check"></i><b>4.7.2</b> Logistic Regression</a></li>
-<li class="chapter" data-level="4.7.3" data-path="classification.html"><a href="classification.html#linear-discriminant-analysis-1"><i class="fa fa-check"></i><b>4.7.3</b> Linear Discriminant Analysis</a></li>
+<li class="chapter" data-level="4.7.3" data-path="classification.html"><a href="classification.html#linear-discriminant-analysis-1"><i class="fa fa-check"></i><b>4.7.3</b> Linear discriminant analysis</a></li>
+<li class="chapter" data-level="4.7.4" data-path="classification.html"><a href="classification.html#k-nearest-neighbors-1"><i class="fa fa-check"></i><b>4.7.4</b> K-Nearest Neighbors</a></li>
+<li class="chapter" data-level="4.7.5" data-path="classification.html"><a href="classification.html#choosing-the-model"><i class="fa fa-check"></i><b>4.7.5</b> Choosing the model</a></li>
+<li class="chapter" data-level="4.7.6" data-path="classification.html"><a href="classification.html#evaluating-the-threshold"><i class="fa fa-check"></i><b>4.7.6</b> Evaluating the threshold</a></li>
 </ul></li>
+<li class="chapter" data-level="4.8" data-path="classification.html"><a href="classification.html#conclusion"><i class="fa fa-check"></i><b>4.8</b> Conclusion</a></li>
+<li class="chapter" data-level="4.9" data-path="classification.html"><a href="classification.html#exercises-2"><i class="fa fa-check"></i><b>4.9</b> Exercises</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/beaulucas/tidy_islr" target="blank">GitHub Repository</a></li>
@@ -229,6 +234,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">4.1</span> Packages used in this chapter</h2>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
 <span class="kw">library</span>(tidymodels)
+<span class="kw">library</span>(discrim)
+<span class="kw">library</span>(kknn)
 <span class="kw">library</span>(knitr)
 <span class="kw">library</span>(kableExtra)
 <span class="kw">library</span>(skimr)</code></pre>
@@ -260,7 +267,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  n obs: 10000 
 ##  n variables: 4 
 ## 
-## ── Variable type:factor ─────────────────────────────
+## ── Variable type:factor ──────
 ##  variable missing complete     n n_unique                 top_counts
 ##   default       0    10000 10000        2  No: 9667, Yes: 333, NA: 0
 ##   student       0    10000 10000        2 No: 7056, Yes: 2944, NA: 0
@@ -268,7 +275,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##    FALSE
 ##    FALSE
 ## 
-## ── Variable type:numeric ────────────────────────────
+## ── Variable type:numeric ─────
 ##  variable missing complete     n     mean       sd     p0      p25
 ##   balance       0    10000 10000   835.37   483.71   0      481.73
 ##    income       0    10000 10000 33516.98 13336.64 771.97 21340.46
@@ -730,154 +737,262 @@ test_default <span class="op">%&gt;%</span>
 </div>
 <div id="lab-logistic-regression-lda-qda-and-knn" class="section level2">
 <h2><span class="header-section-number">4.7</span> Lab: Logistic Regression, LDA, QDA, and KNN</h2>
-<div id="the-stock-market-data" class="section level3">
-<h3><span class="header-section-number">4.7.1</span> The Stock Market Data</h3>
-<p>We will look at <code>ISLR::Smarket</code> dataset, which consists of S&amp;P 500 returns from 2001 through 2005.</p>
-<pre class="sourceCode r"><code class="sourceCode r">smarket &lt;-<span class="st"> </span>ISLR<span class="op">::</span>Smarket <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span>janitor<span class="op">::</span><span class="kw">clean_names</span>()
-smarket</code></pre>
-<pre><code>## # A tibble: 1,250 x 9
-##    year   lag1   lag2   lag3   lag4   lag5 volume  today direction
-##   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;fct&gt;    
-## 1  2001  0.381 -0.192 -2.62  -1.06   5.01    1.19  0.959 Up       
-## 2  2001  0.959  0.381 -0.192 -2.62  -1.06    1.30  1.03  Up       
-## 3  2001  1.03   0.959  0.381 -0.192 -2.62    1.41 -0.623 Down     
-## 4  2001 -0.623  1.03   0.959  0.381 -0.192   1.28  0.614 Up       
-## 5  2001  0.614 -0.623  1.03   0.959  0.381   1.21  0.213 Up       
-## 6  2001  0.213  0.614 -0.623  1.03   0.959   1.35  1.39  Up       
-## # … with 1,244 more rows</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">smarket <span class="op">%&gt;%</span><span class="st"> </span>skimr<span class="op">::</span><span class="kw">skim</span>()</code></pre>
+<p>The dataset contains <code>683</code> observations and <code>11</code> variables, one of which is our response variable (<code>class</code>). There is a variable <code>id</code> which identifies the patient. All predictor variables are factors, some of them ordinal, some not. I don’t know much more about the metadata, but I’m going to assume the predictor types are all accurate and the ordinal nature appropriate when present. If we trust the ordinality, then we can convert them into integers. Only one variable has missing data, <code>bare_nuclei</code>, with 16 missing observations. For cleaning, I’m going to remove the <code>id</code> column as well as the <code>NA</code> values of <code>bare_nuclei</code>.</p>
+<div id="churn-dataset" class="section level3">
+<h3><span class="header-section-number">4.7.1</span> Churn Dataset</h3>
+<p>We will be using the <code>parsnip::wa_churn</code> dataset to test our classification techniques.</p>
+<pre><code>These data were downloaded from the IBM Watson site (see below) in September 2018. The data contain a factor for whether a customer churned or not. Alternatively, the tenure column presumably contains information on how long the customer has had an account. A survival analysis can be done on this column using the churn outcome as the censoring information. A data dictionary can be found on the source website.</code></pre>
+<p>Our interest for this dataset is predicting whether a customer will churn or not. If a customer is likely to churn, we can offer them an incentive to stay. These incentives cost us money, so we want to minimize the incentives given out to customers that won’t churn. We will identify a balance between <em>sensitivity</em> and <em>specificity</em> that maximizes the ROI of our incentive.</p>
+<pre class="sourceCode r"><code class="sourceCode r">wa_churn <span class="op">%&gt;%</span><span class="st"> </span>skimr<span class="op">::</span><span class="kw">skim</span>()</code></pre>
 <pre><code>## Skim summary statistics
-##  n obs: 1250 
-##  n variables: 9 
+##  n obs: 7043 
+##  n variables: 20 
 ## 
-## ── Variable type:factor ─────────────────────────────
-##   variable missing complete    n n_unique               top_counts ordered
-##  direction       0     1250 1250        2 Up: 648, Dow: 602, NA: 0   FALSE
+## ── Variable type:factor ──────
+##           variable missing complete    n n_unique
+##              churn       0     7043 7043        2
+##           contract       0     7043 7043        3
+##  device_protection       0     7043 7043        3
+##   internet_service       0     7043 7043        3
+##     multiple_lines       0     7043 7043        3
+##      online_backup       0     7043 7043        3
+##    online_security       0     7043 7043        3
+##     payment_method       0     7043 7043        4
+##   streaming_movies       0     7043 7043        3
+##       streaming_tv       0     7043 7043        3
+##       tech_support       0     7043 7043        3
+##                                  top_counts ordered
+##                  No: 5174, Yes: 1869, NA: 0   FALSE
+##      Mon: 3875, Two: 1695, One: 1473, NA: 0   FALSE
+##       No: 3095, Yes: 2422, No : 1526, NA: 0   FALSE
+##       Fib: 3096, DSL: 2421, No: 1526, NA: 0   FALSE
+##        No: 3390, Yes: 2971, No : 682, NA: 0   FALSE
+##       No: 3088, Yes: 2429, No : 1526, NA: 0   FALSE
+##       No: 3498, Yes: 2019, No : 1526, NA: 0   FALSE
+##  Ele: 2365, Mai: 1612, Ban: 1544, Cre: 1522   FALSE
+##       No: 2785, Yes: 2732, No : 1526, NA: 0   FALSE
+##       No: 2810, Yes: 2707, No : 1526, NA: 0   FALSE
+##       No: 3473, Yes: 2044, No : 1526, NA: 0   FALSE
 ## 
-## ── Variable type:numeric ────────────────────────────
-##  variable missing complete    n      mean   sd      p0     p25      p50
-##      lag1       0     1250 1250    0.0038 1.14   -4.92   -0.64    0.039
-##      lag2       0     1250 1250    0.0039 1.14   -4.92   -0.64    0.039
-##      lag3       0     1250 1250    0.0017 1.14   -4.92   -0.64    0.038
-##      lag4       0     1250 1250    0.0016 1.14   -4.92   -0.64    0.038
-##      lag5       0     1250 1250    0.0056 1.15   -4.92   -0.64    0.038
-##     today       0     1250 1250    0.0031 1.14   -4.92   -0.64    0.038
-##    volume       0     1250 1250    1.48   0.36    0.36    1.26    1.42 
-##      year       0     1250 1250 2003.02   1.41 2001    2002    2003    
-##      p75    p100     hist
-##     0.6     5.73 ▁▁▂▇▅▁▁▁
-##     0.6     5.73 ▁▁▂▇▅▁▁▁
-##     0.6     5.73 ▁▁▂▇▅▁▁▁
-##     0.6     5.73 ▁▁▂▇▅▁▁▁
-##     0.6     5.73 ▁▁▂▇▅▁▁▁
-##     0.6     5.73 ▁▁▂▇▅▁▁▁
-##     1.64    3.15 ▁▁▇▇▂▁▁▁
-##  2004    2005    ▇▇▁▇▁▇▁▇</code></pre>
+## ── Variable type:integer ─────
+##        variable missing complete    n  mean    sd p0 p25 p50 p75 p100
+##  senior_citizen       0     7043 7043  0.16  0.37  0   0   0   0    1
+##          tenure       0     7043 7043 32.37 24.56  0   9  29  55   72
+##      hist
+##  ▇▁▁▁▁▁▁▂
+##  ▇▃▃▂▂▃▃▅
+## 
+## ── Variable type:numeric ─────
+##           variable missing complete    n    mean      sd    p0    p25
+##         dependents       0     7043 7043    0.3     0.46  0      0   
+##             female       0     7043 7043    0.5     0.5   0      0   
+##    monthly_charges       0     7043 7043   64.76   30.09 18.25  35.5 
+##  paperless_billing       0     7043 7043    0.59    0.49  0      0   
+##            partner       0     7043 7043    0.48    0.5   0      0   
+##      phone_service       0     7043 7043    0.9     0.3   0      1   
+##      total_charges      11     7032 7043 2283.3  2266.77 18.8  401.45
+##      p50     p75    p100     hist
+##     0       1       1    ▇▁▁▁▁▁▁▃
+##     0       1       1    ▇▁▁▁▁▁▁▇
+##    70.35   89.85  118.75 ▇▁▃▂▆▅▅▂
+##     1       1       1    ▆▁▁▁▁▁▁▇
+##     0       1       1    ▇▁▁▁▁▁▁▇
+##     1       1       1    ▁▁▁▁▁▁▁▇
+##  1397.47 3794.74 8684.8  ▇▃▂▂▁▁▁▁</code></pre>
+<p>The dataset contains <code>7043</code> observations and <code>20</code> variables. The dataset consists mostly of factor variables, all with a small amount of unique levels. We are going to try out logistic regression, LDA, and K-nearest neighbors on this dataset. For now, we will only remove the <code>11</code> observations which have missing values for the <code>total_charges</code> column. We will also reorder the <code>churn</code> column levels so that a “success” corresponds with a customer churning.</p>
+<pre class="sourceCode r"><code class="sourceCode r">wa_churn &lt;-<span class="st"> </span>wa_churn <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(total_charges)) <span class="op">%&gt;%</span>
+<span class="kw">mutate</span>(<span class="dt">churn =</span> <span class="kw">fct_relevel</span>(churn, <span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>))</code></pre>
+<p>Now let’s take a look at the response variable.</p>
+<pre class="sourceCode r"><code class="sourceCode r">wa_churn <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(churn) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tally</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   churn     n  prop
+##   &lt;fct&gt; &lt;int&gt; &lt;dbl&gt;
+## 1 No     5163 0.734
+## 2 Yes    1869 0.266</code></pre>
+<p>In this dataset, <code>73.5%</code> of the observations do not churn. There is some skew, but nothing drastic. We will now prepare the data and apply binary classification techniques to see which model performs best.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">40</span>)
+split_churn &lt;-<span class="st"> </span><span class="kw">initial_split</span>(wa_churn, <span class="dt">prop =</span> <span class="dv">3</span><span class="op">/</span><span class="dv">4</span>)
+train_churn &lt;-<span class="st"> </span><span class="kw">training</span>(split_churn)
+test_churn &lt;-<span class="st"> </span><span class="kw">testing</span>(split_churn)</code></pre>
 </div>
 <div id="logistic-regression-1" class="section level3">
 <h3><span class="header-section-number">4.7.2</span> Logistic Regression</h3>
-<p>Let’s run a logistic regression to predict <code>direction</code> using <code>lag1</code> through <code>lag5</code> and <code>volume</code>.</p>
+<p>Let’s run a logistic regression to predict <code>churn</code> using the available variables.</p>
 <p>Unlike ISLR, we will use the <code>parsnip::logistic_reg</code> function over <code>glm</code> due to its API design and machine learning workflow provided by its parent package, <code>tidymodels</code>. Models in the <code>{parsnip}</code> package also allow for choice of different computational engines. This reduces cognitive overhead by standardizing the high-level arguments for training a model without rembembering the specifications of different engine. In our case, we will be using the <code>glm</code> engine.</p>
 <pre><code>logistic_reg() is a way to generate a specification of a model before fitting and allows the model to be created using different packages in R, Stan, keras, or via Spark.</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
-logi_market &lt;-<span class="st"> </span><span class="kw">logistic_reg</span>(<span class="dt">mode =</span> <span class="st">&quot;classification&quot;</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> smarket <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>year, <span class="op">-</span>today), direction <span class="op">~</span><span class="st"> </span>.)
-
-logi_market <span class="op">%&gt;%</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">tidy</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(p.value)</code></pre>
-<pre><code>## # A tibble: 7 x 5
-##   term        estimate std.error statistic p.value
-##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
-## 1 lag1         -0.0731    0.0502    -1.46    0.145
-## 2 volume        0.135     0.158      0.855   0.392
-## 3 lag2         -0.0423    0.0501    -0.845   0.398
-## 4 (Intercept)  -0.126     0.241     -0.523   0.601
-## 5 lag3          0.0111    0.0499     0.222   0.824
-## 6 lag5          0.0103    0.0495     0.208   0.835
-## # … with 1 more row</code></pre>
-<p>The model shows that the smallest p-value is associated with <code>lag</code> (although the p-value is still relatively large). If we had to interpret the likely faulty model, the negative coefficient suggests that if the market was up yesterday, it’s less likely to go up today.</p>
-<p>We can still use the <code>predict()</code> function with our <code>{tidymodels}</code> workflow. The <code>type</code> parameter specifies whether we want probabilities or classifications returned. The object returned is a tibble with columns of the predicted probability of the observation being in each class.</p>
-<pre class="sourceCode r"><code class="sourceCode r">probs &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="dt">object =</span> logi_market, <span class="dt">new_data =</span> smarket, <span class="dt">type =</span> <span class="st">&quot;prob&quot;</span>)
-smarket <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">bind_cols</span>(probs)</code></pre>
-<pre><code>## # A tibble: 1,250 x 11
-##    year   lag1   lag2   lag3   lag4   lag5 volume  today direction
-##   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;fct&gt;    
-## 1  2001  0.381 -0.192 -2.62  -1.06   5.01    1.19  0.959 Up       
-## 2  2001  0.959  0.381 -0.192 -2.62  -1.06    1.30  1.03  Up       
-## 3  2001  1.03   0.959  0.381 -0.192 -2.62    1.41 -0.623 Down     
-## 4  2001 -0.623  1.03   0.959  0.381 -0.192   1.28  0.614 Up       
-## 5  2001  0.614 -0.623  1.03   0.959  0.381   1.21  0.213 Up       
-## 6  2001  0.213  0.614 -0.623  1.03   0.959   1.35  1.39  Up       
-## # … with 1,244 more rows, and 2 more variables: .pred_Down &lt;dbl&gt;,
-## #   .pred_Up &lt;dbl&gt;</code></pre>
-<p>ISLR recommends creating classification labels by hand, but we can also utilize <code>predict()</code> for this.</p>
-<pre class="sourceCode r"><code class="sourceCode r">preds &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="dt">object =</span> logi_market, <span class="dt">new_data =</span> smarket, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
-smarket <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">bind_cols</span>(preds)</code></pre>
-<pre><code>## # A tibble: 1,250 x 10
-##    year   lag1   lag2   lag3   lag4   lag5 volume  today direction
-##   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;fct&gt;    
-## 1  2001  0.381 -0.192 -2.62  -1.06   5.01    1.19  0.959 Up       
-## 2  2001  0.959  0.381 -0.192 -2.62  -1.06    1.30  1.03  Up       
-## 3  2001  1.03   0.959  0.381 -0.192 -2.62    1.41 -0.623 Down     
-## 4  2001 -0.623  1.03   0.959  0.381 -0.192   1.28  0.614 Up       
-## 5  2001  0.614 -0.623  1.03   0.959  0.381   1.21  0.213 Up       
-## 6  2001  0.213  0.614 -0.623  1.03   0.959   1.35  1.39  Up       
-## # … with 1,244 more rows, and 1 more variable: .pred_class &lt;fct&gt;</code></pre>
-<p>Again, we can produce a confusion matrix using <code>conf_mat()</code> function of the <code>{yardstick}</code> package (used for measuring model performance, also part of <code>{tidymodels}</code>).</p>
+<pre class="sourceCode r"><code class="sourceCode r">logi_churn &lt;-<span class="st"> </span><span class="kw">logistic_reg</span>(<span class="dt">mode =</span> <span class="st">&quot;classification&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> train_churn, churn <span class="op">~</span><span class="st"> </span>.)
+broom<span class="op">::</span><span class="kw">tidy</span>(logi_churn) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(p.value)</code></pre>
+<pre><code>## # A tibble: 24 x 5
+##   term                estimate std.error statistic  p.value
+##   &lt;chr&gt;                  &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 tenure             -0.0558   0.00702       -7.95 1.81e-15
+## 2 contractTwo year   -1.42     0.206         -6.87 6.48e-12
+## 3 contractOne year   -0.655    0.126         -5.21 1.88e- 7
+## 4 paperless_billing   0.397    0.0859         4.62 3.87e- 6
+## 5 total_charges       0.000288 0.0000800      3.59 3.26e- 4
+## 6 online_securityYes -0.533    0.208         -2.56 1.05e- 2
+## # … with 18 more rows</code></pre>
+<p>The model shows that the smallest p-value is associated with <code>tenure</code> and <code>contract</code>. This makes sense, as users locked into contracts will have a tougher time cancelling their service. We can interpret the negative coefficients as reducing the chance a customer churns. Notice how customers that utilize <code>paperless_billing</code> and electronic <code>payment_method</code> exhibit higher likelihood to churn. They are probably more tech-savvy, younger, and more likely to research other options.</p>
+<div id="measuring-model-performance" class="section level4">
+<h4><span class="header-section-number">4.7.2.1</span> Measuring model performance</h4>
+<p>We can use the <code>predict()</code> function with our <code>{tidymodels}</code> workflow. The <code>type</code> parameter specifies whether we want probabilities or classifications returned. The object returned is a tibble with columns of the predicted probability of the observation being in each class.</p>
+<pre class="sourceCode r"><code class="sourceCode r">logi_preds &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="dt">object =</span> logi_churn, <span class="dt">new_data =</span> test_churn,
+                      <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)</code></pre>
+<p>Specifying <code>type = &quot;class&quot;</code> will generate classification predictions based off of a <code>0.5</code> threshold (this might not be optimal for the problem).</p>
+<p>Let’s add them to our test set.</p>
+<pre class="sourceCode r"><code class="sourceCode r">test_metrics &lt;-<span class="st"> </span>test_churn <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">bind_cols</span>(logi_preds)</code></pre>
+<p>This adds a column, <code>.pred_class</code> at each observation.</p>
+<p>We can produce a confusion matrix using <code>conf_mat()</code> function of the <code>{yardstick}</code> package (used for measuring model performance, also part of <code>{tidymodels}</code>).</p>
 <p>We tell <code>conf_mat()</code> that the <code>direction</code> column is our source of truth, and our classifications are contained in the <code>.pred_class</code> column.</p>
-<pre class="sourceCode r"><code class="sourceCode r">cm_market &lt;-<span class="st"> </span>smarket <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">bind_cols</span>(preds) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">conf_mat</span>(<span class="dt">truth =</span> direction, <span class="dt">estimate =</span> .pred_class)
+<pre class="sourceCode r"><code class="sourceCode r">cm_churn &lt;-<span class="st"> </span>test_metrics <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">conf_mat</span>(<span class="dt">truth =</span> churn, <span class="dt">estimate =</span> .pred_class)
 
-cm_market</code></pre>
+cm_churn</code></pre>
 <pre><code>##           Truth
-## Prediction Down  Up
-##       Down  145 141
-##       Up    457 507</code></pre>
+## Prediction   No  Yes
+##        No  1156  208
+##        Yes  142  252</code></pre>
 <p><code>conf_mat</code> objects also have a <code>summary()</code> method that computes various classification metrics.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(cm_market) <span class="op">%&gt;%</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(cm_churn) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">filter</span>(.metric <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;accuracy&#39;</span>, <span class="st">&#39;sens&#39;</span>, <span class="st">&#39;spec&#39;</span>))</code></pre>
 <pre><code>## # A tibble: 3 x 3
 ##   .metric  .estimator .estimate
 ##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
-## 1 accuracy binary         0.522
-## 2 sens     binary         0.241
-## 3 spec     binary         0.782</code></pre>
-<p>Our overall accuracy is around <code>~52%</code>. This may seem decent, but if we look at the original <code>smarket</code> data, we see that the <code>direction</code> value is evenly split (market goes up <code>51.8%</code> of the time). Still, it suggests that we are slightly better off than random guessing.</p>
-<p>However, we need to consider that this accuracy is on the <em>training data</em>, which is often overly optimistic. To get a better sense of our model performance, we need to train on a subset of the data, and test on the remaining subset.</p>
-<p>We will train on data from <code>2001</code> to <code>2004</code> and then test on data from <code>2005</code>.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">40</span>)
-<span class="co"># prepare training/test splits</span>
-smarket_split &lt;-<span class="st"> </span><span class="kw">initial_split</span>(smarket, <span class="dt">prop =</span> <span class="dv">3</span><span class="op">/</span><span class="dv">4</span>)
-train_smarket &lt;-<span class="st"> </span><span class="kw">training</span>(smarket_split)
-test_smarket &lt;-<span class="st"> </span><span class="kw">testing</span>(smarket_split)
-
-<span class="co"># fit model and grab predictions</span>
-logi_market &lt;-<span class="st"> </span><span class="kw">logistic_reg</span>(<span class="dt">mode =</span> <span class="st">&quot;classification&quot;</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> train_smarket <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>year, <span class="op">-</span>today), direction <span class="op">~</span><span class="st"> </span>.)
-preds &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="dt">object =</span> logi_market, <span class="dt">new_data =</span> test_smarket, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
-
-<span class="co"># build confusion matrix on test set</span>
-test_cm &lt;-<span class="st"> </span>test_smarket <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">bind_cols</span>(preds) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">conf_mat</span>(<span class="dt">truth =</span> direction, <span class="dt">estimate =</span> .pred_class)
-
-<span class="co"># summary statistics</span>
-<span class="kw">summary</span>(test_cm) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter</span>(.metric <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;accuracy&#39;</span>, <span class="st">&#39;sens&#39;</span>, <span class="st">&#39;spec&#39;</span>))</code></pre>
-<pre><code>## # A tibble: 3 x 3
+## 1 accuracy binary         0.801
+## 2 sens     binary         0.891
+## 3 spec     binary         0.548</code></pre>
+<p>Our overall accuracy is around <code>~80.1%</code>. This may seem high, but if we look at the original dataset, the data is skewed. A naive classifier would produce a <code>73.5%</code> accuracy (the proportion of yes/no churn values).Still, it suggests that we are better off than randomly guessing.</p>
+<p>Can we account for the skew of data when assessing our model? If we utilize the <code>yardstick::metrics()</code> function on our test data fitted with class predictions, we can get a dataframe containing overall model performance.</p>
+<pre class="sourceCode r"><code class="sourceCode r">test_metrics <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">metrics</span>(<span class="dt">truth =</span> churn, <span class="dt">estimate =</span> .pred_class)</code></pre>
+<pre><code>## # A tibble: 2 x 3
 ##   .metric  .estimator .estimate
 ##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
-## 1 accuracy binary         0.478
-## 2 sens     binary         0.176
-## 3 spec     binary         0.791</code></pre>
-<p>In this scenario, the accuracy is <code>47.8%</code>. Certain iterations of this <em>could</em> produce a lower test error due to randomness + small sample size, but each iteration tends to be lower than the previous, no-split example. Obviously, this example shows that applying classification models doesn’t always yield a robust model. Having the ability to predict the stock market with a dozen lines of code isn’t realistic.</p>
+## 1 accuracy binary         0.801
+## 2 kap      binary         0.460</code></pre>
+<p>Notice the metric of <code>kap</code>. The <a href="https://stats.stackexchange.com/questions/82162/cohens-kappa-in-plain-english">Kappa statistic</a> compares an observed accuracy with expected accuracy (random chance). This controls for the skewness of our model by comparing our model’s accuracy with the naive classifier. In this case, our <code>kap</code> of <code>0.460</code> indicates that our model is <code>46%</code> better than the naive classifier.</p>
+<p>We will be using <code>kap</code> to evaluate how our logistic regression fits to other techniques.</p>
+</div>
 </div>
 <div id="linear-discriminant-analysis-1" class="section level3">
-<h3><span class="header-section-number">4.7.3</span> Linear Discriminant Analysis</h3>
+<h3><span class="header-section-number">4.7.3</span> Linear discriminant analysis</h3>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">40</span>)
+lda_churn &lt;-<span class="st"> </span><span class="kw">discrim_linear</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> train_churn, churn <span class="op">~</span><span class="st"> </span>.)</code></pre>
+<p>Calling the <code>parsnip::</code> model object gives us information about the model fit. We can see the prior probabilities as well as the <em>coefficients of linear discriminants</em>. These provide the linear combination of the variables used to create the decision rule. If the combination is large, the model will predict an increase.</p>
+<pre class="sourceCode r"><code class="sourceCode r">lda_churn<span class="op">$</span>fit<span class="op">$</span>scaling <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">as_tibble</span>(<span class="dt">rownames =</span> <span class="st">&quot;term&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">arrange</span>(LD1)</code></pre>
+<pre><code>## # A tibble: 30 x 2
+##   term                  LD1
+##   &lt;chr&gt;               &lt;dbl&gt;
+## 1 contractOne year   -0.519
+## 2 online_securityYes -0.422
+## 3 contractTwo year   -0.362
+## 4 tech_supportYes    -0.285
+## 5 phone_service      -0.220
+## 6 online_backupYes   -0.209
+## # … with 24 more rows</code></pre>
+<p>We see similar important terms as the logistic regression model. Customers on long contracts are less likely to churn.</p>
+<pre class="sourceCode r"><code class="sourceCode r">lda_preds &lt;-<span class="st"> </span><span class="kw">predict</span>(lda_churn, test_churn, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>) 
 
+test_churn <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">bind_cols</span>(lda_preds) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">metrics</span>(<span class="dt">truth =</span> churn, <span class="dt">estimate =</span> .pred_class)</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   .metric  .estimator .estimate
+##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
+## 1 accuracy binary         0.787
+## 2 kap      binary         0.429</code></pre>
+<p>Here we achieve a <code>kap</code> of <code>42.9%</code>.</p>
 </div>
+<div id="k-nearest-neighbors-1" class="section level3">
+<h3><span class="header-section-number">4.7.4</span> K-Nearest Neighbors</h3>
+<p>Next, we will utilize the <code>parsnip::nearest_neighbor()</code> function.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">40</span>)
+knn_churn &lt;-<span class="st"> </span><span class="kw">nearest_neighbor</span>(<span class="dt">mode =</span> <span class="st">&quot;classification&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> train_churn, churn <span class="op">~</span><span class="st"> </span>.)
+knn_preds &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="dt">object =</span> knn_churn, <span class="dt">new_data =</span> test_churn)
+
+test_churn <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">bind_cols</span>(knn_preds) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">metrics</span>(<span class="dt">truth =</span> churn, <span class="dt">estimate =</span> .pred_class)</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   .metric  .estimator .estimate
+##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
+## 1 accuracy binary         0.745
+## 2 kap      binary         0.341</code></pre>
+<p>K-nearest neighbors performs much worse, with a <code>kap</code> of <code>34.1%</code>.</p>
+<p>KNN’s poor performance is most likely due to the predictor variables and true decision boundary not being highly non-linear. In this case, KNN’s flexibility doesn’t match the shape of the data.</p>
+</div>
+<div id="choosing-the-model" class="section level3">
+<h3><span class="header-section-number">4.7.5</span> Choosing the model</h3>
+<p>Given logistic regression and LDA exhibiting similar performance metrics, we could use either model. However, logistic regression makes less assumptions about the underlying data.</p>
+<p>Let’s take a look at the ROC curve using <code>yardstick::roc_curve()</code> function.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># https://stats.stackexchange.com/questions/188416/discriminant-analysis-vs-logistic-regression</span>
+logi_preds &lt;-<span class="st"> </span><span class="kw">predict</span>(logi_churn, test_churn, <span class="dt">type =</span> <span class="st">&quot;prob&quot;</span>)
+test_churn <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">bind_cols</span>(logi_preds) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">roc_curve</span>(churn, .pred_Yes) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">autoplot</span>()</code></pre>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-109-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>Our sensitivity (ability to correctly identify those who will churn) has two visible inflection points where the slope changes, one around <code>~55%</code> and the other around <code>~80%</code>. What should we pick as our classifier threshold?</p>
+</div>
+<div id="evaluating-the-threshold" class="section level3">
+<h3><span class="header-section-number">4.7.6</span> Evaluating the threshold</h3>
+<p>Choosing a classification threshold greatly depends on the problem context.</p>
+<p>Imagine we want to hand out an incentive to customers we believe will churn. This incentive costs us money, but has a <code>100%</code> success rate of retaining a customer (turning them from a <code>Yes</code> to <code>No</code> churn).</p>
+<p>Let’s assume the cost of this incentive for us is <code>$75</code>, but the value of retaining the user is <code>$150</code>. We want to maximize the return we get from this incentive.</p>
+<p>In this case, every true positive will net us <code>$75</code> of profit, and every false positive will cost us <code>$75</code> (the customer doesn’t churn, so giving the incentive was a waste). We want to find the optimal decision boundary where we maximize our return from this incentive.</p>
+<pre class="sourceCode r"><code class="sourceCode r">ltv =<span class="st"> </span><span class="dv">150</span>
+incentive =<span class="st"> </span><span class="dv">75</span>
+
+logi_class &lt;-<span class="st"> </span><span class="kw">predict</span>(logi_churn, test_churn, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
+costs &lt;-<span class="st"> </span>test_churn <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">bind_cols</span>(logi_preds) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">bind_cols</span>(logi_class) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">roc_curve</span>(churn, .pred_Yes) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">profit  =</span> sensitivity <span class="op">*</span><span class="st"> </span>(ltv <span class="op">-</span><span class="st"> </span>incentive),
+         <span class="dt">cost =</span> (<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>specificity) <span class="op">*</span><span class="st"> </span>incentive,
+         <span class="dt">net =</span> profit <span class="op">-</span><span class="st"> </span>cost)
+
+costs <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> sensitivity, <span class="dt">y =</span> net)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">max</span>(net)))</code></pre>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-110-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>We can grab the optimal sensitivity and find the corresponding decision threshold.</p>
+<pre class="sourceCode r"><code class="sourceCode r">optimal_sens &lt;-<span class="st"> </span>costs <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(net <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(net))
+optimal_sens</code></pre>
+<pre><code>## # A tibble: 1 x 6
+##   .threshold specificity sensitivity profit  cost   net
+##        &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1      0.308       0.757       0.764   57.3  18.3  39.1</code></pre>
+<p>We find that our ideal sensitivity of <code>76.4%</code> corresponds with a specificity of <code>75.7%</code>. For whatever reason, <code>roc_curve()</code> gives the <code>.threshold</code> column the predicted <code>No</code> churn class (despite specifying an ROC curve with <code>.pred_Yes</code> column). Thus, if we eastimate a customer to have a churn percentage greater or equal to <code>1 - 0.308 = 0.692</code>, we can offer them this incentive.</p>
+<pre class="sourceCode r"><code class="sourceCode r">yes_threshold &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span>(optimal_sens<span class="op">$</span>.threshold)
+test_churn <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">bind_cols</span>(logi_preds) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(.pred_Yes <span class="op">&gt;=</span><span class="st"> </span>yes_threshold) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(churn) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tally</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">revenue =</span> <span class="kw">if_else</span>(churn <span class="op">==</span><span class="st"> &quot;No&quot;</span>, n <span class="op">*</span><span class="st"> </span><span class="op">-</span>incentive, n <span class="op">*</span><span class="st"> </span>(ltv <span class="op">-</span><span class="st"> </span>incentive)))</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   churn     n revenue
+##   &lt;fct&gt; &lt;int&gt;   &lt;dbl&gt;
+## 1 No       39   -2925
+## 2 Yes     103    7725</code></pre>
+<p>This incentive program will cost us <code>~$23k</code> through false positives (handing out incentives to customers that won’t churn), but will net us <code>~$26k</code> in revenue from true positives. It’s a gross oversimplification, but we expect this program to yield us <code>~11%</code> profit margin.</p>
+</div>
+</div>
+<div id="conclusion" class="section level2">
+<h2><span class="header-section-number">4.8</span> Conclusion</h2>
+<p>We demonstrated how a classification model could be used to solve a real-world problem in which we want to maximize the value of sending incentives to customers that are likely to churn.</p>
+</div>
+<div id="exercises-2" class="section level2">
+<h2><span class="header-section-number">4.9</span> Exercises</h2>
+
 </div>
 </div>
             </section>
