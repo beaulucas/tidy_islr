@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 4 Classification | A Tidy Introduction To Statistical Learning</title>
   <meta name="description" content="Chapter 4 Classification | A Tidy Introduction To Statistical Learning" />
-  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 4 Classification | A Tidy Introduction To Statistical Learning" />
   <meta property="og:type" content="book" />
@@ -24,15 +24,15 @@
 <meta name="author" content="Beau Lucas" />
 
 
-<meta name="date" content="2020-01-30" />
+<meta name="date" content="2020-02-09" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="linear-regression.html">
-
+<link rel="prev" href="linear-regression.html"/>
+<link rel="next" href="resampling-methods.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -40,6 +40,9 @@
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -56,7 +59,6 @@ a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
 a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
@@ -207,6 +209,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.8" data-path="classification.html"><a href="classification.html#conclusion"><i class="fa fa-check"></i><b>4.8</b> Conclusion</a></li>
 <li class="chapter" data-level="4.9" data-path="classification.html"><a href="classification.html#exercises-2"><i class="fa fa-check"></i><b>4.9</b> Exercises</a></li>
 </ul></li>
+<li class="chapter" data-level="5" data-path="resampling-methods.html"><a href="resampling-methods.html"><i class="fa fa-check"></i><b>5</b> Resampling Methods</a><ul>
+<li class="chapter" data-level="5.1" data-path="resampling-methods.html"><a href="resampling-methods.html#cross-validation"><i class="fa fa-check"></i><b>5.1</b> Cross-Validation</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="resampling-methods.html"><a href="resampling-methods.html#the-validation-set-approach"><i class="fa fa-check"></i><b>5.1.1</b> The Validation Set Approach</a></li>
+<li class="chapter" data-level="5.1.2" data-path="resampling-methods.html"><a href="resampling-methods.html#leave-one-out-cross-validation."><i class="fa fa-check"></i><b>5.1.2</b> Leave-One-Out Cross-Validation.</a></li>
+<li class="chapter" data-level="5.1.3" data-path="resampling-methods.html"><a href="resampling-methods.html#k-fold-cross-validation"><i class="fa fa-check"></i><b>5.1.3</b> k-Fold Cross-Validation</a></li>
+<li class="chapter" data-level="5.1.4" data-path="resampling-methods.html"><a href="resampling-methods.html#bias-variance-trade-off-for-k-fold-cross-validation"><i class="fa fa-check"></i><b>5.1.4</b> Bias-Variance Trade-Off for <em>k</em>-fold Cross-Validation</a></li>
+<li class="chapter" data-level="5.1.5" data-path="resampling-methods.html"><a href="resampling-methods.html#cross-validation-on-classification-problems"><i class="fa fa-check"></i><b>5.1.5</b> Cross-Validation on Classification Problems</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="resampling-methods.html"><a href="resampling-methods.html#the-bootstrap"><i class="fa fa-check"></i><b>5.2</b> The Bootstrap</a></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/beaulucas/tidy_islr" target="blank">GitHub Repository</a></li>
 
@@ -232,13 +244,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <hr />
 <div id="packages-used-in-this-chapter-2" class="section level2">
 <h2><span class="header-section-number">4.1</span> Packages used in this chapter</h2>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
-<span class="kw">library</span>(tidymodels)
-<span class="kw">library</span>(discrim)
-<span class="kw">library</span>(kknn)
-<span class="kw">library</span>(knitr)
-<span class="kw">library</span>(kableExtra)
-<span class="kw">library</span>(skimr)</code></pre>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb108-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb108-2" data-line-number="2"><span class="kw">library</span>(tidymodels)</a>
+<a class="sourceLine" id="cb108-3" data-line-number="3"><span class="kw">library</span>(discrim)</a>
+<a class="sourceLine" id="cb108-4" data-line-number="4"><span class="kw">library</span>(kknn)</a>
+<a class="sourceLine" id="cb108-5" data-line-number="5"><span class="kw">library</span>(knitr)</a>
+<a class="sourceLine" id="cb108-6" data-line-number="6"><span class="kw">library</span>(kableExtra)</a>
+<a class="sourceLine" id="cb108-7" data-line-number="7"><span class="kw">library</span>(skimr)</a></code></pre></div>
 <p>Linear regression in chapter 3 was concerned with predicting a quantitative response variable. What if the response variable is <em>qualitative</em>? Eye color is an example of a qualitative variable, which takes discrete value such as <code>blue</code>, <code>brown</code>, <code>green</code>. These are also referred to as <em>categorical</em>.</p>
 <p>The approach of predicting qualitative responses is known as <em>classification</em>. Often, we predict the probability of the occurences of each category of a qualitative variable, and then make a decision based off of that.</p>
 <p>In this chapter we discuss three of the most widely-used classifiers:</p>
@@ -259,38 +271,283 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ol>
 <p>Similar to regression, we have a set of training observations that use to build a classifier. We also want the classifier to perform well on both training and test observations.</p>
 <p>We will use the dataset <code>ISLR::Default</code>. First, let’s convert it to tidy format.</p>
-<pre class="sourceCode r"><code class="sourceCode r">default &lt;-<span class="st"> </span>ISLR<span class="op">::</span>Default <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>()</code></pre>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb109-1" data-line-number="1">default &lt;-<span class="st"> </span>ISLR<span class="op">::</span>Default <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>()</a></code></pre></div>
 <p>We are interested in the ability to predict whether an individual will default on their credit card payment, based on their credit card <code>balance</code> and annual income.</p>
 <p>If we look at the summary statistics, we see the data is clean, and that very few people default on their balances.</p>
-<pre class="sourceCode r"><code class="sourceCode r">default <span class="op">%&gt;%</span><span class="st"> </span>skimr<span class="op">::</span><span class="kw">skim</span>()</code></pre>
-<pre><code>## Skim summary statistics
-##  n obs: 10000 
-##  n variables: 4 
-## 
-## ── Variable type:factor ──────
-##  variable missing complete     n n_unique                 top_counts
-##   default       0    10000 10000        2  No: 9667, Yes: 333, NA: 0
-##   student       0    10000 10000        2 No: 7056, Yes: 2944, NA: 0
-##  ordered
-##    FALSE
-##    FALSE
-## 
-## ── Variable type:numeric ─────
-##  variable missing complete     n     mean       sd     p0      p25
-##   balance       0    10000 10000   835.37   483.71   0      481.73
-##    income       0    10000 10000 33516.98 13336.64 771.97 21340.46
-##       p50      p75     p100     hist
-##    823.64  1166.31  2654.32 ▅▆▇▆▃▁▁▁
-##  34552.64 43807.73 73554.23 ▁▆▆▆▇▅▁▁</code></pre>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb110-1" data-line-number="1">default <span class="op">%&gt;%</span><span class="st"> </span>skimr<span class="op">::</span><span class="kw">skim</span>()</a></code></pre></div>
+<table style='width: auto;'
+        class='table table-condensed'>
+<caption>
+<span id="tab:unnamed-chunk-72">Table 4.1: </span>Data summary
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Name
+</td>
+<td style="text-align:left;">
+Piped data
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Number of rows
+</td>
+<td style="text-align:left;">
+10000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Number of columns
+</td>
+<td style="text-align:left;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+_______________________
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Column type frequency:
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+factor
+</td>
+<td style="text-align:left;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+________________________
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Group variables
+</td>
+<td style="text-align:left;">
+None
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: factor</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+skim_variable
+</th>
+<th style="text-align:right;">
+n_missing
+</th>
+<th style="text-align:right;">
+complete_rate
+</th>
+<th style="text-align:left;">
+ordered
+</th>
+<th style="text-align:right;">
+n_unique
+</th>
+<th style="text-align:left;">
+top_counts
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+default
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+No: 9667, Yes: 333
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+student
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+No: 7056, Yes: 2944
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+skim_variable
+</th>
+<th style="text-align:right;">
+n_missing
+</th>
+<th style="text-align:right;">
+complete_rate
+</th>
+<th style="text-align:right;">
+mean
+</th>
+<th style="text-align:right;">
+sd
+</th>
+<th style="text-align:right;">
+p0
+</th>
+<th style="text-align:right;">
+p25
+</th>
+<th style="text-align:right;">
+p50
+</th>
+<th style="text-align:right;">
+p75
+</th>
+<th style="text-align:right;">
+p100
+</th>
+<th style="text-align:left;">
+hist
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+balance
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+835.37
+</td>
+<td style="text-align:right;">
+483.71
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+481.73
+</td>
+<td style="text-align:right;">
+823.64
+</td>
+<td style="text-align:right;">
+1166.31
+</td>
+<td style="text-align:right;">
+2654.32
+</td>
+<td style="text-align:left;">
+▆▇▅▁▁
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+income
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+33516.98
+</td>
+<td style="text-align:right;">
+13336.64
+</td>
+<td style="text-align:right;">
+771.97
+</td>
+<td style="text-align:right;">
+21340.46
+</td>
+<td style="text-align:right;">
+34552.64
+</td>
+<td style="text-align:right;">
+43807.73
+</td>
+<td style="text-align:right;">
+73554.23
+</td>
+<td style="text-align:left;">
+▂▇▇▅▁
+</td>
+</tr>
+</tbody>
+</table>
 <p>The scatterplot signals a strong relationship between <code>balance</code> and <code>default</code>.</p>
-<pre class="sourceCode r"><code class="sourceCode r">default <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> balance, <span class="dt">y =</span> income, <span class="dt">fill =</span> default)) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_hex</span>(<span class="dt">alpha =</span> <span class="dv">2</span><span class="op">/</span><span class="dv">3</span>)</code></pre>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb111-1" data-line-number="1">default <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb111-2" data-line-number="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> balance, <span class="dt">y =</span> income, <span class="dt">fill =</span> default)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb111-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_hex</span>(<span class="dt">alpha =</span> <span class="dv">2</span><span class="op">/</span><span class="dv">3</span>)</a></code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-73-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>The boxplot captures the stark difference in <code>balance</code> between those who default and do not.</p>
-<pre class="sourceCode r"><code class="sourceCode r">default <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> balance, <span class="dt">fill =</span> default)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_boxplot</span>()</code></pre>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb112-1" data-line-number="1">default <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb112-2" data-line-number="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> balance, <span class="dt">fill =</span> default)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb112-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_boxplot</span>()</a></code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-74-1.png" width="576" style="display: block; margin: auto;" /></p>
 </div>
 <div id="why-not-linear-regression" class="section level2">
@@ -300,7 +557,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Thus, changing the order of encodings would change relationship among the conditions, producing fundamentally different linear models.</p>
 <p>There could be a case where a response variables took on a natural ordering, such as <code>mild</code>, <code>moderate</code>, <code>severe</code>. We would also need to believe that the gap between each level is equivalent. Unfortunately, there is no natural way to convert a qualitative response variable with more than two levels into a quantitative response that is appropriate for linear regression.</p>
 <p>For cases of <em>binary</em> qualitative response, we can utilize the dummy variable solution seen in Chapter 3. In this case, the order of the encodings is arbitrary.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> add latex for encoding</span></code></pre>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb113-1" data-line-number="1"><span class="co"># </span><span class="al">TODO</span><span class="co"> add latex for encoding</span></a></code></pre></div>
 <p>Linear regression does work for this binary response scenario. However, it is possible for linear regression to produce estimates outside of the <code>[0, 1]</code> interval, which affects their interpretability as probabilities.</p>
 <p>When the qualitative response has more than two levels, we need to use classification methods that are appropriate.</p>
 </div>
@@ -308,28 +565,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">4.4</span> Logistic Regression</h2>
 <p>Let’s consider the <code>default</code> dataset. Rather than modeling this response <span class="math inline">\(Y\)</span> directly, logistic regression models the <em>probability</em> that <span class="math inline">\(Y\)</span> belongs to a particular category.</p>
 <p>If we estimate using linear regression, we see that some estimated probabilities are negative. We are using the <code>tidymodels</code> package.</p>
-<pre class="sourceCode r"><code class="sourceCode r">default &lt;-<span class="st"> </span>default <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">default_bool =</span> <span class="kw">if_else</span>(default <span class="op">==</span><span class="st"> &quot;Yes&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>))
-lm_default &lt;-<span class="st"> </span><span class="kw">linear_reg</span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> default, default_bool <span class="op">~</span><span class="st"> </span>balance)
-
-default <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">bind_cols</span>(<span class="kw">predict</span>(lm_default, default)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> balance)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span>  .pred)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> default_bool, <span class="dt">colour =</span> default_bool)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">guides</span>(<span class="dt">colour=</span><span class="ot">FALSE</span>)</code></pre>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb114-1" data-line-number="1">default &lt;-<span class="st"> </span>default <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb114-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">default_bool =</span> <span class="kw">if_else</span>(default <span class="op">==</span><span class="st"> &quot;Yes&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>))</a>
+<a class="sourceLine" id="cb114-3" data-line-number="3">lm_default &lt;-<span class="st"> </span><span class="kw">linear_reg</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb114-4" data-line-number="4"><span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> default, default_bool <span class="op">~</span><span class="st"> </span>balance)</a>
+<a class="sourceLine" id="cb114-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb114-6" data-line-number="6">default <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb114-7" data-line-number="7"><span class="st">  </span><span class="kw">bind_cols</span>(<span class="kw">predict</span>(lm_default, default)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb114-8" data-line-number="8"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> balance)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb114-9" data-line-number="9"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span>  .pred)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb114-10" data-line-number="10"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> default_bool, <span class="dt">colour =</span> default_bool)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb114-11" data-line-number="11"><span class="st">  </span><span class="kw">guides</span>(<span class="dt">colour=</span><span class="ot">FALSE</span>)</a></code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-76-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>Below is the classification using logistic regression, where are probabilities fall between <code>0</code> and <code>1</code>.</p>
-<pre class="sourceCode r"><code class="sourceCode r">logi_default &lt;-<span class="st"> </span><span class="kw">logistic_reg</span>(<span class="dt">mode =</span> <span class="st">&quot;classification&quot;</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> default, <span class="kw">as.factor</span>(default_bool) <span class="op">~</span><span class="st"> </span>balance)
-
-default <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">bind_cols</span>(<span class="kw">predict</span>(logi_default, default, <span class="dt">type =</span> <span class="st">&quot;prob&quot;</span>)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> balance)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span>  .pred_<span class="dv">1</span>)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> default_bool, <span class="dt">colour =</span> default_bool)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">guides</span>(<span class="dt">colour=</span><span class="ot">FALSE</span>)</code></pre>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb115-1" data-line-number="1">logi_default &lt;-<span class="st"> </span><span class="kw">logistic_reg</span>(<span class="dt">mode =</span> <span class="st">&quot;classification&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb115-2" data-line-number="2"><span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> default, <span class="kw">as.factor</span>(default_bool) <span class="op">~</span><span class="st"> </span>balance)</a>
+<a class="sourceLine" id="cb115-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb115-4" data-line-number="4">default <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb115-5" data-line-number="5"><span class="st">  </span><span class="kw">bind_cols</span>(<span class="kw">predict</span>(logi_default, default, <span class="dt">type =</span> <span class="st">&quot;prob&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb115-6" data-line-number="6"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> balance)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb115-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span>  .pred_<span class="dv">1</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb115-8" data-line-number="8"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> default_bool, <span class="dt">colour =</span> default_bool)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb115-9" data-line-number="9"><span class="st">  </span><span class="kw">guides</span>(<span class="dt">colour=</span><span class="ot">FALSE</span>)</a></code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-77-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>Logistic regression in this example is modelling the probability of default, given the value of <code>balance</code>.</p>
 <div>
@@ -380,9 +637,9 @@ Pr(<code>default</code> = <code>Yes</code>|<code>balance</code>)
 <p>The coefficients in the logistic regression equation must be estimated used training data. Linear regression used the least squares approach to estimate the coefficients. It is possible to use non-linear least squares to fit the model, but <em>maximum likelihood</em> is preferred.</p>
 <p>Maximum likelihood seeks to to find estimates for <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> such that the predicted probability <span class="math inline">\(\hat{p}(x_i)\)</span> of default for each individual corresponds as closely as possible to to the individual’s observed default status. We want estimates that produce low probabilities for individuals who did not default, and high probabilities for those who did.</p>
 <p>We can formalize this with a <em>likelihood function</em>:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co">#TODO add likelihood function, links, etc</span></code></pre>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb116-1" data-line-number="1"><span class="co">#TODO add likelihood function, links, etc</span></a></code></pre></div>
 <p>We can examine the coefficients and other information from our logistic regression model.</p>
-<pre class="sourceCode r"><code class="sourceCode r">logi_default <span class="op">%&gt;%</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">tidy</span>()</code></pre>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb117-1" data-line-number="1">logi_default <span class="op">%&gt;%</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">tidy</span>()</a></code></pre></div>
 <pre><code>## # A tibble: 2 x 5
 ##   term         estimate std.error statistic   p.value
 ##   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
@@ -396,26 +653,26 @@ Pr(<code>default</code> = <code>Yes</code>|<code>balance</code>)
 <h3><span class="header-section-number">4.4.3</span> Making Predictions</h3>
 <p>Once we have the coefficients, we simply compute the probability of <code>default</code> for any given observation.</p>
 <p>Let’s take an individual with a <code>balance</code> of <code>$1000</code>. Using our model terms, we can compute the probability. Let’s extract the terms from the model and plug in a <code>balance</code> of <code>$1000</code>.</p>
-<pre class="sourceCode r"><code class="sourceCode r">logi_coef &lt;-<span class="st"> </span>logi_default <span class="op">%&gt;%</span>
-<span class="st">  </span>broom<span class="op">::</span><span class="kw">tidy</span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="co"># widen it and clean up names</span>
-<span class="st">  </span><span class="kw">select</span>(term, estimate) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> term, <span class="dt">values_from =</span> estimate) <span class="op">%&gt;%</span>
-<span class="st">  </span>janitor<span class="op">::</span><span class="kw">clean_names</span>()
-
-logi_coef <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prob_1000 =</span> <span class="kw">exp</span>(intercept <span class="op">+</span><span class="st"> </span>balance <span class="op">*</span><span class="st"> </span><span class="dv">1000</span>) <span class="op">/</span>
-<span class="st">           </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw">exp</span>(intercept <span class="op">+</span><span class="st"> </span>balance <span class="op">*</span><span class="st"> </span><span class="dv">1000</span>)))</code></pre>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb119-1" data-line-number="1">logi_coef &lt;-<span class="st"> </span>logi_default <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb119-2" data-line-number="2"><span class="st">  </span>broom<span class="op">::</span><span class="kw">tidy</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb119-3" data-line-number="3"><span class="st">  </span><span class="co"># widen it and clean up names</span></a>
+<a class="sourceLine" id="cb119-4" data-line-number="4"><span class="st">  </span><span class="kw">select</span>(term, estimate) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb119-5" data-line-number="5"><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> term, <span class="dt">values_from =</span> estimate) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb119-6" data-line-number="6"><span class="st">  </span>janitor<span class="op">::</span><span class="kw">clean_names</span>()</a>
+<a class="sourceLine" id="cb119-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb119-8" data-line-number="8">logi_coef <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb119-9" data-line-number="9"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prob_1000 =</span> <span class="kw">exp</span>(intercept <span class="op">+</span><span class="st"> </span>balance <span class="op">*</span><span class="st"> </span><span class="dv">1000</span>) <span class="op">/</span></a>
+<a class="sourceLine" id="cb119-10" data-line-number="10"><span class="st">           </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw">exp</span>(intercept <span class="op">+</span><span class="st"> </span>balance <span class="op">*</span><span class="st"> </span><span class="dv">1000</span>)))</a></code></pre></div>
 <pre><code>## # A tibble: 1 x 3
 ##   intercept balance prob_1000
 ##       &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;
 ## 1     -10.7 0.00550   0.00575</code></pre>
 <p>We find the probability to be less than <code>1%</code>.</p>
 <p>We can also incorporate qualitative predictors with the logistic regression model. Here we encode <code>student</code> in to the model.</p>
-<pre class="sourceCode r"><code class="sourceCode r">logi_default_student &lt;-<span class="st"> </span><span class="kw">logistic_reg</span>(<span class="dt">mode =</span> <span class="st">&quot;classification&quot;</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> default, <span class="kw">as.factor</span>(default_bool) <span class="op">~</span><span class="st"> </span>student)
-
-logi_default_student <span class="op">%&gt;%</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">tidy</span>()</code></pre>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb121-1" data-line-number="1">logi_default_student &lt;-<span class="st"> </span><span class="kw">logistic_reg</span>(<span class="dt">mode =</span> <span class="st">&quot;classification&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb121-2" data-line-number="2"><span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> default, <span class="kw">as.factor</span>(default_bool) <span class="op">~</span><span class="st"> </span>student)</a>
+<a class="sourceLine" id="cb121-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb121-4" data-line-number="4">logi_default_student <span class="op">%&gt;%</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">tidy</span>()</a></code></pre></div>
 <pre><code>## # A tibble: 2 x 5
 ##   term        estimate std.error statistic  p.value
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
@@ -436,10 +693,10 @@ logi_default_student <span class="op">%&gt;%</span><span class="st"> </span>broo
 </div>
 <p>And again use the maximum likelihood method to estimate the coefficients.</p>
 <p>Let’s estimate <code>balance</code> using <code>balance</code>, <code>income</code> and <code>student</code>.</p>
-<pre class="sourceCode r"><code class="sourceCode r">multiple_logi_default&lt;-<span class="st"> </span><span class="kw">logistic_reg</span>(<span class="dt">mode =</span> <span class="st">&quot;classification&quot;</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> default, <span class="kw">as.factor</span>(default_bool) <span class="op">~</span><span class="st"> </span>balance <span class="op">+</span><span class="st"> </span>student <span class="op">+</span><span class="st"> </span>income)
-
-multiple_logi_default <span class="op">%&gt;%</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">tidy</span>()</code></pre>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb123-1" data-line-number="1">multiple_logi_default&lt;-<span class="st"> </span><span class="kw">logistic_reg</span>(<span class="dt">mode =</span> <span class="st">&quot;classification&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb123-2" data-line-number="2"><span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> default, <span class="kw">as.factor</span>(default_bool) <span class="op">~</span><span class="st"> </span>balance <span class="op">+</span><span class="st"> </span>student <span class="op">+</span><span class="st"> </span>income)</a>
+<a class="sourceLine" id="cb123-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb123-4" data-line-number="4">multiple_logi_default <span class="op">%&gt;%</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">tidy</span>()</a></code></pre></div>
 <pre><code>## # A tibble: 4 x 5
 ##   term            estimate  std.error statistic   p.value
 ##   &lt;chr&gt;              &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
@@ -449,9 +706,9 @@ multiple_logi_default <span class="op">%&gt;%</span><span class="st"> </span>bro
 ## 4 income        0.00000303 0.00000820     0.370 7.12e-  1</code></pre>
 <p>Notice that being a student now <em>decreases</em> the chances of default, whereas in our previous model (which only contained <code>student</code> as a predictor), it increased the chances.</p>
 <p>Why is that? This model is showing that, for a fixed value of <code>income</code> and <code>balance</code>, students actually default less. This is because <code>student</code> and <code>balance</code> are correlated.</p>
-<pre class="sourceCode r"><code class="sourceCode r">default <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> balance, <span class="dt">fill =</span> student)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_boxplot</span>()</code></pre>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb125-1" data-line-number="1">default <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb125-2" data-line-number="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> balance, <span class="dt">fill =</span> student)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb125-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_boxplot</span>()</a></code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-83-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>If we plot the distribution of <code>balance</code> across <code>student</code>, we see that students tend to carry larger credit card balances.</p>
 <p>This example illustrates the dangers of drawing insights from single predictor regressions when other predictors may be relevant. The results from using one predictor can be substantially different compared to using multiple predictors. This phenomenon is known as <em>confounding</em>.</p>
@@ -515,31 +772,31 @@ x=\frac{\mu_{1}^{2}-\mu_{2}^{2}}{2\left(\mu_{1}-\mu_{2}\right)}=\frac{\mu_{1}+\m
 <ul>
 <li><span class="math inline">\(\mu_1 = -1.25, \mu_2 = 1.25, \sigma_1^2 = \sigma_2^2 = 1\)</span></li>
 </ul>
-<pre class="sourceCode r"><code class="sourceCode r">var_<span class="dv">1</span> =<span class="st"> </span><span class="dv">1</span>
-var_<span class="dv">2</span> =<span class="st"> </span>var_<span class="dv">1</span>
-f_<span class="dv">1</span> =<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">fun =</span> <span class="st">&quot;f_1&quot;</span>, <span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dt">n =</span> <span class="dv">10000</span>, <span class="dt">mean =</span> <span class="fl">-1.25</span>, <span class="dt">sd =</span> var_<span class="dv">1</span>))
-f_<span class="dv">2</span> =<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">fun =</span> <span class="st">&quot;f_2&quot;</span>, <span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dt">n =</span> <span class="dv">10000</span>, <span class="dt">mean =</span> <span class="fl">1.25</span>, <span class="dt">sd =</span> var_<span class="dv">2</span>))
-f_x =<span class="st"> </span><span class="kw">bind_rows</span>(f_<span class="dv">1</span>, f_<span class="dv">2</span>)
-
-<span class="co"># add summary statistics</span>
-
-f_x &lt;-<span class="st"> </span>f_x <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">group_by</span>(fun) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pi =</span> <span class="kw">n</span>(),
-         <span class="dt">var =</span> <span class="kw">var</span>(x),
-         <span class="dt">mu =</span> <span class="kw">mean</span>(x)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pi =</span> pi <span class="op">/</span><span class="st"> </span><span class="kw">n</span>())
-
-decision_boundary &lt;-<span class="st"> </span>f_x <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">group_by</span>(fun) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mu =</span> <span class="kw">mean</span>(x)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">decision_boundary =</span> <span class="kw">sum</span>(mu) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">pull</span>()
-f_x <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">colour =</span> fun)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_density</span>() <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> decision_boundary, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>)</code></pre>
+<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb126-1" data-line-number="1">var_<span class="dv">1</span> =<span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb126-2" data-line-number="2">var_<span class="dv">2</span> =<span class="st"> </span>var_<span class="dv">1</span></a>
+<a class="sourceLine" id="cb126-3" data-line-number="3">f_<span class="dv">1</span> =<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">fun =</span> <span class="st">&quot;f_1&quot;</span>, <span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dt">n =</span> <span class="dv">10000</span>, <span class="dt">mean =</span> <span class="fl">-1.25</span>, <span class="dt">sd =</span> var_<span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb126-4" data-line-number="4">f_<span class="dv">2</span> =<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">fun =</span> <span class="st">&quot;f_2&quot;</span>, <span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dt">n =</span> <span class="dv">10000</span>, <span class="dt">mean =</span> <span class="fl">1.25</span>, <span class="dt">sd =</span> var_<span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb126-5" data-line-number="5">f_x =<span class="st"> </span><span class="kw">bind_rows</span>(f_<span class="dv">1</span>, f_<span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb126-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb126-7" data-line-number="7"><span class="co"># add summary statistics</span></a>
+<a class="sourceLine" id="cb126-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb126-9" data-line-number="9">f_x &lt;-<span class="st"> </span>f_x <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb126-10" data-line-number="10"><span class="st">  </span><span class="kw">group_by</span>(fun) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb126-11" data-line-number="11"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pi =</span> <span class="kw">n</span>(),</a>
+<a class="sourceLine" id="cb126-12" data-line-number="12">         <span class="dt">var =</span> <span class="kw">var</span>(x),</a>
+<a class="sourceLine" id="cb126-13" data-line-number="13">         <span class="dt">mu =</span> <span class="kw">mean</span>(x)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb126-14" data-line-number="14"><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb126-15" data-line-number="15"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pi =</span> pi <span class="op">/</span><span class="st"> </span><span class="kw">n</span>())</a>
+<a class="sourceLine" id="cb126-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb126-17" data-line-number="17">decision_boundary &lt;-<span class="st"> </span>f_x <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb126-18" data-line-number="18"><span class="st">  </span><span class="kw">group_by</span>(fun) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb126-19" data-line-number="19"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mu =</span> <span class="kw">mean</span>(x)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb126-20" data-line-number="20"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">decision_boundary =</span> <span class="kw">sum</span>(mu) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb126-21" data-line-number="21"><span class="st">  </span><span class="kw">pull</span>()</a>
+<a class="sourceLine" id="cb126-22" data-line-number="22">f_x <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb126-23" data-line-number="23"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">colour =</span> fun)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb126-24" data-line-number="24"><span class="st">  </span><span class="kw">geom_density</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb126-25" data-line-number="25"><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> decision_boundary, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>)</a></code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-84-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>These two densities overlap, and so given <span class="math inline">\(X = x\)</span>, we still have uncertaintly about which class the observation belongs to. If both classes are equally likely for a random observation <span class="math inline">\(\pi_1 = \pi_2\)</span>, then we see the Bayes classifier assigns the observation to class 1 if <span class="math inline">\(x &lt; 0\)</span> and class 2 otherwise.</p>
 <p>Even if we are sure that <span class="math inline">\(X\)</span> is drawn from a Gaussian distribution within each class, we still need to estimate <span class="math inline">\(\mu_1,...,\mu_k\)</span>, <span class="math inline">\(\pi_1,...,\pi_k\)</span>, and <span class="math inline">\(\sigma^2\)</span>. The <em>linear discriminant analysis</em> method approximates these by plugging in estimates as follows</p>
@@ -575,28 +832,28 @@ f_x <span class="op">%&gt;%</span>
 \]</span></p>
 <p>This classifier has <em>linear</em> in the name due to the fact that the <em>discriminant function</em> above are linear functions of <span class="math inline">\(x\)</span>.</p>
 <p>Let’s take a sample from our earlier distribution and see how it performs.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(discrim)
-f_sample =<span class="st"> </span>f_x <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_frac</span>(<span class="dt">size =</span> <span class="fl">0.01</span>)
-
-lda_f &lt;-<span class="st"> </span>discrim<span class="op">::</span><span class="kw">discrim_linear</span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> f_sample, <span class="kw">as.factor</span>(fun) <span class="op">~</span><span class="st"> </span>x)
-
-preds &lt;-<span class="st"> </span><span class="kw">predict</span>(lda_f, f_sample, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
-
-f_sample &lt;-<span class="st"> </span>f_sample <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">bind_cols</span>(preds)
-<span class="co"># </span><span class="al">TODO</span><span class="co"> figure out how to truly extract decision boundary from MASS::lda</span>
-est_decision &lt;-<span class="st"> </span>f_sample <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(x) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(.pred_class <span class="op">==</span><span class="st"> &#39;f_2&#39;</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(x)
-
-<span class="kw">ggplot</span>(f_sample, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">fill =</span> fun)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_histogram</span>() <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> est_decision, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>)</code></pre>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb127-1" data-line-number="1"><span class="kw">library</span>(discrim)</a>
+<a class="sourceLine" id="cb127-2" data-line-number="2">f_sample =<span class="st"> </span>f_x <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_frac</span>(<span class="dt">size =</span> <span class="fl">0.01</span>)</a>
+<a class="sourceLine" id="cb127-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb127-4" data-line-number="4">lda_f &lt;-<span class="st"> </span>discrim<span class="op">::</span><span class="kw">discrim_linear</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb127-5" data-line-number="5"><span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> f_sample, <span class="kw">as.factor</span>(fun) <span class="op">~</span><span class="st"> </span>x)</a>
+<a class="sourceLine" id="cb127-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb127-7" data-line-number="7">preds &lt;-<span class="st"> </span><span class="kw">predict</span>(lda_f, f_sample, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)</a>
+<a class="sourceLine" id="cb127-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb127-9" data-line-number="9">f_sample &lt;-<span class="st"> </span>f_sample <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">bind_cols</span>(preds)</a>
+<a class="sourceLine" id="cb127-10" data-line-number="10"><span class="co"># </span><span class="al">TODO</span><span class="co"> figure out how to truly extract decision boundary from MASS::lda</span></a>
+<a class="sourceLine" id="cb127-11" data-line-number="11">est_decision &lt;-<span class="st"> </span>f_sample <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(x) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(.pred_class <span class="op">==</span><span class="st"> &#39;f_2&#39;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb127-12" data-line-number="12"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(x)</a>
+<a class="sourceLine" id="cb127-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb127-14" data-line-number="14"><span class="kw">ggplot</span>(f_sample, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">fill =</span> fun)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb127-15" data-line-number="15"><span class="st">  </span><span class="kw">geom_histogram</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb127-16" data-line-number="16"><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> est_decision, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb127-17" data-line-number="17"><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>)</a></code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-85-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>Notice the estimated decision boundary (dashed line) being very close to the Bayes decision boundary.</p>
 <div id="measuring-performance" class="section level4">
 <h4><span class="header-section-number">4.5.2.1</span> Measuring Performance</h4>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> show lda performance compared to true value</span></code></pre>
+<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb128-1" data-line-number="1"><span class="co"># </span><span class="al">TODO</span><span class="co"> show lda performance compared to true value</span></a></code></pre></div>
 </div>
 </div>
 <div id="linear-discriminant-analysis-for-p-1-1" class="section level3">
@@ -628,32 +885,32 @@ f(x)=\frac{1}{(2 \pi)^{p / 2}|\mathbf{\Sigma}|^{1 / 2}} \exp \left(-\frac{1}{2}(
 <div id="performing-lda-on-default-data" class="section level4">
 <h4><span class="header-section-number">4.5.3.1</span> Performing LDA on Default data</h4>
 <p>If we run an LDA model on our <code>default</code> dataset, predicting the probability of <code>default</code> based off of <code>student</code> and <code>balance</code>, we achieve a respectable <code>3.0%</code> error rate.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
-default_split &lt;-<span class="st"> </span><span class="kw">initial_split</span>(default, <span class="dt">prop =</span> <span class="dv">3</span><span class="op">/</span><span class="dv">4</span>)
-train_default &lt;-<span class="st"> </span><span class="kw">training</span>(default_split)
-test_default &lt;-<span class="st"> </span><span class="kw">testing</span>(default_split)
-
-lda_default &lt;-<span class="st"> </span>discrim<span class="op">::</span><span class="kw">discrim_linear</span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> train_default, default <span class="op">~</span><span class="st"> </span>student <span class="op">+</span><span class="st"> </span>balance)
-
-preds &lt;-<span class="st"> </span><span class="kw">predict</span>(lda_default, test_default, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
-
-<span class="co"># error rate</span>
-test_default <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">bind_cols</span>(preds) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">metrics</span>(<span class="dt">truth =</span> default, <span class="dt">estimate =</span> .pred_class)</code></pre>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb129-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb129-2" data-line-number="2">default_split &lt;-<span class="st"> </span><span class="kw">initial_split</span>(default, <span class="dt">prop =</span> <span class="dv">3</span><span class="op">/</span><span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb129-3" data-line-number="3">train_default &lt;-<span class="st"> </span><span class="kw">training</span>(default_split)</a>
+<a class="sourceLine" id="cb129-4" data-line-number="4">test_default &lt;-<span class="st"> </span><span class="kw">testing</span>(default_split)</a>
+<a class="sourceLine" id="cb129-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb129-6" data-line-number="6">lda_default &lt;-<span class="st"> </span>discrim<span class="op">::</span><span class="kw">discrim_linear</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb129-7" data-line-number="7"><span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> train_default, default <span class="op">~</span><span class="st"> </span>student <span class="op">+</span><span class="st"> </span>balance)</a>
+<a class="sourceLine" id="cb129-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb129-9" data-line-number="9">preds &lt;-<span class="st"> </span><span class="kw">predict</span>(lda_default, test_default, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)</a>
+<a class="sourceLine" id="cb129-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb129-11" data-line-number="11"><span class="co"># error rate</span></a>
+<a class="sourceLine" id="cb129-12" data-line-number="12">test_default <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb129-13" data-line-number="13"><span class="st">  </span><span class="kw">bind_cols</span>(preds) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb129-14" data-line-number="14"><span class="st">  </span><span class="kw">metrics</span>(<span class="dt">truth =</span> default, <span class="dt">estimate =</span> .pred_class)</a></code></pre></div>
 <pre><code>## # A tibble: 2 x 3
 ##   .metric  .estimator .estimate
 ##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
 ## 1 accuracy binary         0.97 
 ## 2 kap      binary         0.369</code></pre>
 <p>While this may seem impressive, let’s remember that only <code>3.6%</code> of observations in the dataset end up in default. This means that if we assigned a <em>null</em> classifier, which simply predicted every observation to not end in default, our error rate would be <code>3.6%</code>. This is worse, but not by much, compared to our LDA error rate.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># null error rate</span>
-test_default <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">group_by</span>(default) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">count</span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))</code></pre>
+<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb131-1" data-line-number="1"><span class="co"># null error rate</span></a>
+<a class="sourceLine" id="cb131-2" data-line-number="2">test_default <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb131-3" data-line-number="3"><span class="st">  </span><span class="kw">group_by</span>(default) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb131-4" data-line-number="4"><span class="st">  </span><span class="kw">count</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb131-5" data-line-number="5"><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb131-6" data-line-number="6"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))</a></code></pre></div>
 <pre><code>## # A tibble: 2 x 3
 ##   default     n  prop
 ##   &lt;fct&gt;   &lt;int&gt; &lt;dbl&gt;
@@ -665,11 +922,11 @@ test_default <span class="op">%&gt;%</span>
 <li>Incorrectly assigning an individual who doesn’t default to the “default” category.</li>
 </ul>
 <p>We can identify the breakdown by using a <em>confusion matrix</em></p>
-<pre class="sourceCode r"><code class="sourceCode r">cm &lt;-<span class="st"> </span>test_default <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">bind_cols</span>(preds) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">conf_mat</span>(<span class="dt">truth =</span> default, <span class="dt">estimate =</span> .pred_class)
-
-cm</code></pre>
+<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb133-1" data-line-number="1">cm &lt;-<span class="st"> </span>test_default <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb133-2" data-line-number="2"><span class="st">  </span><span class="kw">bind_cols</span>(preds) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb133-3" data-line-number="3"><span class="st">  </span><span class="kw">conf_mat</span>(<span class="dt">truth =</span> default, <span class="dt">estimate =</span> .pred_class)</a>
+<a class="sourceLine" id="cb133-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb133-5" data-line-number="5">cm</a></code></pre></div>
 <pre><code>##           Truth
 ## Prediction   No  Yes
 ##        No  2402   67
@@ -680,13 +937,13 @@ cm</code></pre>
 <p>Remember that LDA is trying to approximate the Bayes classifier, which has the lowest <em>total</em> error rate out of all classifiers (assuming Gaussian assumption is correct). The classifier will yield the smallest total number of misclassifications, regardless of which class the errors came from. In this credit card scenario, the credit card company might wish to avoid incorrectly misclassifying a user who defaults. In this case, they value sensitivity. For them, the cost of misclassifying a defaulter is higher than the cost of misclassifying a non-defaulter (which they still desire to avoid).</p>
 <p>It’s possible to modify LDA for such circumstances. Given the Bayes classifier works by assigning an observation to a class in which the posterior probability <span class="math inline">\(p_k(X)\)</span> is greatest (in the two-class scenario, this decision boundary is at <code>0.5</code>), we can modify the probability threshold to suit our needs. If we wish to increase our sensitivity, we can lower this threshold.</p>
 <p>Imagine we lowered the threshold to <code>0.2</code>. Sure, we would classify more people as defaulters than before (decreasing our specificity) but we would also catch more defaulters we previously missed (increasing our sensitivity).</p>
-<pre class="sourceCode r"><code class="sourceCode r">preds &lt;-<span class="st"> </span><span class="kw">predict</span>(lda_default, test_default, <span class="dt">type =</span> <span class="st">&quot;prob&quot;</span>)
-
-<span class="co"># error rate</span>
-test_default <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">bind_cols</span>(preds) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">.pred_class =</span> <span class="kw">as.factor</span>(<span class="kw">if_else</span>(.pred_Yes <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.2</span>, <span class="st">&quot;Yes&quot;</span>, <span class="st">&quot;No&quot;</span>))) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">conf_mat</span>(<span class="dt">truth =</span> default, <span class="dt">estimate =</span> .pred_class)</code></pre>
+<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb135-1" data-line-number="1">preds &lt;-<span class="st"> </span><span class="kw">predict</span>(lda_default, test_default, <span class="dt">type =</span> <span class="st">&quot;prob&quot;</span>)</a>
+<a class="sourceLine" id="cb135-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb135-3" data-line-number="3"><span class="co"># error rate</span></a>
+<a class="sourceLine" id="cb135-4" data-line-number="4">test_default <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb135-5" data-line-number="5"><span class="st">  </span><span class="kw">bind_cols</span>(preds) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb135-6" data-line-number="6"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">.pred_class =</span> <span class="kw">as.factor</span>(<span class="kw">if_else</span>(.pred_Yes <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.2</span>, <span class="st">&quot;Yes&quot;</span>, <span class="st">&quot;No&quot;</span>))) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb135-7" data-line-number="7"><span class="st">  </span><span class="kw">conf_mat</span>(<span class="dt">truth =</span> default, <span class="dt">estimate =</span> .pred_class)</a></code></pre></div>
 <pre><code>##           Truth
 ## Prediction   No  Yes
 ##        No  2357   37
@@ -697,10 +954,10 @@ test_default <span class="op">%&gt;%</span>
 <p>The <em>ROC curve</em> is a popular graphic for displaying the two types of errors for all possible thresholds. “ROC” stands for <em>receiver operating characteristics</em>.</p>
 <p>The overall performance of a classifier, summarized over all possible thresholds, is given by the <em>area under the (ROC) curve</em> (AUC). An ideal ROC curve will hug the top left corner. Think of it this way: ideal ROC curves are able to increase sensitivity at a much higher rate than reduction in specificity.</p>
 <p>We can use <code>yardstick::</code> (part of <code>tidymodels::</code>) to plot an ROC curve.</p>
-<pre class="sourceCode r"><code class="sourceCode r">test_default <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">bind_cols</span>(preds) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">roc_curve</span>(default, .pred_Yes) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">autoplot</span>()</code></pre>
+<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb137-1" data-line-number="1">test_default <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb137-2" data-line-number="2"><span class="st">  </span><span class="kw">bind_cols</span>(preds) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb137-3" data-line-number="3"><span class="st">  </span><span class="kw">roc_curve</span>(default, .pred_Yes) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb137-4" data-line-number="4"><span class="st">  </span><span class="kw">autoplot</span>()</a></code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-91-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>We can think of the <em>sensitivity</em> as the true positive, and <em>1 - specificity</em> as the false positive.</p>
 </div>
@@ -714,10 +971,10 @@ test_default <span class="op">%&gt;%</span>
 \]</span></p>
 <p>is largest. In this case, we plug in estimates for <span class="math inline">\(\Sigma_k\)</span>, <span class="math inline">\(\mu_k\)</span>, and <span class="math inline">\(\pi_k\)</span>. Notice the quantity <span class="math inline">\(x\)</span> appears as a quadratic function, hence the name.</p>
 <p>So why would one prefer LDA to QDA, or vice-versa? We again approach the bias-variance trade-off. With <span class="math inline">\(p\)</span> predictors, estimating a class-independent covariance matrix requires estimating <span class="math inline">\(p(p+1)/2\)</span> parameters. For example, a covariance matrix with <code>4</code> predictors would require estimating <code>4(4+1)/2 = 10</code> parameters. To estimate a covariance matrix for each class, the number of parameters is <span class="math inline">\(Kp(p+1)/2\)</span> paramters. With <code>50</code> predictors, this becomes some multiple of <code>1,275</code>, depending on <span class="math inline">\(K\)</span>. The assumption of the common covariance matrix in LDA causes the model to become linear in <span class="math inline">\(x\)</span>, which means there are <span class="math inline">\(Kp\)</span> linear coefficients to estimate. As a result, LDA is much less flexible clasifier than QDA, and has lower variance.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> understand the parameter calculation</span></code></pre>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb138-1" data-line-number="1"><span class="co"># </span><span class="al">TODO</span><span class="co"> understand the parameter calculation</span></a></code></pre></div>
 <p>The consequence of this is that if LDA’s assumption of a common covariance matrix is significantly off, the LDA can suffer from high bias. In general, LDA tends to be a better bet than QDA when there are relatively few training observations and so reduction of variance is crucial. In contrast, with large data sets, QDA can be recommended as the variance of the classifier is not a major concern, or the assumption of a common covariance matrix for the <span class="math inline">\(K\)</span> classes is clearly not correct.</p>
 <p>Breaking the assumption of a common covariance matrix can “curve” the decision boundary, and so the use of a more flexible model (QDA) could yield better results.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> add QDA example</span></code></pre>
+<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb139-1" data-line-number="1"><span class="co"># </span><span class="al">TODO</span><span class="co"> add QDA example</span></a></code></pre></div>
 </div>
 </div>
 <div id="a-comparison-of-classification-methods" class="section level2">
@@ -733,96 +990,731 @@ test_default <span class="op">%&gt;%</span>
 <p>The similarity in fitting procedure means that LDA and logistic regression often give similar results. When the assumption that observations are drawn from a Gaussian distribution with a common covariance matrix in each class are in fact true, the LDA can perform better than logistic regression. If the assumptions are in fact false, logistic regression can outperform LDA.</p>
 <p>KNN, on the other hand, is completely non-parametric. KNN looks at observations “closest” to <span class="math inline">\(x\)</span>, and assigns it to the class to which the plurality of these observations belong. No assumptions are made about the shape of the decision boundary. We can expect KNN to outperform both LDA and logistic regression when the decision boundary is highly non-linear. A downside of KNN, even when it does outperform, is its lack of interpretability. KNN does not tell us which predictors are important.</p>
 <p>QDA serves as a compromise between the non-parametric KNN method and the linear LDA and logistic regression approaches. The assumption of quadratic decision boundary allows it to accurately model a wider range of problems. It’s reduced flexibility compared to KNN allows it to produce a lower variance with a limited number of training observations due to it making some assumptions about the form of the decision boundary.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> compare all on different dataset using tidymodels and broom</span></code></pre>
 </div>
 <div id="lab-logistic-regression-lda-qda-and-knn" class="section level2">
 <h2><span class="header-section-number">4.7</span> Lab: Logistic Regression, LDA, QDA, and KNN</h2>
-<p>The dataset contains <code>683</code> observations and <code>11</code> variables, one of which is our response variable (<code>class</code>). There is a variable <code>id</code> which identifies the patient. All predictor variables are factors, some of them ordinal, some not. I don’t know much more about the metadata, but I’m going to assume the predictor types are all accurate and the ordinal nature appropriate when present. If we trust the ordinality, then we can convert them into integers. Only one variable has missing data, <code>bare_nuclei</code>, with 16 missing observations. For cleaning, I’m going to remove the <code>id</code> column as well as the <code>NA</code> values of <code>bare_nuclei</code>.</p>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb140-1" data-line-number="1"><span class="co"># </span><span class="al">TODO</span><span class="co"> add QDA example</span></a></code></pre></div>
 <div id="churn-dataset" class="section level3">
 <h3><span class="header-section-number">4.7.1</span> Churn Dataset</h3>
-<p>We will be using the <code>parsnip::wa_churn</code> dataset to test our classification techniques.</p>
+<p>We will be using the <code>modeldata::wa_churn</code> dataset to test our classification techniques.</p>
+<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb141-1" data-line-number="1"><span class="kw">library</span>(modeldata)</a>
+<a class="sourceLine" id="cb141-2" data-line-number="2"><span class="kw">data</span>(wa_churn)</a></code></pre></div>
 <pre><code>These data were downloaded from the IBM Watson site (see below) in September 2018. The data contain a factor for whether a customer churned or not. Alternatively, the tenure column presumably contains information on how long the customer has had an account. A survival analysis can be done on this column using the churn outcome as the censoring information. A data dictionary can be found on the source website.</code></pre>
 <p>Our interest for this dataset is predicting whether a customer will churn or not. If a customer is likely to churn, we can offer them an incentive to stay. These incentives cost us money, so we want to minimize the incentives given out to customers that won’t churn. We will identify a balance between <em>sensitivity</em> and <em>specificity</em> that maximizes the ROI of our incentive.</p>
-<pre class="sourceCode r"><code class="sourceCode r">wa_churn <span class="op">%&gt;%</span><span class="st"> </span>skimr<span class="op">::</span><span class="kw">skim</span>()</code></pre>
-<pre><code>## Skim summary statistics
-##  n obs: 7043 
-##  n variables: 20 
-## 
-## ── Variable type:factor ──────
-##           variable missing complete    n n_unique
-##              churn       0     7043 7043        2
-##           contract       0     7043 7043        3
-##  device_protection       0     7043 7043        3
-##   internet_service       0     7043 7043        3
-##     multiple_lines       0     7043 7043        3
-##      online_backup       0     7043 7043        3
-##    online_security       0     7043 7043        3
-##     payment_method       0     7043 7043        4
-##   streaming_movies       0     7043 7043        3
-##       streaming_tv       0     7043 7043        3
-##       tech_support       0     7043 7043        3
-##                                  top_counts ordered
-##                  No: 5174, Yes: 1869, NA: 0   FALSE
-##      Mon: 3875, Two: 1695, One: 1473, NA: 0   FALSE
-##       No: 3095, Yes: 2422, No : 1526, NA: 0   FALSE
-##       Fib: 3096, DSL: 2421, No: 1526, NA: 0   FALSE
-##        No: 3390, Yes: 2971, No : 682, NA: 0   FALSE
-##       No: 3088, Yes: 2429, No : 1526, NA: 0   FALSE
-##       No: 3498, Yes: 2019, No : 1526, NA: 0   FALSE
-##  Ele: 2365, Mai: 1612, Ban: 1544, Cre: 1522   FALSE
-##       No: 2785, Yes: 2732, No : 1526, NA: 0   FALSE
-##       No: 2810, Yes: 2707, No : 1526, NA: 0   FALSE
-##       No: 3473, Yes: 2044, No : 1526, NA: 0   FALSE
-## 
-## ── Variable type:integer ─────
-##        variable missing complete    n  mean    sd p0 p25 p50 p75 p100
-##  senior_citizen       0     7043 7043  0.16  0.37  0   0   0   0    1
-##          tenure       0     7043 7043 32.37 24.56  0   9  29  55   72
-##      hist
-##  ▇▁▁▁▁▁▁▂
-##  ▇▃▃▂▂▃▃▅
-## 
-## ── Variable type:numeric ─────
-##           variable missing complete    n    mean      sd    p0    p25
-##         dependents       0     7043 7043    0.3     0.46  0      0   
-##             female       0     7043 7043    0.5     0.5   0      0   
-##    monthly_charges       0     7043 7043   64.76   30.09 18.25  35.5 
-##  paperless_billing       0     7043 7043    0.59    0.49  0      0   
-##            partner       0     7043 7043    0.48    0.5   0      0   
-##      phone_service       0     7043 7043    0.9     0.3   0      1   
-##      total_charges      11     7032 7043 2283.3  2266.77 18.8  401.45
-##      p50     p75    p100     hist
-##     0       1       1    ▇▁▁▁▁▁▁▃
-##     0       1       1    ▇▁▁▁▁▁▁▇
-##    70.35   89.85  118.75 ▇▁▃▂▆▅▅▂
-##     1       1       1    ▆▁▁▁▁▁▁▇
-##     0       1       1    ▇▁▁▁▁▁▁▇
-##     1       1       1    ▁▁▁▁▁▁▁▇
-##  1397.47 3794.74 8684.8  ▇▃▂▂▁▁▁▁</code></pre>
+<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb143-1" data-line-number="1">wa_churn <span class="op">%&gt;%</span><span class="st"> </span>skimr<span class="op">::</span><span class="kw">skim</span>()</a></code></pre></div>
+<table style='width: auto;'
+        class='table table-condensed'>
+<caption>
+<span id="tab:unnamed-chunk-96">Table 4.2: </span>Data summary
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Name
+</td>
+<td style="text-align:left;">
+Piped data
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Number of rows
+</td>
+<td style="text-align:left;">
+7043
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Number of columns
+</td>
+<td style="text-align:left;">
+20
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+_______________________
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Column type frequency:
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+factor
+</td>
+<td style="text-align:left;">
+11
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+________________________
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Group variables
+</td>
+<td style="text-align:left;">
+None
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: factor</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+skim_variable
+</th>
+<th style="text-align:right;">
+n_missing
+</th>
+<th style="text-align:right;">
+complete_rate
+</th>
+<th style="text-align:left;">
+ordered
+</th>
+<th style="text-align:right;">
+n_unique
+</th>
+<th style="text-align:left;">
+top_counts
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+churn
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+No: 5174, Yes: 1869
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+multiple_lines
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+No: 3390, Yes: 2971, No : 682
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+internet_service
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+Fib: 3096, DSL: 2421, No: 1526
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+online_security
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+No: 3498, Yes: 2019, No : 1526
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+online_backup
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+No: 3088, Yes: 2429, No : 1526
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+device_protection
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+No: 3095, Yes: 2422, No : 1526
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tech_support
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+No: 3473, Yes: 2044, No : 1526
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+streaming_tv
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+No: 2810, Yes: 2707, No : 1526
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+streaming_movies
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+No: 2785, Yes: 2732, No : 1526
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+contract
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+Mon: 3875, Two: 1695, One: 1473
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+payment_method
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+Ele: 2365, Mai: 1612, Ban: 1544, Cre: 1522
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+skim_variable
+</th>
+<th style="text-align:right;">
+n_missing
+</th>
+<th style="text-align:right;">
+complete_rate
+</th>
+<th style="text-align:right;">
+mean
+</th>
+<th style="text-align:right;">
+sd
+</th>
+<th style="text-align:right;">
+p0
+</th>
+<th style="text-align:right;">
+p25
+</th>
+<th style="text-align:right;">
+p50
+</th>
+<th style="text-align:right;">
+p75
+</th>
+<th style="text-align:right;">
+p100
+</th>
+<th style="text-align:left;">
+hist
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+female
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.50
+</td>
+<td style="text-align:right;">
+0.50
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:left;">
+▇▁▁▁▇
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+senior_citizen
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.16
+</td>
+<td style="text-align:right;">
+0.37
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:left;">
+▇▁▁▁▂
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+partner
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.48
+</td>
+<td style="text-align:right;">
+0.50
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:left;">
+▇▁▁▁▇
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+dependents
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:right;">
+0.46
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:left;">
+▇▁▁▁▃
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tenure
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+32.37
+</td>
+<td style="text-align:right;">
+24.56
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+9.00
+</td>
+<td style="text-align:right;">
+29.00
+</td>
+<td style="text-align:right;">
+55.00
+</td>
+<td style="text-align:right;">
+72.00
+</td>
+<td style="text-align:left;">
+▇▃▃▃▆
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+phone_service
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.90
+</td>
+<td style="text-align:right;">
+0.30
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:left;">
+▁▁▁▁▇
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+paperless_billing
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.59
+</td>
+<td style="text-align:right;">
+0.49
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+<td style="text-align:left;">
+▆▁▁▁▇
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+monthly_charges
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+64.76
+</td>
+<td style="text-align:right;">
+30.09
+</td>
+<td style="text-align:right;">
+18.25
+</td>
+<td style="text-align:right;">
+35.50
+</td>
+<td style="text-align:right;">
+70.35
+</td>
+<td style="text-align:right;">
+89.85
+</td>
+<td style="text-align:right;">
+118.75
+</td>
+<td style="text-align:left;">
+▇▅▆▇▅
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+total_charges
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2283.30
+</td>
+<td style="text-align:right;">
+2266.77
+</td>
+<td style="text-align:right;">
+18.80
+</td>
+<td style="text-align:right;">
+401.45
+</td>
+<td style="text-align:right;">
+1397.47
+</td>
+<td style="text-align:right;">
+3794.74
+</td>
+<td style="text-align:right;">
+8684.80
+</td>
+<td style="text-align:left;">
+▇▂▂▂▁
+</td>
+</tr>
+</tbody>
+</table>
 <p>The dataset contains <code>7043</code> observations and <code>20</code> variables. The dataset consists mostly of factor variables, all with a small amount of unique levels. We are going to try out logistic regression, LDA, and K-nearest neighbors on this dataset. For now, we will only remove the <code>11</code> observations which have missing values for the <code>total_charges</code> column. We will also reorder the <code>churn</code> column levels so that a “success” corresponds with a customer churning.</p>
-<pre class="sourceCode r"><code class="sourceCode r">wa_churn &lt;-<span class="st"> </span>wa_churn <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(total_charges)) <span class="op">%&gt;%</span>
-<span class="kw">mutate</span>(<span class="dt">churn =</span> <span class="kw">fct_relevel</span>(churn, <span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>))</code></pre>
+<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb144-1" data-line-number="1">wa_churn &lt;-<span class="st"> </span>wa_churn <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(total_charges)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb144-2" data-line-number="2"><span class="kw">mutate</span>(<span class="dt">churn =</span> <span class="kw">fct_relevel</span>(churn, <span class="st">&quot;No&quot;</span>, <span class="st">&quot;Yes&quot;</span>))</a></code></pre></div>
 <p>Now let’s take a look at the response variable.</p>
-<pre class="sourceCode r"><code class="sourceCode r">wa_churn <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(churn) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tally</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))</code></pre>
+<div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb145-1" data-line-number="1">wa_churn <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(churn) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tally</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))</a></code></pre></div>
 <pre><code>## # A tibble: 2 x 3
 ##   churn     n  prop
 ##   &lt;fct&gt; &lt;int&gt; &lt;dbl&gt;
 ## 1 No     5163 0.734
 ## 2 Yes    1869 0.266</code></pre>
 <p>In this dataset, <code>73.5%</code> of the observations do not churn. There is some skew, but nothing drastic. We will now prepare the data and apply binary classification techniques to see which model performs best.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">40</span>)
-split_churn &lt;-<span class="st"> </span><span class="kw">initial_split</span>(wa_churn, <span class="dt">prop =</span> <span class="dv">3</span><span class="op">/</span><span class="dv">4</span>)
-train_churn &lt;-<span class="st"> </span><span class="kw">training</span>(split_churn)
-test_churn &lt;-<span class="st"> </span><span class="kw">testing</span>(split_churn)</code></pre>
+<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb147-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">40</span>)</a>
+<a class="sourceLine" id="cb147-2" data-line-number="2">split_churn &lt;-<span class="st"> </span><span class="kw">initial_split</span>(wa_churn, <span class="dt">prop =</span> <span class="dv">3</span><span class="op">/</span><span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb147-3" data-line-number="3">train_churn &lt;-<span class="st"> </span><span class="kw">training</span>(split_churn)</a>
+<a class="sourceLine" id="cb147-4" data-line-number="4">test_churn &lt;-<span class="st"> </span><span class="kw">testing</span>(split_churn)</a></code></pre></div>
 </div>
 <div id="logistic-regression-1" class="section level3">
 <h3><span class="header-section-number">4.7.2</span> Logistic Regression</h3>
 <p>Let’s run a logistic regression to predict <code>churn</code> using the available variables.</p>
 <p>Unlike ISLR, we will use the <code>parsnip::logistic_reg</code> function over <code>glm</code> due to its API design and machine learning workflow provided by its parent package, <code>tidymodels</code>. Models in the <code>{parsnip}</code> package also allow for choice of different computational engines. This reduces cognitive overhead by standardizing the high-level arguments for training a model without rembembering the specifications of different engine. In our case, we will be using the <code>glm</code> engine.</p>
 <pre><code>logistic_reg() is a way to generate a specification of a model before fitting and allows the model to be created using different packages in R, Stan, keras, or via Spark.</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">logi_churn &lt;-<span class="st"> </span><span class="kw">logistic_reg</span>(<span class="dt">mode =</span> <span class="st">&quot;classification&quot;</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> train_churn, churn <span class="op">~</span><span class="st"> </span>.)
-broom<span class="op">::</span><span class="kw">tidy</span>(logi_churn) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(p.value)</code></pre>
+<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb149-1" data-line-number="1">logi_churn &lt;-<span class="st"> </span><span class="kw">logistic_reg</span>(<span class="dt">mode =</span> <span class="st">&quot;classification&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb149-2" data-line-number="2"><span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> train_churn, churn <span class="op">~</span><span class="st"> </span>.)</a>
+<a class="sourceLine" id="cb149-3" data-line-number="3">broom<span class="op">::</span><span class="kw">tidy</span>(logi_churn) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(p.value)</a></code></pre></div>
 <pre><code>## # A tibble: 24 x 5
 ##   term                estimate std.error statistic  p.value
 ##   &lt;chr&gt;                  &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
@@ -837,26 +1729,26 @@ broom<span class="op">::</span><span class="kw">tidy</span>(logi_churn) <span cl
 <div id="measuring-model-performance" class="section level4">
 <h4><span class="header-section-number">4.7.2.1</span> Measuring model performance</h4>
 <p>We can use the <code>predict()</code> function with our <code>{tidymodels}</code> workflow. The <code>type</code> parameter specifies whether we want probabilities or classifications returned. The object returned is a tibble with columns of the predicted probability of the observation being in each class.</p>
-<pre class="sourceCode r"><code class="sourceCode r">logi_preds &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="dt">object =</span> logi_churn, <span class="dt">new_data =</span> test_churn,
-                      <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)</code></pre>
+<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb151-1" data-line-number="1">logi_preds &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="dt">object =</span> logi_churn, <span class="dt">new_data =</span> test_churn,</a>
+<a class="sourceLine" id="cb151-2" data-line-number="2">                      <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)</a></code></pre></div>
 <p>Specifying <code>type = &quot;class&quot;</code> will generate classification predictions based off of a <code>0.5</code> threshold (this might not be optimal for the problem).</p>
 <p>Let’s add them to our test set.</p>
-<pre class="sourceCode r"><code class="sourceCode r">test_metrics &lt;-<span class="st"> </span>test_churn <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">bind_cols</span>(logi_preds)</code></pre>
+<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb152-1" data-line-number="1">test_metrics &lt;-<span class="st"> </span>test_churn <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb152-2" data-line-number="2"><span class="st">  </span><span class="kw">bind_cols</span>(logi_preds)</a></code></pre></div>
 <p>This adds a column, <code>.pred_class</code> at each observation.</p>
 <p>We can produce a confusion matrix using <code>conf_mat()</code> function of the <code>{yardstick}</code> package (used for measuring model performance, also part of <code>{tidymodels}</code>).</p>
 <p>We tell <code>conf_mat()</code> that the <code>direction</code> column is our source of truth, and our classifications are contained in the <code>.pred_class</code> column.</p>
-<pre class="sourceCode r"><code class="sourceCode r">cm_churn &lt;-<span class="st"> </span>test_metrics <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">conf_mat</span>(<span class="dt">truth =</span> churn, <span class="dt">estimate =</span> .pred_class)
-
-cm_churn</code></pre>
+<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb153-1" data-line-number="1">cm_churn &lt;-<span class="st"> </span>test_metrics <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb153-2" data-line-number="2"><span class="st">  </span><span class="kw">conf_mat</span>(<span class="dt">truth =</span> churn, <span class="dt">estimate =</span> .pred_class)</a>
+<a class="sourceLine" id="cb153-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb153-4" data-line-number="4">cm_churn</a></code></pre></div>
 <pre><code>##           Truth
 ## Prediction   No  Yes
 ##        No  1156  208
 ##        Yes  142  252</code></pre>
 <p><code>conf_mat</code> objects also have a <code>summary()</code> method that computes various classification metrics.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(cm_churn) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter</span>(.metric <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;accuracy&#39;</span>, <span class="st">&#39;sens&#39;</span>, <span class="st">&#39;spec&#39;</span>))</code></pre>
+<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb155-1" data-line-number="1"><span class="kw">summary</span>(cm_churn) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb155-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(.metric <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;accuracy&#39;</span>, <span class="st">&#39;sens&#39;</span>, <span class="st">&#39;spec&#39;</span>))</a></code></pre></div>
 <pre><code>## # A tibble: 3 x 3
 ##   .metric  .estimator .estimate
 ##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
@@ -865,8 +1757,8 @@ cm_churn</code></pre>
 ## 3 spec     binary         0.548</code></pre>
 <p>Our overall accuracy is around <code>~80.1%</code>. This may seem high, but if we look at the original dataset, the data is skewed. A naive classifier would produce a <code>73.5%</code> accuracy (the proportion of yes/no churn values).Still, it suggests that we are better off than randomly guessing.</p>
 <p>Can we account for the skew of data when assessing our model? If we utilize the <code>yardstick::metrics()</code> function on our test data fitted with class predictions, we can get a dataframe containing overall model performance.</p>
-<pre class="sourceCode r"><code class="sourceCode r">test_metrics <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">metrics</span>(<span class="dt">truth =</span> churn, <span class="dt">estimate =</span> .pred_class)</code></pre>
+<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb157-1" data-line-number="1">test_metrics <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb157-2" data-line-number="2"><span class="st">  </span><span class="kw">metrics</span>(<span class="dt">truth =</span> churn, <span class="dt">estimate =</span> .pred_class)</a></code></pre></div>
 <pre><code>## # A tibble: 2 x 3
 ##   .metric  .estimator .estimate
 ##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
@@ -878,13 +1770,13 @@ cm_churn</code></pre>
 </div>
 <div id="linear-discriminant-analysis-1" class="section level3">
 <h3><span class="header-section-number">4.7.3</span> Linear discriminant analysis</h3>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">40</span>)
-lda_churn &lt;-<span class="st"> </span><span class="kw">discrim_linear</span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> train_churn, churn <span class="op">~</span><span class="st"> </span>.)</code></pre>
+<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb159-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">40</span>)</a>
+<a class="sourceLine" id="cb159-2" data-line-number="2">lda_churn &lt;-<span class="st"> </span><span class="kw">discrim_linear</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb159-3" data-line-number="3"><span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> train_churn, churn <span class="op">~</span><span class="st"> </span>.)</a></code></pre></div>
 <p>Calling the <code>parsnip::</code> model object gives us information about the model fit. We can see the prior probabilities as well as the <em>coefficients of linear discriminants</em>. These provide the linear combination of the variables used to create the decision rule. If the combination is large, the model will predict an increase.</p>
-<pre class="sourceCode r"><code class="sourceCode r">lda_churn<span class="op">$</span>fit<span class="op">$</span>scaling <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">as_tibble</span>(<span class="dt">rownames =</span> <span class="st">&quot;term&quot;</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">arrange</span>(LD1)</code></pre>
+<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb160-1" data-line-number="1">lda_churn<span class="op">$</span>fit<span class="op">$</span>scaling <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb160-2" data-line-number="2"><span class="st">  </span><span class="kw">as_tibble</span>(<span class="dt">rownames =</span> <span class="st">&quot;term&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb160-3" data-line-number="3"><span class="st">  </span><span class="kw">arrange</span>(LD1)</a></code></pre></div>
 <pre><code>## # A tibble: 30 x 2
 ##   term                  LD1
 ##   &lt;chr&gt;               &lt;dbl&gt;
@@ -896,11 +1788,11 @@ lda_churn &lt;-<span class="st"> </span><span class="kw">discrim_linear</span>()
 ## 6 online_backupYes   -0.209
 ## # … with 24 more rows</code></pre>
 <p>We see similar important terms as the logistic regression model. Customers on long contracts are less likely to churn.</p>
-<pre class="sourceCode r"><code class="sourceCode r">lda_preds &lt;-<span class="st"> </span><span class="kw">predict</span>(lda_churn, test_churn, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>) 
-
-test_churn <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">bind_cols</span>(lda_preds) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">metrics</span>(<span class="dt">truth =</span> churn, <span class="dt">estimate =</span> .pred_class)</code></pre>
+<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb162-1" data-line-number="1">lda_preds &lt;-<span class="st"> </span><span class="kw">predict</span>(lda_churn, test_churn, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>) </a>
+<a class="sourceLine" id="cb162-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb162-3" data-line-number="3">test_churn <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb162-4" data-line-number="4"><span class="st">  </span><span class="kw">bind_cols</span>(lda_preds) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb162-5" data-line-number="5"><span class="st">  </span><span class="kw">metrics</span>(<span class="dt">truth =</span> churn, <span class="dt">estimate =</span> .pred_class)</a></code></pre></div>
 <pre><code>## # A tibble: 2 x 3
 ##   .metric  .estimator .estimate
 ##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
@@ -911,14 +1803,14 @@ test_churn <span class="op">%&gt;%</span>
 <div id="k-nearest-neighbors-1" class="section level3">
 <h3><span class="header-section-number">4.7.4</span> K-Nearest Neighbors</h3>
 <p>Next, we will utilize the <code>parsnip::nearest_neighbor()</code> function.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">40</span>)
-knn_churn &lt;-<span class="st"> </span><span class="kw">nearest_neighbor</span>(<span class="dt">mode =</span> <span class="st">&quot;classification&quot;</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> train_churn, churn <span class="op">~</span><span class="st"> </span>.)
-knn_preds &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="dt">object =</span> knn_churn, <span class="dt">new_data =</span> test_churn)
-
-test_churn <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">bind_cols</span>(knn_preds) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">metrics</span>(<span class="dt">truth =</span> churn, <span class="dt">estimate =</span> .pred_class)</code></pre>
+<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb164-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">40</span>)</a>
+<a class="sourceLine" id="cb164-2" data-line-number="2">knn_churn &lt;-<span class="st"> </span><span class="kw">nearest_neighbor</span>(<span class="dt">mode =</span> <span class="st">&quot;classification&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb164-3" data-line-number="3"><span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> train_churn, churn <span class="op">~</span><span class="st"> </span>.)</a>
+<a class="sourceLine" id="cb164-4" data-line-number="4">knn_preds &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="dt">object =</span> knn_churn, <span class="dt">new_data =</span> test_churn)</a>
+<a class="sourceLine" id="cb164-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb164-6" data-line-number="6">test_churn <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb164-7" data-line-number="7"><span class="st">  </span><span class="kw">bind_cols</span>(knn_preds) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb164-8" data-line-number="8"><span class="st">  </span><span class="kw">metrics</span>(<span class="dt">truth =</span> churn, <span class="dt">estimate =</span> .pred_class)</a></code></pre></div>
 <pre><code>## # A tibble: 2 x 3
 ##   .metric  .estimator .estimate
 ##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
@@ -931,13 +1823,13 @@ test_churn <span class="op">%&gt;%</span>
 <h3><span class="header-section-number">4.7.5</span> Choosing the model</h3>
 <p>Given logistic regression and LDA exhibiting similar performance metrics, we could use either model. However, logistic regression makes less assumptions about the underlying data.</p>
 <p>Let’s take a look at the ROC curve using <code>yardstick::roc_curve()</code> function.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># https://stats.stackexchange.com/questions/188416/discriminant-analysis-vs-logistic-regression</span>
-logi_preds &lt;-<span class="st"> </span><span class="kw">predict</span>(logi_churn, test_churn, <span class="dt">type =</span> <span class="st">&quot;prob&quot;</span>)
-test_churn <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">bind_cols</span>(logi_preds) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">roc_curve</span>(churn, .pred_Yes) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">autoplot</span>()</code></pre>
-<p><img src="tidy_islr_files/figure-html/unnamed-chunk-109-1.png" width="576" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb166-1" data-line-number="1"><span class="co"># https://stats.stackexchange.com/questions/188416/discriminant-analysis-vs-logistic-regression</span></a>
+<a class="sourceLine" id="cb166-2" data-line-number="2">logi_preds &lt;-<span class="st"> </span><span class="kw">predict</span>(logi_churn, test_churn, <span class="dt">type =</span> <span class="st">&quot;prob&quot;</span>)</a>
+<a class="sourceLine" id="cb166-3" data-line-number="3">test_churn <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb166-4" data-line-number="4"><span class="st">  </span><span class="kw">bind_cols</span>(logi_preds) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb166-5" data-line-number="5"><span class="st">  </span><span class="kw">roc_curve</span>(churn, .pred_Yes) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb166-6" data-line-number="6"><span class="st">  </span><span class="kw">autoplot</span>()</a></code></pre></div>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-110-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>Our sensitivity (ability to correctly identify those who will churn) has two visible inflection points where the slope changes, one around <code>~55%</code> and the other around <code>~80%</code>. What should we pick as our classifier threshold?</p>
 </div>
 <div id="evaluating-the-threshold" class="section level3">
@@ -946,38 +1838,38 @@ test_churn <span class="op">%&gt;%</span>
 <p>Imagine we want to hand out an incentive to customers we believe will churn. This incentive costs us money, but has a <code>100%</code> success rate of retaining a customer (turning them from a <code>Yes</code> to <code>No</code> churn).</p>
 <p>Let’s assume the cost of this incentive for us is <code>$75</code>, but the value of retaining the user is <code>$150</code>. We want to maximize the return we get from this incentive.</p>
 <p>In this case, every true positive will net us <code>$75</code> of profit, and every false positive will cost us <code>$75</code> (the customer doesn’t churn, so giving the incentive was a waste). We want to find the optimal decision boundary where we maximize our return from this incentive.</p>
-<pre class="sourceCode r"><code class="sourceCode r">ltv =<span class="st"> </span><span class="dv">150</span>
-incentive =<span class="st"> </span><span class="dv">75</span>
-
-logi_class &lt;-<span class="st"> </span><span class="kw">predict</span>(logi_churn, test_churn, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)
-costs &lt;-<span class="st"> </span>test_churn <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">bind_cols</span>(logi_preds) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">bind_cols</span>(logi_class) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">roc_curve</span>(churn, .pred_Yes) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">profit  =</span> sensitivity <span class="op">*</span><span class="st"> </span>(ltv <span class="op">-</span><span class="st"> </span>incentive),
-         <span class="dt">cost =</span> (<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>specificity) <span class="op">*</span><span class="st"> </span>incentive,
-         <span class="dt">net =</span> profit <span class="op">-</span><span class="st"> </span>cost)
-
-costs <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> sensitivity, <span class="dt">y =</span> net)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">max</span>(net)))</code></pre>
-<p><img src="tidy_islr_files/figure-html/unnamed-chunk-110-1.png" width="576" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb167-1" data-line-number="1">ltv =<span class="st"> </span><span class="dv">150</span></a>
+<a class="sourceLine" id="cb167-2" data-line-number="2">incentive =<span class="st"> </span><span class="dv">75</span></a>
+<a class="sourceLine" id="cb167-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb167-4" data-line-number="4">logi_class &lt;-<span class="st"> </span><span class="kw">predict</span>(logi_churn, test_churn, <span class="dt">type =</span> <span class="st">&quot;class&quot;</span>)</a>
+<a class="sourceLine" id="cb167-5" data-line-number="5">costs &lt;-<span class="st"> </span>test_churn <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb167-6" data-line-number="6"><span class="st">  </span><span class="kw">bind_cols</span>(logi_preds) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb167-7" data-line-number="7"><span class="st">  </span><span class="kw">bind_cols</span>(logi_class) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb167-8" data-line-number="8"><span class="st">  </span><span class="kw">roc_curve</span>(churn, .pred_Yes) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb167-9" data-line-number="9"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">profit  =</span> sensitivity <span class="op">*</span><span class="st"> </span>(ltv <span class="op">-</span><span class="st"> </span>incentive),</a>
+<a class="sourceLine" id="cb167-10" data-line-number="10">         <span class="dt">cost =</span> (<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>specificity) <span class="op">*</span><span class="st"> </span>incentive,</a>
+<a class="sourceLine" id="cb167-11" data-line-number="11">         <span class="dt">net =</span> profit <span class="op">-</span><span class="st"> </span>cost)</a>
+<a class="sourceLine" id="cb167-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb167-13" data-line-number="13">costs <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb167-14" data-line-number="14"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> sensitivity, <span class="dt">y =</span> net)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb167-15" data-line-number="15"><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb167-16" data-line-number="16"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="kw">max</span>(net)))</a></code></pre></div>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-111-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>We can grab the optimal sensitivity and find the corresponding decision threshold.</p>
-<pre class="sourceCode r"><code class="sourceCode r">optimal_sens &lt;-<span class="st"> </span>costs <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter</span>(net <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(net))
-optimal_sens</code></pre>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb168-1" data-line-number="1">optimal_sens &lt;-<span class="st"> </span>costs <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb168-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(net <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(net))</a>
+<a class="sourceLine" id="cb168-3" data-line-number="3">optimal_sens</a></code></pre></div>
 <pre><code>## # A tibble: 1 x 6
 ##   .threshold specificity sensitivity profit  cost   net
 ##        &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ## 1      0.308       0.757       0.764   57.3  18.3  39.1</code></pre>
 <p>We find that our ideal sensitivity of <code>76.4%</code> corresponds with a specificity of <code>75.7%</code>. For whatever reason, <code>roc_curve()</code> gives the <code>.threshold</code> column the predicted <code>No</code> churn class (despite specifying an ROC curve with <code>.pred_Yes</code> column). Thus, if we eastimate a customer to have a churn percentage greater or equal to <code>1 - 0.308 = 0.692</code>, we can offer them this incentive.</p>
-<pre class="sourceCode r"><code class="sourceCode r">yes_threshold &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span>(optimal_sens<span class="op">$</span>.threshold)
-test_churn <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">bind_cols</span>(logi_preds) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter</span>(.pred_Yes <span class="op">&gt;=</span><span class="st"> </span>yes_threshold) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">group_by</span>(churn) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tally</span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">revenue =</span> <span class="kw">if_else</span>(churn <span class="op">==</span><span class="st"> &quot;No&quot;</span>, n <span class="op">*</span><span class="st"> </span><span class="op">-</span>incentive, n <span class="op">*</span><span class="st"> </span>(ltv <span class="op">-</span><span class="st"> </span>incentive)))</code></pre>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb170-1" data-line-number="1">yes_threshold &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span>(optimal_sens<span class="op">$</span>.threshold)</a>
+<a class="sourceLine" id="cb170-2" data-line-number="2">test_churn <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb170-3" data-line-number="3"><span class="st">  </span><span class="kw">bind_cols</span>(logi_preds) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb170-4" data-line-number="4"><span class="st">  </span><span class="kw">filter</span>(.pred_Yes <span class="op">&gt;=</span><span class="st"> </span>yes_threshold) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb170-5" data-line-number="5"><span class="st">  </span><span class="kw">group_by</span>(churn) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tally</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb170-6" data-line-number="6"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">revenue =</span> <span class="kw">if_else</span>(churn <span class="op">==</span><span class="st"> &quot;No&quot;</span>, n <span class="op">*</span><span class="st"> </span><span class="op">-</span>incentive, n <span class="op">*</span><span class="st"> </span>(ltv <span class="op">-</span><span class="st"> </span>incentive)))</a></code></pre></div>
 <pre><code>## # A tibble: 2 x 3
 ##   churn     n revenue
 ##   &lt;fct&gt; &lt;int&gt;   &lt;dbl&gt;
@@ -1000,17 +1892,19 @@ test_churn <span class="op">%&gt;%</span>
           </div>
         </div>
       </div>
-<a href="linear-regression.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="linear-regression.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="resampling-methods.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -1018,12 +1912,11 @@ gitbook.start({
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -1035,6 +1928,10 @@ gitbook.start({
 "text": null
 },
 "history": {
+"link": null,
+"text": null
+},
+"view": {
 "link": null,
 "text": null
 },
@@ -1053,8 +1950,9 @@ gitbook.start({
     script.type = "text/javascript";
     var src = "true";
     if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(src))
-      src = src.replace(/^https?:/, '');
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
     script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();

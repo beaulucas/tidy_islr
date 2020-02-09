@@ -598,17 +598,20 @@ KNN, on the other hand, is completely non-parametric. KNN looks at observations 
 
 QDA serves as a compromise between the non-parametric KNN method and the linear LDA and logistic regression approaches. The assumption of quadratic decision boundary allows it to accurately model a wider range of problems. It's reduced flexibility compared to KNN allows it to produce a lower variance with a limited number of training observations due to it making some assumptions about the form of the decision boundary.
 
-```{r}
-# TODO compare all on different dataset using tidymodels and broom
-```
-
 ## Lab: Logistic Regression, LDA, QDA, and KNN
 
-The dataset contains `683` observations and `11` variables, one of which is our response variable (`class`). There is a variable `id` which identifies the patient. All predictor variables are factors, some of them ordinal, some not. I don't know much more about the metadata, but I'm going to assume the predictor types are all accurate and the ordinal nature appropriate when present. If we trust the ordinality, then we can convert them into integers. Only one variable has missing data, `bare_nuclei`, with 16 missing observations. For cleaning, I'm going to remove the `id` column as well as the `NA` values of `bare_nuclei`.
+```{r}
+# TODO add QDA example
+```
 
 ### Churn Dataset
 
-We will be using the `parsnip::wa_churn` dataset to test our classification techniques.
+We will be using the `modeldata::wa_churn` dataset to test our classification techniques.
+
+```{r}
+library(modeldata)
+data(wa_churn)
+```
 
 ```
 These data were downloaded from the IBM Watson site (see below) in September 2018. The data contain a factor for whether a customer churned or not. Alternatively, the tenure column presumably contains information on how long the customer has had an account. A survival analysis can be done on this column using the churn outcome as the censoring information. A data dictionary can be found on the source website.

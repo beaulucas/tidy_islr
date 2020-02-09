@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 3 Linear Regression | A Tidy Introduction To Statistical Learning</title>
   <meta name="description" content="Chapter 3 Linear Regression | A Tidy Introduction To Statistical Learning" />
-  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 3 Linear Regression | A Tidy Introduction To Statistical Learning" />
   <meta property="og:type" content="book" />
@@ -24,15 +24,15 @@
 <meta name="author" content="Beau Lucas" />
 
 
-<meta name="date" content="2020-01-30" />
+<meta name="date" content="2020-02-09" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="statistical-learning.html">
-<link rel="next" href="classification.html">
+<link rel="prev" href="statistical-learning.html"/>
+<link rel="next" href="classification.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -40,6 +40,9 @@
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -56,7 +59,6 @@ a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
 a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
@@ -207,6 +209,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.8" data-path="classification.html"><a href="classification.html#conclusion"><i class="fa fa-check"></i><b>4.8</b> Conclusion</a></li>
 <li class="chapter" data-level="4.9" data-path="classification.html"><a href="classification.html#exercises-2"><i class="fa fa-check"></i><b>4.9</b> Exercises</a></li>
 </ul></li>
+<li class="chapter" data-level="5" data-path="resampling-methods.html"><a href="resampling-methods.html"><i class="fa fa-check"></i><b>5</b> Resampling Methods</a><ul>
+<li class="chapter" data-level="5.1" data-path="resampling-methods.html"><a href="resampling-methods.html#cross-validation"><i class="fa fa-check"></i><b>5.1</b> Cross-Validation</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="resampling-methods.html"><a href="resampling-methods.html#the-validation-set-approach"><i class="fa fa-check"></i><b>5.1.1</b> The Validation Set Approach</a></li>
+<li class="chapter" data-level="5.1.2" data-path="resampling-methods.html"><a href="resampling-methods.html#leave-one-out-cross-validation."><i class="fa fa-check"></i><b>5.1.2</b> Leave-One-Out Cross-Validation.</a></li>
+<li class="chapter" data-level="5.1.3" data-path="resampling-methods.html"><a href="resampling-methods.html#k-fold-cross-validation"><i class="fa fa-check"></i><b>5.1.3</b> k-Fold Cross-Validation</a></li>
+<li class="chapter" data-level="5.1.4" data-path="resampling-methods.html"><a href="resampling-methods.html#bias-variance-trade-off-for-k-fold-cross-validation"><i class="fa fa-check"></i><b>5.1.4</b> Bias-Variance Trade-Off for <em>k</em>-fold Cross-Validation</a></li>
+<li class="chapter" data-level="5.1.5" data-path="resampling-methods.html"><a href="resampling-methods.html#cross-validation-on-classification-problems"><i class="fa fa-check"></i><b>5.1.5</b> Cross-Validation on Classification Problems</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="resampling-methods.html"><a href="resampling-methods.html#the-bootstrap"><i class="fa fa-check"></i><b>5.2</b> The Bootstrap</a></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/beaulucas/tidy_islr" target="blank">GitHub Repository</a></li>
 
@@ -233,10 +245,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Linear regression is a simple yet very powerful approach in statistical learning. It is important to have a strong understanding of it before moving on to more complex learning methods.</p>
 <div id="packages-used-in-this-chapter-1" class="section level2">
 <h2><span class="header-section-number">3.1</span> Packages used in this chapter</h2>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
-<span class="kw">library</span>(modelr)
-<span class="kw">library</span>(knitr)
-<span class="kw">library</span>(kableExtra)</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="kw">library</span>(modelr)</a>
+<a class="sourceLine" id="cb13-3" data-line-number="3"><span class="kw">library</span>(knitr)</a>
+<a class="sourceLine" id="cb13-4" data-line-number="4"><span class="kw">library</span>(kableExtra)</a></code></pre></div>
 </div>
 <div id="simple-linear-regression" class="section level2">
 <h2><span class="header-section-number">3.2</span> Simple Linear Regression</h2>
@@ -308,53 +320,53 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>simulate <code>n = 200</code> observations</li>
 <li>compare the population regression line (<code>sim_y</code>) to a number of possible least squares lines (generated from 10 different training sets of the data)</li>
 </ul>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># f(x), or Y = 2 + 2x + error</span>
-
-sim_linear &lt;-<span class="st"> </span><span class="kw">tibble</span>(
-  <span class="dt">b0 =</span> <span class="dv">2</span>,
-  <span class="dt">b1 =</span> <span class="dv">2</span>,
-  <span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">100</span> <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="dt">n =</span> <span class="dv">200</span>, <span class="dt">mean =</span> <span class="dv">100</span>, <span class="dt">sd =</span> <span class="dv">15</span>),
-  <span class="dt">err =</span> <span class="kw">rnorm</span>(<span class="dv">200</span>, <span class="dt">sd =</span> <span class="dv">50</span>),
-  <span class="dt">sim_y =</span> b0 <span class="op">+</span><span class="st"> </span>b1 <span class="op">*</span><span class="st"> </span>x,
-  <span class="dt">true_y =</span> b0 <span class="op">+</span><span class="st"> </span>b1 <span class="op">*</span><span class="st"> </span>x <span class="op">+</span><span class="st"> </span>err
-)
-
-<span class="co"># generate 10 training sets</span>
-y &lt;-<span class="st"> </span><span class="kw">tibble</span>()
-<span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>) {
-  x &lt;-<span class="st"> </span><span class="kw">sample_frac</span>(sim_linear, <span class="fl">0.1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">iter_set =</span> i)
-  y &lt;-<span class="st"> </span>y <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">bind_rows</span>(x)
-}
-
-<span class="co"># apply linear model to each sample</span>
-by_iter &lt;-<span class="st"> </span>y <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">group_by</span>(iter_set) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">nest</span>()
-lm_model &lt;-<span class="st"> </span><span class="cf">function</span>(df) {
-  <span class="kw">lm</span>(true_y <span class="op">~</span><span class="st"> </span>x, <span class="dt">data =</span> df)
-}
-by_iter &lt;-<span class="st"> </span>by_iter <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(
-    <span class="dt">model =</span> <span class="kw">map</span>(data, lm_model),
-    <span class="dt">preds =</span> <span class="kw">map2</span>(data, model, add_predictions)
-  )
-
-<span class="co"># extract predictions</span>
-preds &lt;-<span class="st"> </span><span class="kw">unnest</span>(by_iter, preds)
-
-<span class="kw">ggplot</span>(<span class="dt">data =</span> sim_linear, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> true_y)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">3</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> preds, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> pred, <span class="dt">colour =</span> iter_set, <span class="dt">group =</span> iter_set), <span class="dt">linetype =</span> <span class="st">&quot;F1&quot;</span>, <span class="dt">size =</span> <span class="fl">.75</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> sim_y), <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span>
-<span class="st">  </span><span class="kw">theme</span>(
-    <span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>, <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),
-    <span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), <span class="dt">axis.line =</span> <span class="kw">element_line</span>(<span class="dt">colour =</span> <span class="st">&quot;grey92&quot;</span>)
-  ) <span class="op">+</span>
-<span class="st">  </span><span class="kw">labs</span>(
-    <span class="dt">title =</span> <span class="st">&quot;Each least squares line provides a reasonable estimate&quot;</span>,
-    <span class="dt">y =</span> <span class="st">&quot;y&quot;</span>
-  )</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="co"># f(x), or Y = 2 + 2x + error</span></a>
+<a class="sourceLine" id="cb14-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb14-3" data-line-number="3">sim_linear &lt;-<span class="st"> </span><span class="kw">tibble</span>(</a>
+<a class="sourceLine" id="cb14-4" data-line-number="4">  <span class="dt">b0 =</span> <span class="dv">2</span>,</a>
+<a class="sourceLine" id="cb14-5" data-line-number="5">  <span class="dt">b1 =</span> <span class="dv">2</span>,</a>
+<a class="sourceLine" id="cb14-6" data-line-number="6">  <span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">100</span> <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="dt">n =</span> <span class="dv">200</span>, <span class="dt">mean =</span> <span class="dv">100</span>, <span class="dt">sd =</span> <span class="dv">15</span>),</a>
+<a class="sourceLine" id="cb14-7" data-line-number="7">  <span class="dt">err =</span> <span class="kw">rnorm</span>(<span class="dv">200</span>, <span class="dt">sd =</span> <span class="dv">50</span>),</a>
+<a class="sourceLine" id="cb14-8" data-line-number="8">  <span class="dt">sim_y =</span> b0 <span class="op">+</span><span class="st"> </span>b1 <span class="op">*</span><span class="st"> </span>x,</a>
+<a class="sourceLine" id="cb14-9" data-line-number="9">  <span class="dt">true_y =</span> b0 <span class="op">+</span><span class="st"> </span>b1 <span class="op">*</span><span class="st"> </span>x <span class="op">+</span><span class="st"> </span>err</a>
+<a class="sourceLine" id="cb14-10" data-line-number="10">)</a>
+<a class="sourceLine" id="cb14-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb14-12" data-line-number="12"><span class="co"># generate 10 training sets</span></a>
+<a class="sourceLine" id="cb14-13" data-line-number="13">y &lt;-<span class="st"> </span><span class="kw">tibble</span>()</a>
+<a class="sourceLine" id="cb14-14" data-line-number="14"><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>) {</a>
+<a class="sourceLine" id="cb14-15" data-line-number="15">  x &lt;-<span class="st"> </span><span class="kw">sample_frac</span>(sim_linear, <span class="fl">0.1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">iter_set =</span> i)</a>
+<a class="sourceLine" id="cb14-16" data-line-number="16">  y &lt;-<span class="st"> </span>y <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">bind_rows</span>(x)</a>
+<a class="sourceLine" id="cb14-17" data-line-number="17">}</a>
+<a class="sourceLine" id="cb14-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb14-19" data-line-number="19"><span class="co"># apply linear model to each sample</span></a>
+<a class="sourceLine" id="cb14-20" data-line-number="20">by_iter &lt;-<span class="st"> </span>y <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb14-21" data-line-number="21"><span class="st">  </span><span class="kw">group_by</span>(iter_set) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb14-22" data-line-number="22"><span class="st">  </span><span class="kw">nest</span>()</a>
+<a class="sourceLine" id="cb14-23" data-line-number="23">lm_model &lt;-<span class="st"> </span><span class="cf">function</span>(df) {</a>
+<a class="sourceLine" id="cb14-24" data-line-number="24">  <span class="kw">lm</span>(true_y <span class="op">~</span><span class="st"> </span>x, <span class="dt">data =</span> df)</a>
+<a class="sourceLine" id="cb14-25" data-line-number="25">}</a>
+<a class="sourceLine" id="cb14-26" data-line-number="26">by_iter &lt;-<span class="st"> </span>by_iter <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb14-27" data-line-number="27"><span class="st">  </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb14-28" data-line-number="28">    <span class="dt">model =</span> <span class="kw">map</span>(data, lm_model),</a>
+<a class="sourceLine" id="cb14-29" data-line-number="29">    <span class="dt">preds =</span> <span class="kw">map2</span>(data, model, add_predictions)</a>
+<a class="sourceLine" id="cb14-30" data-line-number="30">  )</a>
+<a class="sourceLine" id="cb14-31" data-line-number="31"></a>
+<a class="sourceLine" id="cb14-32" data-line-number="32"><span class="co"># extract predictions</span></a>
+<a class="sourceLine" id="cb14-33" data-line-number="33">preds &lt;-<span class="st"> </span><span class="kw">unnest</span>(by_iter, preds)</a>
+<a class="sourceLine" id="cb14-34" data-line-number="34"></a>
+<a class="sourceLine" id="cb14-35" data-line-number="35"><span class="kw">ggplot</span>(<span class="dt">data =</span> sim_linear, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> true_y)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb14-36" data-line-number="36"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">3</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb14-37" data-line-number="37"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> preds, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> pred, <span class="dt">colour =</span> iter_set, <span class="dt">group =</span> iter_set), <span class="dt">linetype =</span> <span class="st">&quot;F1&quot;</span>, <span class="dt">size =</span> <span class="fl">.75</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb14-38" data-line-number="38"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> sim_y), <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb14-39" data-line-number="39"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb14-40" data-line-number="40"><span class="st">  </span><span class="kw">theme</span>(</a>
+<a class="sourceLine" id="cb14-41" data-line-number="41">    <span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>, <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),</a>
+<a class="sourceLine" id="cb14-42" data-line-number="42">    <span class="dt">panel.grid.major =</span> <span class="kw">element_blank</span>(), <span class="dt">axis.line =</span> <span class="kw">element_line</span>(<span class="dt">colour =</span> <span class="st">&quot;grey92&quot;</span>)</a>
+<a class="sourceLine" id="cb14-43" data-line-number="43">  ) <span class="op">+</span></a>
+<a class="sourceLine" id="cb14-44" data-line-number="44"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb14-45" data-line-number="45">    <span class="dt">title =</span> <span class="st">&quot;Each least squares line provides a reasonable estimate&quot;</span>,</a>
+<a class="sourceLine" id="cb14-46" data-line-number="46">    <span class="dt">y =</span> <span class="st">&quot;y&quot;</span></a>
+<a class="sourceLine" id="cb14-47" data-line-number="47">  )</a></code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-11-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>The chart above demonstrates the population regression line (red) surrounded by ten different estimates of the least squares line. Notice how every least squares line (shades of blue) is different. This is because each one is generated from a random sample pulled from the simulated data. For a real-world comparison, the simulated data would be the entire population data which is often impossible to obtain. The observations used to generate the least squares line would be the sample data we have access to. In the same way a sample mean can provide a reasonable estimate of the population mean, fitting a least squares line can provide a reasonable estimate of the population regression line.</p>
 <p>This comparison of linear regression to estimating population means touches on the topic of bias. An estimate of <span class="math inline">\(\mu\)</span> using the the sample mean <span class="math inline">\(\hat\mu\)</span> is unbiased. On average, the sample mean will not systemically over or underestimate <span class="math inline">\(\mu\)</span>. If we were to take a large enough estimates of <span class="math inline">\(\mu\)</span>, each produced by a particular set of observations, then this average would exactly equal <span class="math inline">\(\mu\)</span>. This concept applies to our estimates of <span class="math inline">\(\beta_0, \beta_1\)</span> as well.</p>
@@ -529,7 +541,7 @@ preds &lt;-<span class="st"> </span><span class="kw">unnest</span>(by_iter, pred
 </div>
 <p>In simple terms, if <span class="math inline">\(H_o\)</span> were true and all of the predictors have regression coefficients of 0, we would expect the unexplained variance of the model to be approximately equal to that of the total variance, and both the numerator and the denominator of the F-statistic formula to be equal. When there is no relationship between the response and predictors, the F-statistic will take on a value close to 1. However, as RSS shrinks (the model begins to account for more of the variance), the numerator grows and the denominator shrinks, both causing the F-statistic to increase. We can think of the F-statistic as a ratio between the explained variance and unexplained variance. As the explained variance grows larger than the unexplained portion, the likelihood that we reject the null hypothesis grows.</p>
 <p>How large does the F-statistic need to be to reject the null hypothesis? This depends on <span class="math inline">\(n\)</span> and <span class="math inline">\(p\)</span>. As <span class="math inline">\(n\)</span> grows, F-statistics closer to 1 may provide sufficient evidence to reject <span class="math inline">\(H_o\)</span>. If <span class="math inline">\(H_o\)</span> is true and <span class="math inline">\(\epsilon_i\)</span> have a normal distribution, the F-statistic follows an F-distribution. We can compute the p-value for any value of <span class="math inline">\(n\)</span> and <span class="math inline">\(p\)</span> associated with an F-statistic.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> remove this section?</span></code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="co"># </span><span class="al">TODO</span><span class="co"> remove this section?</span></a></code></pre></div>
 <p>Sometimes we want to test whether a particular subset of <span class="math inline">\(q\)</span> of the coefficients are zero.</p>
 <p>The null hypothesis could be</p>
 <div>
@@ -548,7 +560,7 @@ preds &lt;-<span class="st"> </span><span class="kw">unnest</span>(by_iter, pred
 <p>Why do we need to look at overall F-statistics if we have individual p-values of the predictors? There are scenarios where individual predictors, by chance, will have <em>small</em> p-values, even in the absence of any true association. This could lead us to incorrectly diagnose a relationship.</p>
 <p>The overall F-statistic does not suffer this problem because it adjusts for the number of predictors.</p>
 <p>The F-statistic approach works when the number of predictors <span class="math inline">\(p\)</span> is small compared to <span class="math inline">\(n\)</span>. Sometimes, we have situations where <span class="math inline">\(p &gt; n\)</span>. In this situation, ther eare more coefficients <span class="math inline">\(\beta_j\)</span> to estimate than observations from which to estimate them. Such situations requires different approaches that we haven’t discussed yet (see chapter 6)</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> add chapter 6 link</span></code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="co"># </span><span class="al">TODO</span><span class="co"> add chapter 6 link</span></a></code></pre></div>
 </div>
 <div id="deciding-on-important-variables" class="section level4">
 <h4><span class="header-section-number">3.3.2.2</span> Deciding on Important Variables</h4>
@@ -588,29 +600,28 @@ preds &lt;-<span class="st"> </span><span class="kw">unnest</span>(by_iter, pred
 <h3><span class="header-section-number">3.3.3</span> Other Considerations in the Regression Model</h3>
 <p>So far, all predictors have been <em>quantitative</em>. However, it is common to have <em>qualitative</em> variables as well.</p>
 <p>Take a look at the <code>ISLR::Credit</code> dataset, which has a mix of both types.</p>
-<pre class="sourceCode r"><code class="sourceCode r">tidy_credit &lt;-<span class="st"> </span>ISLR<span class="op">::</span>Credit <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span>
-<span class="st">  </span>janitor<span class="op">::</span><span class="kw">clean_names</span>()
-tidy_credit</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">tidy_credit &lt;-<span class="st"> </span>ISLR<span class="op">::</span>Credit <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb17-2" data-line-number="2"><span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb17-3" data-line-number="3"><span class="st">  </span>janitor<span class="op">::</span><span class="kw">clean_names</span>()</a>
+<a class="sourceLine" id="cb17-4" data-line-number="4">tidy_credit</a></code></pre></div>
 <pre><code>## # A tibble: 400 x 12
 ##      id income limit rating cards   age education gender student married
 ##   &lt;int&gt;  &lt;dbl&gt; &lt;int&gt;  &lt;int&gt; &lt;int&gt; &lt;int&gt;     &lt;int&gt; &lt;fct&gt;  &lt;fct&gt;   &lt;fct&gt;  
 ## 1     1   14.9  3606    283     2    34        11 &quot; Mal… No      Yes    
-## 2     2  106.   6645    483     3    82        15 Female Yes     Yes    
+## 2     2  106.   6645    483     3    82        15 &quot;Fema… Yes     Yes    
 ## 3     3  105.   7075    514     4    71        11 &quot; Mal… No      No     
-## 4     4  149.   9504    681     3    36        11 Female No      No     
+## 4     4  149.   9504    681     3    36        11 &quot;Fema… No      No     
 ## 5     5   55.9  4897    357     2    68        16 &quot; Mal… No      Yes    
 ## 6     6   80.2  8047    569     4    77        10 &quot; Mal… No      No     
-## # … with 394 more rows, and 2 more variables: ethnicity &lt;fct&gt;,
-## #   balance &lt;int&gt;</code></pre>
+## # … with 394 more rows, and 2 more variables: ethnicity &lt;fct&gt;, balance &lt;int&gt;</code></pre>
 <div id="predictors-with-only-two-levels" class="section level4">
 <h4><span class="header-section-number">3.3.3.1</span> Predictors with only Two Levels</h4>
 <p>Suppose we wish to investigate difference in credit card balance between males and females, ignoring all other variables. If a <em>qualitative</em> variable (also known as a <em>factor</em>) only has two possible values, then incorporating it into a model is easy. We can create a binomial dummy variable that takes on two values. For <code>gender</code>, this could be a variable that is <code>0</code> if observation has value <code>male</code>, and <code>1</code> if observation has value <code>female</code>. This variable can then be used in the regression equation.</p>
 <p>Take note that <code>lm()</code> automatically creates dummy variables when given qualitative predictors.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> insert regression equation</span></code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">credit_model &lt;-<span class="st"> </span><span class="kw">lm</span>(balance <span class="op">~</span><span class="st"> </span>gender, <span class="dt">data =</span> tidy_credit)
-tidy_credit_model &lt;-<span class="st"> </span>broom<span class="op">::</span><span class="kw">tidy</span>(credit_model)
-tidy_credit_model</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="co"># </span><span class="al">TODO</span><span class="co"> insert regression equation</span></a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">credit_model &lt;-<span class="st"> </span><span class="kw">lm</span>(balance <span class="op">~</span><span class="st"> </span>gender, <span class="dt">data =</span> tidy_credit)</a>
+<a class="sourceLine" id="cb20-2" data-line-number="2">tidy_credit_model &lt;-<span class="st"> </span>broom<span class="op">::</span><span class="kw">tidy</span>(credit_model)</a>
+<a class="sourceLine" id="cb20-3" data-line-number="3">tidy_credit_model</a></code></pre></div>
 <pre><code>## # A tibble: 2 x 5
 ##   term         estimate std.error statistic  p.value
 ##   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
@@ -623,7 +634,7 @@ tidy_credit_model</code></pre>
 <h3><span class="header-section-number">3.3.4</span> Qualitative Predictors with More than Two Levels</h3>
 <p>A single dummy variable can not represent all the possible values. We can create additional dummy variables for this.</p>
 <p>Let’s make a dummy variable from <code>ethnicity</code> column, which takes three distinct values. This will yield two dummy variables.</p>
-<pre class="sourceCode r"><code class="sourceCode r">tidy_credit <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">distinct</span>(ethnicity)</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">tidy_credit <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">distinct</span>(ethnicity)</a></code></pre></div>
 <pre><code>## # A tibble: 3 x 1
 ##   ethnicity       
 ##   &lt;fct&gt;           
@@ -631,12 +642,12 @@ tidy_credit_model</code></pre>
 ## 2 Asian           
 ## 3 African American</code></pre>
 <p><code>fastDummies</code> package will be used to generate these. In this case, <code>African American</code> serves as the baseline, and dummy variables are created for <code>Caucasian</code> and <code>Asian</code>. <strong>There will always be one fewer dummy variable than the number of levels.</strong></p>
-<pre class="sourceCode r"><code class="sourceCode r">tidy_credit_dummy &lt;-<span class="st"> </span>tidy_credit <span class="op">%&gt;%</span>
-<span class="st">  </span>fastDummies<span class="op">::</span><span class="kw">dummy_cols</span>(<span class="dt">select_columns =</span> <span class="st">&quot;ethnicity&quot;</span>, <span class="dt">remove_first_dummy =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span>janitor<span class="op">::</span><span class="kw">clean_names</span>()
-
-tidy_credit_dummy <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(<span class="kw">starts_with</span>(<span class="st">&quot;ethnicity&quot;</span>))</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">tidy_credit_dummy &lt;-<span class="st"> </span>tidy_credit <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb24-2" data-line-number="2"><span class="st">  </span>fastDummies<span class="op">::</span><span class="kw">dummy_cols</span>(<span class="dt">select_columns =</span> <span class="st">&quot;ethnicity&quot;</span>, <span class="dt">remove_first_dummy =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb24-3" data-line-number="3"><span class="st">  </span>janitor<span class="op">::</span><span class="kw">clean_names</span>()</a>
+<a class="sourceLine" id="cb24-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb24-5" data-line-number="5">tidy_credit_dummy <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb24-6" data-line-number="6"><span class="st">  </span><span class="kw">select</span>(<span class="kw">starts_with</span>(<span class="st">&quot;ethnicity&quot;</span>))</a></code></pre></div>
 <pre><code>## # A tibble: 400 x 3
 ##   ethnicity ethnicity_asian ethnicity_caucasian
 ##   &lt;fct&gt;               &lt;int&gt;               &lt;int&gt;
@@ -648,8 +659,8 @@ tidy_credit_dummy <span class="op">%&gt;%</span>
 ## 6 Caucasian               0                   1
 ## # … with 394 more rows</code></pre>
 <p>We can again run the model with newly created dummy variables. Keep in mind, prior creation is not necessary, as <code>lm</code> will generate them automatically.</p>
-<pre class="sourceCode r"><code class="sourceCode r">ethnicity_model &lt;-<span class="st"> </span><span class="kw">lm</span>(balance <span class="op">~</span><span class="st"> </span>ethnicity_asian <span class="op">+</span><span class="st"> </span>ethnicity_caucasian, <span class="dt">data =</span> tidy_credit_dummy)
-broom<span class="op">::</span><span class="kw">tidy</span>(ethnicity_model)</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1">ethnicity_model &lt;-<span class="st"> </span><span class="kw">lm</span>(balance <span class="op">~</span><span class="st"> </span>ethnicity_asian <span class="op">+</span><span class="st"> </span>ethnicity_caucasian, <span class="dt">data =</span> tidy_credit_dummy)</a>
+<a class="sourceLine" id="cb26-2" data-line-number="2">broom<span class="op">::</span><span class="kw">tidy</span>(ethnicity_model)</a></code></pre></div>
 <pre><code>## # A tibble: 3 x 5
 ##   term                estimate std.error statistic  p.value
 ##   &lt;chr&gt;                  &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
@@ -675,25 +686,25 @@ broom<span class="op">::</span><span class="kw">tidy</span>(ethnicity_model)</co
 <p>The <em>hierarchical principle</em> states that <em>if we include an interaction in a model, we should also include the main effects, even if the p-values associated with their coefficients are not significant</em>.</p>
 <p>It’s also possible for qualitative and quantitative variables to interact with each other. We will again use the <code>Credit</code> data set. Suppose we wish to predict <code>balance</code> using the <code>income</code> (quantitative) and <code>student</code> (qualitative) variables.</p>
 <p>First, let’s take a look at what it looks like to fit this model without an interaction term. Both <code>income</code> and <code>student</code> are significant.</p>
-<pre class="sourceCode r"><code class="sourceCode r">lm_credit &lt;-<span class="st"> </span><span class="kw">lm</span>(balance <span class="op">~</span><span class="st"> </span>income <span class="op">+</span><span class="st"> </span>student, <span class="dt">data =</span> tidy_credit)
-lm_credit <span class="op">%&gt;%</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">tidy</span>()</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1">lm_credit &lt;-<span class="st"> </span><span class="kw">lm</span>(balance <span class="op">~</span><span class="st"> </span>income <span class="op">+</span><span class="st"> </span>student, <span class="dt">data =</span> tidy_credit)</a>
+<a class="sourceLine" id="cb28-2" data-line-number="2">lm_credit <span class="op">%&gt;%</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">tidy</span>()</a></code></pre></div>
 <pre><code>## # A tibble: 3 x 5
 ##   term        estimate std.error statistic  p.value
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
 ## 1 (Intercept)   211.      32.5        6.51 2.34e-10
 ## 2 income          5.98     0.557     10.8  7.82e-24
 ## 3 studentYes    383.      65.3        5.86 9.78e- 9</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">tidy_credit <span class="op">%&gt;%</span>
-<span class="st">  </span>modelr<span class="op">::</span><span class="kw">add_predictions</span>(lm_credit) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> income, <span class="dt">y =</span> pred, <span class="dt">colour =</span> student)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> balance, <span class="dt">colour =</span> student), <span class="dt">fill =</span> <span class="st">&quot;grey&quot;</span>, <span class="dt">pch =</span> <span class="dv">21</span>, <span class="dt">alpha =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">2</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">theme_minimal</span>()</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1">tidy_credit <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb30-2" data-line-number="2"><span class="st">  </span>modelr<span class="op">::</span><span class="kw">add_predictions</span>(lm_credit) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb30-3" data-line-number="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> income, <span class="dt">y =</span> pred, <span class="dt">colour =</span> student)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb30-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb30-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> balance, <span class="dt">colour =</span> student), <span class="dt">fill =</span> <span class="st">&quot;grey&quot;</span>, <span class="dt">pch =</span> <span class="dv">21</span>, <span class="dt">alpha =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">2</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb30-6" data-line-number="6"><span class="st">  </span><span class="kw">theme_minimal</span>()</a></code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-19-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>It’s a pretty good fit, and because there is no interaction terms, the lines are parallel. Notice how many more observations there are to fit on for the non-students.</p>
 <p>Now, let’s add an interaction term.</p>
-<pre class="sourceCode r"><code class="sourceCode r">lm_credit_int &lt;-<span class="st"> </span><span class="kw">lm</span>(balance <span class="op">~</span><span class="st"> </span>income <span class="op">+</span><span class="st"> </span>student <span class="op">+</span><span class="st"> </span>income <span class="op">*</span><span class="st"> </span>student, <span class="dt">data =</span> tidy_credit)
-lm_credit_int <span class="op">%&gt;%</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">tidy</span>()</code></pre>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1">lm_credit_int &lt;-<span class="st"> </span><span class="kw">lm</span>(balance <span class="op">~</span><span class="st"> </span>income <span class="op">+</span><span class="st"> </span>student <span class="op">+</span><span class="st"> </span>income <span class="op">*</span><span class="st"> </span>student, <span class="dt">data =</span> tidy_credit)</a>
+<a class="sourceLine" id="cb31-2" data-line-number="2">lm_credit_int <span class="op">%&gt;%</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">tidy</span>()</a></code></pre></div>
 <pre><code>## # A tibble: 4 x 5
 ##   term              estimate std.error statistic  p.value
 ##   &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
@@ -701,18 +712,18 @@ lm_credit_int <span class="op">%&gt;%</span><span class="st"> </span>broom<span 
 ## 2 income                6.22     0.592     10.5  6.34e-23
 ## 3 studentYes          477.     104.         4.57 6.59e- 6
 ## 4 income:studentYes    -2.00     1.73      -1.15 2.49e- 1</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">tidy_credit <span class="op">%&gt;%</span>
-<span class="st">  </span>modelr<span class="op">::</span><span class="kw">add_predictions</span>(lm_credit_int) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> income, <span class="dt">y =</span> pred, <span class="dt">colour =</span> student)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> balance, <span class="dt">colour =</span> student), <span class="dt">fill =</span> <span class="st">&quot;grey&quot;</span>, <span class="dt">pch =</span> <span class="dv">21</span>, <span class="dt">alpha =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">2</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">theme_minimal</span>()</code></pre>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1">tidy_credit <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb33-2" data-line-number="2"><span class="st">  </span>modelr<span class="op">::</span><span class="kw">add_predictions</span>(lm_credit_int) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb33-3" data-line-number="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> income, <span class="dt">y =</span> pred, <span class="dt">colour =</span> student)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb33-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb33-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> balance, <span class="dt">colour =</span> student), <span class="dt">fill =</span> <span class="st">&quot;grey&quot;</span>, <span class="dt">pch =</span> <span class="dv">21</span>, <span class="dt">alpha =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">2</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb33-6" data-line-number="6"><span class="st">  </span><span class="kw">theme_minimal</span>()</a></code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-21-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>The model now takes into account how <code>income</code> and <code>student</code> interact with each other. Interpreting the chart suggests that increases in <code>income</code> among students has a smaller effect on balance than it does to non-students.</p>
 <p>Does it fit better?</p>
-<pre class="sourceCode r"><code class="sourceCode r">models &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">without_interaction =</span> lm_credit, <span class="dt">with_interaction =</span> lm_credit_int)
-purrr<span class="op">::</span><span class="kw">map_df</span>(models, broom<span class="op">::</span>glance, <span class="dt">.id =</span> <span class="st">&quot;model&quot;</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(model, r.squared, statistic, p.value, df)</code></pre>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1">models &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">without_interaction =</span> lm_credit, <span class="dt">with_interaction =</span> lm_credit_int)</a>
+<a class="sourceLine" id="cb34-2" data-line-number="2">purrr<span class="op">::</span><span class="kw">map_df</span>(models, broom<span class="op">::</span>glance, <span class="dt">.id =</span> <span class="st">&quot;model&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb34-3" data-line-number="3"><span class="st">  </span><span class="kw">select</span>(model, r.squared, statistic, p.value, df)</a></code></pre></div>
 <pre><code>## # A tibble: 2 x 5
 ##   model               r.squared statistic  p.value    df
 ##   &lt;chr&gt;                   &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt;
@@ -730,26 +741,26 @@ purrr<span class="op">::</span><span class="kw">map_df</span>(models, broom<span
 </p>
 </div>
 <p>Let’s look at the <code>Auto</code> dataset with models of different polynomial degrees overlaid. Clearly, the data is not linear, exhibiting a <em>quadratic</em> shape.</p>
-<pre class="sourceCode r"><code class="sourceCode r">tidy_auto &lt;-<span class="st"> </span>ISLR<span class="op">::</span>Auto <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>()
-
-lm_auto &lt;-<span class="st"> </span><span class="kw">lm</span>(mpg <span class="op">~</span><span class="st"> </span>horsepower, <span class="dt">data =</span> tidy_auto)
-lm_auto2 &lt;-<span class="st"> </span><span class="kw">lm</span>(mpg <span class="op">~</span><span class="st"> </span><span class="kw">poly</span>(horsepower, <span class="dv">2</span>), <span class="dt">data =</span> tidy_auto)
-lm_auto5 &lt;-<span class="st"> </span><span class="kw">lm</span>(mpg <span class="op">~</span><span class="st"> </span><span class="kw">poly</span>(horsepower, <span class="dv">5</span>), <span class="dt">data =</span> tidy_auto)
-
-tidy_auto <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">gather_predictions</span>(lm_auto, lm_auto2, lm_auto5) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> horsepower, <span class="dt">y =</span> mpg)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">3</span>, <span class="dt">pch =</span> <span class="dv">21</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> pred, <span class="dt">colour =</span> model), <span class="dt">size =</span> <span class="fl">1.5</span>)</code></pre>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1">tidy_auto &lt;-<span class="st"> </span>ISLR<span class="op">::</span>Auto <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>()</a>
+<a class="sourceLine" id="cb36-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb36-3" data-line-number="3">lm_auto &lt;-<span class="st"> </span><span class="kw">lm</span>(mpg <span class="op">~</span><span class="st"> </span>horsepower, <span class="dt">data =</span> tidy_auto)</a>
+<a class="sourceLine" id="cb36-4" data-line-number="4">lm_auto2 &lt;-<span class="st"> </span><span class="kw">lm</span>(mpg <span class="op">~</span><span class="st"> </span><span class="kw">poly</span>(horsepower, <span class="dv">2</span>), <span class="dt">data =</span> tidy_auto)</a>
+<a class="sourceLine" id="cb36-5" data-line-number="5">lm_auto5 &lt;-<span class="st"> </span><span class="kw">lm</span>(mpg <span class="op">~</span><span class="st"> </span><span class="kw">poly</span>(horsepower, <span class="dv">5</span>), <span class="dt">data =</span> tidy_auto)</a>
+<a class="sourceLine" id="cb36-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb36-7" data-line-number="7">tidy_auto <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb36-8" data-line-number="8"><span class="st">  </span><span class="kw">gather_predictions</span>(lm_auto, lm_auto2, lm_auto5) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb36-9" data-line-number="9"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> horsepower, <span class="dt">y =</span> mpg)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb36-10" data-line-number="10"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">3</span>, <span class="dt">pch =</span> <span class="dv">21</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb36-11" data-line-number="11"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> pred, <span class="dt">colour =</span> model), <span class="dt">size =</span> <span class="fl">1.5</span>)</a></code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-23-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>The second-order polynomial does a good job of fitting the data, while the fifth-order seems to be unnecessary. The model performance reflects that:</p>
-<pre class="sourceCode r"><code class="sourceCode r">models &lt;-<span class="st"> </span><span class="kw">list</span>(
-  <span class="dt">linear =</span> lm_auto,
-  <span class="dt">second_order =</span> lm_auto2,
-  <span class="dt">fifth_order =</span> lm_auto5
-)
-purrr<span class="op">::</span><span class="kw">map_df</span>(models, broom<span class="op">::</span>glance, <span class="dt">.id =</span> <span class="st">&quot;model&quot;</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(model, r.squared, statistic, p.value, df)</code></pre>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1">models &lt;-<span class="st"> </span><span class="kw">list</span>(</a>
+<a class="sourceLine" id="cb37-2" data-line-number="2">  <span class="dt">linear =</span> lm_auto,</a>
+<a class="sourceLine" id="cb37-3" data-line-number="3">  <span class="dt">second_order =</span> lm_auto2,</a>
+<a class="sourceLine" id="cb37-4" data-line-number="4">  <span class="dt">fifth_order =</span> lm_auto5</a>
+<a class="sourceLine" id="cb37-5" data-line-number="5">)</a>
+<a class="sourceLine" id="cb37-6" data-line-number="6">purrr<span class="op">::</span><span class="kw">map_df</span>(models, broom<span class="op">::</span>glance, <span class="dt">.id =</span> <span class="st">&quot;model&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb37-7" data-line-number="7"><span class="st">  </span><span class="kw">select</span>(model, r.squared, statistic, p.value, df)</a></code></pre></div>
 <pre><code>## # A tibble: 3 x 5
 ##   model        r.squared statistic  p.value    df
 ##   &lt;chr&gt;            &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt;
@@ -776,12 +787,12 @@ purrr<span class="op">::</span><span class="kw">map_df</span>(models, broom<span
 <p>The linear model assumes a straight-line relationship between the predictors and the response. If this is not the case, the inference and prediction accuracy of the fit are suspect.</p>
 <p>We can use a <em>residual plot</em> to visualize when a linear model is placed on to a non-linear relationship. For a simple linear regression model, we plot the residuals <span class="math inline">\(e_i = y_i - \hat{y}_i\)</span> compared to the predictor. For multiple regression, we plot the residuals versus the predicted values <span class="math inline">\(\hat{y}_i\)</span>. If the relationship is linear, the residuals should exhibit a random pattern.</p>
 <p>Let’s take the <code>Auto</code> dataset and plot the residuals compared to <code>horsepower</code> for each model we fit. Notice in the model containing no quadratic term is U-shaped, indicating a non-linear relationship. The model that contains <code>horsepower^2</code> exhibits little pattern in the residuals, indicating a better fit.</p>
-<pre class="sourceCode r"><code class="sourceCode r">tidy_auto <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">gather_predictions</span>(lm_auto, lm_auto2, lm_auto5) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> horsepower, <span class="dt">y =</span> mpg<span class="op">-</span>pred, <span class="dt">colour=</span>model)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">3</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">size =</span> <span class="fl">1.5</span>, <span class="dt">colour=</span><span class="st">&quot;grey&quot;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>model, <span class="dt">nrow=</span><span class="dv">3</span>)</code></pre>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" data-line-number="1">tidy_auto <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb39-2" data-line-number="2"><span class="st">  </span><span class="kw">gather_predictions</span>(lm_auto, lm_auto2, lm_auto5) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb39-3" data-line-number="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> horsepower, <span class="dt">y =</span> mpg<span class="op">-</span>pred, <span class="dt">colour=</span>model)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb39-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">3</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb39-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">size =</span> <span class="fl">1.5</span>, <span class="dt">colour=</span><span class="st">&quot;grey&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb39-6" data-line-number="6"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>model, <span class="dt">nrow=</span><span class="dv">3</span>)</a></code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-25-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>If the residual plot indicates that there non-linear associations in the data, a simple approach is to use non-linear transofmrations of the predictors.</p>
 </div>
@@ -793,16 +804,16 @@ purrr<span class="op">::</span><span class="kw">map_df</span>(models, broom<span
 <p>These correlations occur frequently in <em>time series</em> data, which consists of observations obtained at discrete points in time. In many cases, observations that are obtained at adjacent time periods points will have positively correlated errors.</p>
 <p>We can again plot the residuals as a function of time to see if this is the case. If no correlation, there should be no pattern in the residuals. If error terms exhibit correlation, we may see that adjacent residuals exhibit similar values, known as <em>tracking</em>.</p>
 <p>This can also happen outside of time series data. The assumption of uncorrelated errors is extremely important for linear regression as well as other statistical methods.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> add a residual plot for time series with correlated error terms, similar to pg. 95</span></code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">tidy_sunspot &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">y=</span><span class="kw">as.matrix</span>(sunspot.year), <span class="dt">ds=</span><span class="kw">time</span>(sunspot.year)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>()
-tidy_sunspot
-sunspot_lm &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_sunspot, y <span class="op">~</span><span class="st"> </span>ds)
-tidy_sunspot <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">add_predictions</span>(sunspot_lm) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>ds, <span class="dt">y=</span>pred<span class="op">-</span>y)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&quot;lm&quot;</span>, <span class="dt">se =</span> <span class="ot">FALSE</span>)</code></pre>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" data-line-number="1"><span class="co"># </span><span class="al">TODO</span><span class="co"> add a residual plot for time series with correlated error terms, similar to pg. 95</span></a></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1">tidy_sunspot &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">y=</span><span class="kw">as.matrix</span>(sunspot.year), <span class="dt">ds=</span><span class="kw">time</span>(sunspot.year)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>()</a>
+<a class="sourceLine" id="cb41-2" data-line-number="2">tidy_sunspot</a>
+<a class="sourceLine" id="cb41-3" data-line-number="3">sunspot_lm &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_sunspot, y <span class="op">~</span><span class="st"> </span>ds)</a>
+<a class="sourceLine" id="cb41-4" data-line-number="4">tidy_sunspot <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb41-5" data-line-number="5"><span class="st">  </span><span class="kw">add_predictions</span>(sunspot_lm) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb41-6" data-line-number="6"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>ds, <span class="dt">y=</span>pred<span class="op">-</span>y)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb41-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb41-8" data-line-number="8"><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb41-9" data-line-number="9"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&quot;lm&quot;</span>, <span class="dt">se =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 </div>
 <div id="non-constant-variance-of-error-terms" class="section level4">
 <h4><span class="header-section-number">3.3.6.3</span> 3. Non-constant Variance of Error Terms</h4>
@@ -810,81 +821,81 @@ tidy_sunspot <span class="op">%&gt;%</span>
 <p>It is common for error terms to exhiti non-constant variance. Non-constant variance in the errors, also known as <em>heteroscedasticity</em>, can be identified from a <em>funnel shape</em> in the residual plot.</p>
 <p>Let’s take a look at the <code>MASS::cats</code> dataset, which contains observations of various cats sex, body weight, and heart weight. We fit a linear model to it, and then plot the residuals.</p>
 <p>I’ve added a linear fit to the residual plot itself. Observe how the error terms begin to funnel out as <code>bwt</code> increases, indicating non-constant variance of the error terms.</p>
-<pre class="sourceCode r"><code class="sourceCode r">tidy_cats &lt;-<span class="st"> </span>MASS<span class="op">::</span>cats <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span>janitor<span class="op">::</span><span class="kw">clean_names</span>()
-lm_cats &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_cats, hwt <span class="op">~</span><span class="st"> </span>bwt)
-
-tidy_cats <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">add_predictions</span>(lm_cats) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> bwt, <span class="dt">y =</span> hwt <span class="op">-</span><span class="st"> </span>pred)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&quot;lm&quot;</span>, <span class="dt">level =</span> <span class="fl">0.99</span>)</code></pre>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" data-line-number="1">tidy_cats &lt;-<span class="st"> </span>MASS<span class="op">::</span>cats <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span>janitor<span class="op">::</span><span class="kw">clean_names</span>()</a>
+<a class="sourceLine" id="cb42-2" data-line-number="2">lm_cats &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_cats, hwt <span class="op">~</span><span class="st"> </span>bwt)</a>
+<a class="sourceLine" id="cb42-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb42-4" data-line-number="4">tidy_cats <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb42-5" data-line-number="5"><span class="st">  </span><span class="kw">add_predictions</span>(lm_cats) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb42-6" data-line-number="6"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> bwt, <span class="dt">y =</span> hwt <span class="op">-</span><span class="st"> </span>pred)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb42-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb42-8" data-line-number="8"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&quot;lm&quot;</span>, <span class="dt">level =</span> <span class="fl">0.99</span>)</a></code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-27-1.png" width="576" style="display: block; margin: auto;" /></p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> add OLS method to this</span>
-<span class="co"># get weights of each response</span>
-
-<span class="co"># fit a linear model on the residuals</span>
-tidy_cats_res &lt;-<span class="st"> </span>tidy_cats <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">add_predictions</span>(lm_cats) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">res =</span> hwt <span class="op">-</span><span class="st"> </span>pred) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(bwt, hwt, res)
-lm_cats_res &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_cats_res, res <span class="op">~</span><span class="st"> </span>hwt)
-
-cat_weights &lt;-<span class="st"> </span>tidy_cats_res <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">add_predictions</span>(lm_cats_res) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">res_var =</span> (res<span class="op">-</span>pred)<span class="op">^</span><span class="dv">2</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">weight =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span>res_var) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">pull</span>(weight)
-
-lm_cats_weights &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_cats, hwt <span class="op">~</span><span class="st"> </span>bwt, <span class="dt">weights =</span> cat_weights)
-
-tidy_cats <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">gather_predictions</span>(lm_cats, lm_cats_weights) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> bwt, <span class="dt">y =</span> hwt <span class="op">-</span><span class="st"> </span>pred, <span class="dt">colour =</span> model)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> hwt<span class="op">-</span>pred, <span class="dt">colour =</span> model)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&quot;lm&quot;</span>)</code></pre>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="co"># </span><span class="al">TODO</span><span class="co"> add OLS method to this</span></a>
+<a class="sourceLine" id="cb43-2" data-line-number="2"><span class="co"># get weights of each response</span></a>
+<a class="sourceLine" id="cb43-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb43-4" data-line-number="4"><span class="co"># fit a linear model on the residuals</span></a>
+<a class="sourceLine" id="cb43-5" data-line-number="5">tidy_cats_res &lt;-<span class="st"> </span>tidy_cats <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb43-6" data-line-number="6"><span class="st">  </span><span class="kw">add_predictions</span>(lm_cats) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb43-7" data-line-number="7"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">res =</span> hwt <span class="op">-</span><span class="st"> </span>pred) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb43-8" data-line-number="8"><span class="st">  </span><span class="kw">select</span>(bwt, hwt, res)</a>
+<a class="sourceLine" id="cb43-9" data-line-number="9">lm_cats_res &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_cats_res, res <span class="op">~</span><span class="st"> </span>hwt)</a>
+<a class="sourceLine" id="cb43-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb43-11" data-line-number="11">cat_weights &lt;-<span class="st"> </span>tidy_cats_res <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb43-12" data-line-number="12"><span class="st">  </span><span class="kw">add_predictions</span>(lm_cats_res) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb43-13" data-line-number="13"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">res_var =</span> (res<span class="op">-</span>pred)<span class="op">^</span><span class="dv">2</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb43-14" data-line-number="14"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">weight =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span>res_var) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb43-15" data-line-number="15"><span class="st">  </span><span class="kw">pull</span>(weight)</a>
+<a class="sourceLine" id="cb43-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb43-17" data-line-number="17">lm_cats_weights &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_cats, hwt <span class="op">~</span><span class="st"> </span>bwt, <span class="dt">weights =</span> cat_weights)</a>
+<a class="sourceLine" id="cb43-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb43-19" data-line-number="19">tidy_cats <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb43-20" data-line-number="20"><span class="st">  </span><span class="kw">gather_predictions</span>(lm_cats, lm_cats_weights) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb43-21" data-line-number="21"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> bwt, <span class="dt">y =</span> hwt <span class="op">-</span><span class="st"> </span>pred, <span class="dt">colour =</span> model)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb43-22" data-line-number="22"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> hwt<span class="op">-</span>pred, <span class="dt">colour =</span> model)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb43-23" data-line-number="23"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&quot;lm&quot;</span>)</a></code></pre></div>
 <p>When this occurs, there a few ways to remedy it. You could transform the response <span class="math inline">\(Y\)</span> using a function such as <span class="math inline">\(logY\)</span> or <span class="math inline">\(\sqrt{Y}\)</span>. If we have a good idea of the variance of each response, we could fit our model using <em>weighted least squares</em>, which weights proportional to the inverse of the expected variance of an observation.</p>
 </div>
 <div id="outliers" class="section level4">
 <h4><span class="header-section-number">3.3.6.4</span> 4. Outliers</h4>
 <p>An <em>outlier</em> is a point for which <span class="math inline">\(y_i\)</span> is far from the value predicted by the model. These can arise for a variety of reasons, such as incorrect recording of an observation during data collection.</p>
 <p>For the <code>msleep</code> dataset below, which contains data on mammal sleep durations, I’ve highlighted two observations that most would consider outliers. This is for the <code>African elephant</code> and <code>Asian elephant</code> mammals, who’s bodyweights are far and away from the rest of mammals. There are others that could be considered outliers as well. Identifying outliers is an often arbitrary process.</p>
-<pre class="sourceCode r"><code class="sourceCode r">msleep <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> awake, <span class="dt">y =</span> bodywt, <span class="dt">colour =</span> name)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
-<span class="st">  </span>gghighlight<span class="op">::</span><span class="kw">gghighlight</span>(bodywt<span class="op">&gt;</span><span class="dv">2000</span>)</code></pre>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" data-line-number="1">msleep <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb44-2" data-line-number="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> awake, <span class="dt">y =</span> bodywt, <span class="dt">colour =</span> name)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb44-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb44-4" data-line-number="4"><span class="st">  </span>gghighlight<span class="op">::</span><span class="kw">gghighlight</span>(bodywt<span class="op">&gt;</span><span class="dv">2000</span>)</a></code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-29-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>Let’s fit a linear model to predict body weight from how long the animal is awake.</p>
 <p>Notice how the data that maintains the elephant observations significantly affects the slope, drawing the regression line away from the majority of observations.</p>
-<pre class="sourceCode r"><code class="sourceCode r">lm_sleep &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> msleep, bodywt <span class="op">~</span><span class="st"> </span>awake)
-lm_sleep_filtered &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> msleep <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="op">!</span>name <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;African elephant&#39;</span>, <span class="st">&#39;Asian elephant&#39;</span>)), bodywt <span class="op">~</span><span class="st"> </span>awake)
-msleep <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">gather_predictions</span>(lm_sleep, lm_sleep_filtered) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> awake, <span class="dt">y =</span> bodywt)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">pch=</span><span class="dv">21</span>, <span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> pred, <span class="dt">colour =</span> model), <span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">scale_colour_viridis_d</span>() <span class="op">+</span>
-<span class="st">  </span><span class="kw">theme_minimal</span>()</code></pre>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1">lm_sleep &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> msleep, bodywt <span class="op">~</span><span class="st"> </span>awake)</a>
+<a class="sourceLine" id="cb45-2" data-line-number="2">lm_sleep_filtered &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> msleep <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="op">!</span>name <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;African elephant&#39;</span>, <span class="st">&#39;Asian elephant&#39;</span>)), bodywt <span class="op">~</span><span class="st"> </span>awake)</a>
+<a class="sourceLine" id="cb45-3" data-line-number="3">msleep <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb45-4" data-line-number="4"><span class="st">  </span><span class="kw">gather_predictions</span>(lm_sleep, lm_sleep_filtered) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb45-5" data-line-number="5"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> awake, <span class="dt">y =</span> bodywt)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb45-6" data-line-number="6"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">pch=</span><span class="dv">21</span>, <span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb45-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> pred, <span class="dt">colour =</span> model), <span class="dt">size =</span> <span class="fl">1.5</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb45-8" data-line-number="8"><span class="st">  </span><span class="kw">scale_colour_viridis_d</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb45-9" data-line-number="9"><span class="st">  </span><span class="kw">theme_minimal</span>()</a></code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-30-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>The model excluding the elephant observations has a significantly higher <span class="math inline">\(R^2\)</span>, which indicates a better fit.</p>
-<pre class="sourceCode r"><code class="sourceCode r">models &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">with_outliers =</span> lm_sleep,
-               <span class="dt">without_outliers =</span> lm_sleep_filtered)
-purrr<span class="op">::</span><span class="kw">map_df</span>(models, broom<span class="op">::</span>glance, <span class="dt">.id =</span> <span class="st">&quot;model&quot;</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(model, r.squared, statistic, p.value, df)</code></pre>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" data-line-number="1">models &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">with_outliers =</span> lm_sleep,</a>
+<a class="sourceLine" id="cb46-2" data-line-number="2">               <span class="dt">without_outliers =</span> lm_sleep_filtered)</a>
+<a class="sourceLine" id="cb46-3" data-line-number="3">purrr<span class="op">::</span><span class="kw">map_df</span>(models, broom<span class="op">::</span>glance, <span class="dt">.id =</span> <span class="st">&quot;model&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb46-4" data-line-number="4"><span class="st">  </span><span class="kw">select</span>(model, r.squared, statistic, p.value, df)</a></code></pre></div>
 <pre><code>## # A tibble: 2 x 5
 ##   model            r.squared statistic    p.value    df
 ##   &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt; &lt;int&gt;
 ## 1 with_outliers       0.0973      8.73 0.00409        2
 ## 2 without_outliers    0.222      22.5  0.00000900     2</code></pre>
 <p>Another way of handling an outlier is transforming the response variable. Upon inspection of the scatterplot, it becomes clear that the relationship between <code>bodywt</code> and <code>awake</code> is not linear. If we take the same dataset and apply a <code>log</code> function to response variable <code>bodywt</code>, we see that the outliers no longer exists.</p>
-<pre class="sourceCode r"><code class="sourceCode r">msleep <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> awake, <span class="dt">y =</span> <span class="kw">log</span>(bodywt))) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>()</code></pre>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" data-line-number="1">msleep <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb48-2" data-line-number="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> awake, <span class="dt">y =</span> <span class="kw">log</span>(bodywt))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb48-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb48-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_point</span>()</a></code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-32-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>The model that uses <code>log(bodywt)</code> as the response also has better performance than both models above.</p>
-<pre class="sourceCode r"><code class="sourceCode r">lm_sleep_log &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> msleep, <span class="kw">log</span>(bodywt) <span class="op">~</span><span class="st"> </span>awake)
-lm_sleep_log <span class="op">%&gt;%</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">glance</span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(r.squared, statistic, p.value, df)</code></pre>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" data-line-number="1">lm_sleep_log &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> msleep, <span class="kw">log</span>(bodywt) <span class="op">~</span><span class="st"> </span>awake)</a>
+<a class="sourceLine" id="cb49-2" data-line-number="2">lm_sleep_log <span class="op">%&gt;%</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">glance</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb49-3" data-line-number="3"><span class="st">  </span><span class="kw">select</span>(r.squared, statistic, p.value, df)</a></code></pre></div>
 <pre><code>## # A tibble: 1 x 4
 ##   r.squared statistic      p.value    df
 ##       &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt; &lt;int&gt;
@@ -894,27 +905,27 @@ lm_sleep_log <span class="op">%&gt;%</span><span class="st"> </span>broom<span c
 <h4><span class="header-section-number">3.3.6.5</span> 5. High Leverage Points</h4>
 <p>Observations with <em>high leverage</em> have an unusual value for <span class="math inline">\(x_i\)</span>. In a simple regression model, these are practically the same as outliers (I could have flipped predictors with response in my mammal sleep model above). High leverage points are observations that significantly move the regression line. However, in multiple regression, it is possible to have an observation that is well within the range of each individual predictor’s values, but unusual terms of the full set of predictors.</p>
 <p>Let’s look at <code>temp</code> and <code>ozone</code> data from <code>airquality</code> dataset. Plenty of observations have ozone &gt; <code>100</code> and temp &lt; <code>80</code>, but the combination is rare. If we fit models with and without this leverage point, we can see how the regression line moves.</p>
-<pre class="sourceCode r"><code class="sourceCode r">tidy_airquality &lt;-<span class="st"> </span>airquality <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span>
-<span class="st">  </span>janitor<span class="op">::</span><span class="kw">clean_names</span>()
-
-tidy_airquality <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ozone, <span class="dt">y =</span> temp)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span>gghighlight<span class="op">::</span><span class="kw">gghighlight</span>(ozone <span class="op">&gt;</span><span class="st"> </span><span class="dv">100</span> <span class="op">&amp;</span><span class="st"> </span>temp <span class="op">&lt;</span><span class="st"> </span><span class="dv">80</span>)</code></pre>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" data-line-number="1">tidy_airquality &lt;-<span class="st"> </span>airquality <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb51-2" data-line-number="2"><span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb51-3" data-line-number="3"><span class="st">  </span>janitor<span class="op">::</span><span class="kw">clean_names</span>()</a>
+<a class="sourceLine" id="cb51-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb51-5" data-line-number="5">tidy_airquality <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb51-6" data-line-number="6"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ozone, <span class="dt">y =</span> temp)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span>gghighlight<span class="op">::</span><span class="kw">gghighlight</span>(ozone <span class="op">&gt;</span><span class="st"> </span><span class="dv">100</span> <span class="op">&amp;</span><span class="st"> </span>temp <span class="op">&lt;</span><span class="st"> </span><span class="dv">80</span>)</a></code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-34-1.png" width="576" style="display: block; margin: auto;" /></p>
-<pre class="sourceCode r"><code class="sourceCode r">lm_temp &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_airquality, temp <span class="op">~</span><span class="st"> </span>ozone)
-lm_temp_filtered &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_airquality <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="op">!</span>(ozone <span class="op">&gt;</span><span class="st"> </span><span class="dv">100</span> <span class="op">&amp;</span><span class="st"> </span>temp <span class="op">&lt;</span><span class="st"> </span><span class="dv">80</span>)), temp <span class="op">~</span><span class="st"> </span>ozone)</code></pre>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" data-line-number="1">lm_temp &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_airquality, temp <span class="op">~</span><span class="st"> </span>ozone)</a>
+<a class="sourceLine" id="cb52-2" data-line-number="2">lm_temp_filtered &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_airquality <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="op">!</span>(ozone <span class="op">&gt;</span><span class="st"> </span><span class="dv">100</span> <span class="op">&amp;</span><span class="st"> </span>temp <span class="op">&lt;</span><span class="st"> </span><span class="dv">80</span>)), temp <span class="op">~</span><span class="st"> </span>ozone)</a></code></pre></div>
 <p>Notice the slight change in the fit. This observation isn’t that extreme, but still produces a visible difference in fit. More extreme observations would move this line even further, potentially causing an improper fit.</p>
-<pre class="sourceCode r"><code class="sourceCode r">tidy_airquality <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">gather_predictions</span>(lm_temp, lm_temp_filtered) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ozone, <span class="dt">y =</span> pred, <span class="dt">colour =</span> model)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> temp), <span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="dt">colour =</span> <span class="st">&quot;grey&quot;</span>)</code></pre>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" data-line-number="1">tidy_airquality <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb53-2" data-line-number="2"><span class="st">  </span><span class="kw">gather_predictions</span>(lm_temp, lm_temp_filtered) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb53-3" data-line-number="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ozone, <span class="dt">y =</span> pred, <span class="dt">colour =</span> model)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb53-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb53-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> temp), <span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="dt">colour =</span> <span class="st">&quot;grey&quot;</span>)</a></code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-36-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>The model without the strange observation performs slightly better. In reality, I would probably include it as going from an <span class="math inline">\(R^2\)</span> of <code>0.488</code> to <code>0.506</code> isn’t worth the manual effort.</p>
-<pre class="sourceCode r"><code class="sourceCode r">models &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">with_leverage =</span> lm_temp,
-               <span class="dt">without_leverage =</span> lm_temp_filtered)
-purrr<span class="op">::</span><span class="kw">map_df</span>(models, broom<span class="op">::</span>glance, <span class="dt">.id =</span> <span class="st">&quot;model&quot;</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(model, r.squared, statistic, p.value, df)</code></pre>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" data-line-number="1">models &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">with_leverage =</span> lm_temp,</a>
+<a class="sourceLine" id="cb54-2" data-line-number="2">               <span class="dt">without_leverage =</span> lm_temp_filtered)</a>
+<a class="sourceLine" id="cb54-3" data-line-number="3">purrr<span class="op">::</span><span class="kw">map_df</span>(models, broom<span class="op">::</span>glance, <span class="dt">.id =</span> <span class="st">&quot;model&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb54-4" data-line-number="4"><span class="st">  </span><span class="kw">select</span>(model, r.squared, statistic, p.value, df)</a></code></pre></div>
 <pre><code>## # A tibble: 2 x 5
 ##   model            r.squared statistic  p.value    df
 ##   &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt;
@@ -935,46 +946,46 @@ purrr<span class="op">::</span><span class="kw">map_df</span>(models, broom<span
 <h4><span class="header-section-number">3.3.6.6</span> 6. Colinearity</h4>
 <p><code>Collinearity</code> is when two or more predictor variables are closely related to one another.</p>
 <p>If we look at our <code>tidy_credit</code> tibble, we see that <code>rating</code> and <code>limit</code> are very highly correlated with one another.</p>
-<pre class="sourceCode r"><code class="sourceCode r">tidy_credit <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> rating, <span class="dt">y =</span> limit)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" data-line-number="1">tidy_credit <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> rating, <span class="dt">y =</span> limit)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</a></code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-38-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>The effects of collinearity can make it difficult to separate out the individual effects of collinear variables on the response. Since <code>limit</code> and <code>rating</code> move together, it can be hard to determine how each one separately is associated with the response, <code>balance</code>.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> add contour plot</span>
-<span class="co"># clean up what this link did: https://yetanotheriteration.netlify.com/2018/01/high-collinearity-effect-in-regressions/</span></code></pre>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" data-line-number="1"><span class="co"># </span><span class="al">TODO</span><span class="co"> add contour plot</span></a>
+<a class="sourceLine" id="cb57-2" data-line-number="2"><span class="co"># clean up what this link did: https://yetanotheriteration.netlify.com/2018/01/high-collinearity-effect-in-regressions/</span></a></code></pre></div>
 <p>Two multiple regression models show the effects of regressing <code>balance</code> on <code>age + limit</code> versus <code>rating + limit</code>. Notice the large p-value for <code>limit</code>, combined with the &gt;10x increase in standard error for its coefficient compared to the original model. It’s effects have been masked by the collinearity it shares with <code>rating</code>.</p>
-<pre class="sourceCode r"><code class="sourceCode r">lm_age_limit &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_credit, balance <span class="op">~</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>limit)
-lm_rating_limit &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_credit, balance <span class="op">~</span><span class="st"> </span>rating <span class="op">+</span><span class="st"> </span>limit)
-models &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="st">`</span><span class="dt">Balance ~ Age + Limit</span><span class="st">`</span> =<span class="st"> </span>lm_age_limit,
-               <span class="st">`</span><span class="dt">Balance ~ Rating + Limit</span><span class="st">`</span> =<span class="st"> </span>lm_rating_limit)
-purrr<span class="op">::</span><span class="kw">map_df</span>(models, broom<span class="op">::</span>tidy, <span class="dt">.id =</span> <span class="st">&quot;model&quot;</span>)</code></pre>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" data-line-number="1">lm_age_limit &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_credit, balance <span class="op">~</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>limit)</a>
+<a class="sourceLine" id="cb58-2" data-line-number="2">lm_rating_limit &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_credit, balance <span class="op">~</span><span class="st"> </span>rating <span class="op">+</span><span class="st"> </span>limit)</a>
+<a class="sourceLine" id="cb58-3" data-line-number="3">models &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="st">`</span><span class="dt">Balance ~ Age + Limit</span><span class="st">`</span> =<span class="st"> </span>lm_age_limit,</a>
+<a class="sourceLine" id="cb58-4" data-line-number="4">               <span class="st">`</span><span class="dt">Balance ~ Rating + Limit</span><span class="st">`</span> =<span class="st"> </span>lm_rating_limit)</a>
+<a class="sourceLine" id="cb58-5" data-line-number="5">purrr<span class="op">::</span><span class="kw">map_df</span>(models, broom<span class="op">::</span>tidy, <span class="dt">.id =</span> <span class="st">&quot;model&quot;</span>)</a></code></pre></div>
 <pre><code>## # A tibble: 6 x 6
-##   model                  term        estimate std.error statistic   p.value
-##   &lt;chr&gt;                  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-## 1 Balance ~ Age + Limit  (Intercept) -1.73e+2  43.8        -3.96  9.01e-  5
-## 2 Balance ~ Age + Limit  age         -2.29e+0   0.672      -3.41  7.23e-  4
-## 3 Balance ~ Age + Limit  limit        1.73e-1   0.00503    34.5   1.63e-121
-## 4 Balance ~ Rating + Li… (Intercept) -3.78e+2  45.3        -8.34  1.21e- 15
-## 5 Balance ~ Rating + Li… rating       2.20e+0   0.952       2.31  2.13e-  2
-## 6 Balance ~ Rating + Li… limit        2.45e-2   0.0638      0.384 7.01e-  1</code></pre>
+##   model                    term         estimate std.error statistic   p.value
+##   &lt;chr&gt;                    &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 Balance ~ Age + Limit    (Intercept) -173.      43.8        -3.96  9.01e-  5
+## 2 Balance ~ Age + Limit    age           -2.29     0.672      -3.41  7.23e-  4
+## 3 Balance ~ Age + Limit    limit          0.173    0.00503    34.5   1.63e-121
+## 4 Balance ~ Rating + Limit (Intercept) -378.      45.3        -8.34  1.21e- 15
+## 5 Balance ~ Rating + Limit rating         2.20     0.952       2.31  2.13e-  2
+## 6 Balance ~ Rating + Limit limit          0.0245   0.0638      0.384 7.01e-  1</code></pre>
 <p>The growth in the standard error caused by collinearity caises the t-statistic (<span class="math inline">\(B_j\)</span> divided by it’s standard error) to decline. As a result, we may fail to reject <span class="math inline">\(H_0: \beta_j = 0\)</span>. This means that the <em>power</em> of the hypothesis test – the probability of correctly detecting a non-zero coefficient – is reduced by collinearity. Thus, it is desirable to identify and address collinearity problems while fitting the model.</p>
 <p>A simple way is to look at the correlation matrix of the predictors.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(corrr)
-tidy_credit_corr &lt;-<span class="st"> </span>tidy_credit <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select_if</span>(is.numeric) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>id) <span class="op">%&gt;%</span>
-<span class="st">  </span>corrr<span class="op">::</span><span class="kw">correlate</span>() <span class="op">%&gt;%</span>
-<span class="st">  </span>corrr<span class="op">:::</span><span class="kw">stretch</span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(r))
-
-<span class="co"># remove duplicate combinations of x, y</span>
-tidy_credit_corr &lt;-<span class="st"> </span>tidy_credit_corr <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sort_var =</span> <span class="kw">map2_chr</span>(x, y, <span class="op">~</span><span class="kw">toString</span>(<span class="kw">sort</span>(<span class="kw">c</span>(.x, .y))))) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">distinct</span>(sort_var, <span class="dt">.keep_all =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>sort_var)
-
-tidy_credit_corr <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(<span class="kw">desc</span>(<span class="kw">abs</span>(r))) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter</span>(<span class="kw">abs</span>(r) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.05</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">kable</span>() <span class="op">%&gt;%</span>
-<span class="st">  </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>()</code></pre>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb60-1" data-line-number="1"><span class="kw">library</span>(corrr)</a>
+<a class="sourceLine" id="cb60-2" data-line-number="2">tidy_credit_corr &lt;-<span class="st"> </span>tidy_credit <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb60-3" data-line-number="3"><span class="st">  </span><span class="kw">select_if</span>(is.numeric) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb60-4" data-line-number="4"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>id) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb60-5" data-line-number="5"><span class="st">  </span>corrr<span class="op">::</span><span class="kw">correlate</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb60-6" data-line-number="6"><span class="st">  </span>corrr<span class="op">:::</span><span class="kw">stretch</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb60-7" data-line-number="7"><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(r))</a>
+<a class="sourceLine" id="cb60-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb60-9" data-line-number="9"><span class="co"># remove duplicate combinations of x, y</span></a>
+<a class="sourceLine" id="cb60-10" data-line-number="10">tidy_credit_corr &lt;-<span class="st"> </span>tidy_credit_corr <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb60-11" data-line-number="11"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sort_var =</span> <span class="kw">map2_chr</span>(x, y, <span class="op">~</span><span class="kw">toString</span>(<span class="kw">sort</span>(<span class="kw">c</span>(.x, .y))))) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb60-12" data-line-number="12"><span class="st">  </span><span class="kw">distinct</span>(sort_var, <span class="dt">.keep_all =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb60-13" data-line-number="13"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>sort_var)</a>
+<a class="sourceLine" id="cb60-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb60-15" data-line-number="15">tidy_credit_corr <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(<span class="kw">desc</span>(<span class="kw">abs</span>(r))) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb60-16" data-line-number="16"><span class="st">  </span><span class="kw">filter</span>(<span class="kw">abs</span>(r) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.05</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb60-17" data-line-number="17"><span class="st">  </span><span class="kw">kable</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb60-18" data-line-number="18"><span class="st">  </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>()</a></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -1143,10 +1154,10 @@ education
 </div>
 <p>where <span class="math inline">\(R^2_{X_j|X_-j}\)</span> is the <span class="math inline">\(R^2\)</span> from a regression of <span class="math inline">\(X_j\)</span> onto all of the other predictors. If a variable <span class="math inline">\(X_j\)</span> has a high <span class="math inline">\(R^2\)</span> when regressed onto all other predictor variables (other predictor variables can explain a large amount of <span class="math inline">\(X_j\)</span>’s variance), the VIF will be high.</p>
 <p>In R, we can use the <code>car</code> package to calculate <code>GVIF</code> for a <code>lm</code> object.</p>
-<pre class="sourceCode r"><code class="sourceCode r">car<span class="op">::</span><span class="kw">vif</span>(<span class="kw">lm</span>(<span class="dt">data =</span> tidy_credit <span class="op">%&gt;%</span>
-<span class="st">              </span><span class="kw">select</span>(<span class="op">-</span>id), balance <span class="op">~</span><span class="st"> </span>.)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">as_tibble</span>(<span class="dt">rownames =</span> <span class="st">&quot;variable&quot;</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(GVIF))</code></pre>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" data-line-number="1">car<span class="op">::</span><span class="kw">vif</span>(<span class="kw">lm</span>(<span class="dt">data =</span> tidy_credit <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb61-2" data-line-number="2"><span class="st">              </span><span class="kw">select</span>(<span class="op">-</span>id), balance <span class="op">~</span><span class="st"> </span>.)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb61-3" data-line-number="3"><span class="st">  </span><span class="kw">as_tibble</span>(<span class="dt">rownames =</span> <span class="st">&quot;variable&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb61-4" data-line-number="4"><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(GVIF))</a></code></pre></div>
 <pre><code>## # A tibble: 10 x 4
 ##   variable   GVIF    Df `GVIF^(1/(2*Df))`
 ##   &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;             &lt;dbl&gt;
@@ -1160,10 +1171,10 @@ education
 <p>As we can see here, the most problematic variables are <code>rating</code> and <code>limit</code>, which both exceed VIFs of 200. It seems that <code>rating</code> and <code>limit</code> can be explained by the other predictors in the dataset.</p>
 <p>There are two simple solutions for this. The first is to drop problematic variables from the regression.</p>
 <p>Let’s drop <code>rating</code> and see what happens.</p>
-<pre class="sourceCode r"><code class="sourceCode r">car<span class="op">::</span><span class="kw">vif</span>(<span class="kw">lm</span>(<span class="dt">data =</span> tidy_credit <span class="op">%&gt;%</span>
-<span class="st">              </span><span class="kw">select</span>(<span class="op">-</span>id, <span class="op">-</span>rating), balance <span class="op">~</span><span class="st"> </span>.)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">as_tibble</span>(<span class="dt">rownames =</span> <span class="st">&quot;variable&quot;</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(GVIF))</code></pre>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" data-line-number="1">car<span class="op">::</span><span class="kw">vif</span>(<span class="kw">lm</span>(<span class="dt">data =</span> tidy_credit <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb63-2" data-line-number="2"><span class="st">              </span><span class="kw">select</span>(<span class="op">-</span>id, <span class="op">-</span>rating), balance <span class="op">~</span><span class="st"> </span>.)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb63-3" data-line-number="3"><span class="st">  </span><span class="kw">as_tibble</span>(<span class="dt">rownames =</span> <span class="st">&quot;variable&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb63-4" data-line-number="4"><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(GVIF))</a></code></pre></div>
 <pre><code>## # A tibble: 9 x 4
 ##   variable   GVIF    Df `GVIF^(1/(2*Df))`
 ##   &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;             &lt;dbl&gt;
@@ -1180,7 +1191,7 @@ education
 </div>
 <div id="the-marketing-plan" class="section level3">
 <h3><span class="header-section-number">3.3.7</span> The Marketing Plan</h3>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span></code></pre>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb65-1" data-line-number="1"><span class="co"># </span><span class="al">TODO</span></a></code></pre></div>
 <p>We return to the seven questions we set out to answer regarding <code>Advertising</code> data.</p>
 </div>
 <div id="comparison-of-linear-regression-with-k-nearest-neighbors" class="section level3">
@@ -1205,46 +1216,46 @@ education
 <p>A small value of <span class="math inline">\(K\)</span> provides the most flexible fit, which will have low bias but high variance. The high variance comes from the prediction in a particular region being dependant on a small number of observations. In contrast, larger values of <span class="math inline">\(K\)</span> provide a smoother and less variable fit; incorporating the average of a larger number of points, giving a single observation less weight in the prediction. However, this smoothing can cause bias by masking some of the structure in <span class="math inline">\(f(x)\)</span>. In Chapter 5, (<em>TODO</em> add link), we introduce several approaches for estimating test error rates, which can be used identify optimal value of <span class="math inline">\(K\)</span>.</p>
 <p>We can use the <code>caret</code> package to fit a number of <span class="math inline">\(k\)</span>-values with the KNN algorithm, and see which produces the best R^2. This example doesn’t take into account the bias introduced by a larger <span class="math inline">\(k\)</span>-value, and how that might perform on a test dataset.</p>
 <p>A <span class="math inline">\(k\)</span> of 5 produces the best fit.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> plot 3d with decision boundaries for multiple k</span>
-<span class="kw">library</span>(caret)
-k_values =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">k =</span> <span class="kw">c</span>(<span class="kw">seq</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)))
-
-knn_airquality &lt;-<span class="st"> </span><span class="kw">train</span>(<span class="dt">data =</span> tidy_airquality <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(ozone)), ozone <span class="op">~</span><span class="st"> </span>temp <span class="op">+</span><span class="st"> </span>wind, <span class="dt">method =</span> <span class="st">&quot;knn&quot;</span>,<span class="dt">tuneGrid =</span> k_values, <span class="dt">metric =</span> <span class="st">&quot;Rsquared&quot;</span>)
-knn_results &lt;-<span class="st"> </span>knn_airquality<span class="op">$</span>results <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>()
-knn_results</code></pre>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb66-1" data-line-number="1"><span class="co"># </span><span class="al">TODO</span><span class="co"> plot 3d with decision boundaries for multiple k</span></a>
+<a class="sourceLine" id="cb66-2" data-line-number="2"><span class="kw">library</span>(caret)</a>
+<a class="sourceLine" id="cb66-3" data-line-number="3">k_values =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">k =</span> <span class="kw">c</span>(<span class="kw">seq</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)))</a>
+<a class="sourceLine" id="cb66-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb66-5" data-line-number="5">knn_airquality &lt;-<span class="st"> </span><span class="kw">train</span>(<span class="dt">data =</span> tidy_airquality <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(ozone)), ozone <span class="op">~</span><span class="st"> </span>temp <span class="op">+</span><span class="st"> </span>wind, <span class="dt">method =</span> <span class="st">&quot;knn&quot;</span>,<span class="dt">tuneGrid =</span> k_values, <span class="dt">metric =</span> <span class="st">&quot;Rsquared&quot;</span>)</a>
+<a class="sourceLine" id="cb66-6" data-line-number="6">knn_results &lt;-<span class="st"> </span>knn_airquality<span class="op">$</span>results <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>()</a>
+<a class="sourceLine" id="cb66-7" data-line-number="7">knn_results</a></code></pre></div>
 <pre><code>## # A tibble: 10 x 7
 ##       k  RMSE Rsquared   MAE RMSESD RsquaredSD MAESD
 ##   &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
-## 1     1  23.4    0.556  15.6   3.70     0.101   2.05
-## 2     2  22.1    0.599  15.1   3.14     0.0842  2.08
-## 3     3  20.7    0.641  14.7   3.05     0.0911  1.78
-## 4     4  20.3    0.651  14.5   3.11     0.0800  1.53
-## 5     5  19.9    0.661  14.2   3.59     0.0841  1.82
-## 6     6  19.9    0.659  14.0   3.73     0.0797  1.94
+## 1     1  22.8    0.547  15.2   3.05     0.0772  2.03
+## 2     2  21.2    0.602  14.8   3.54     0.104   2.14
+## 3     3  20.3    0.620  14.2   3.29     0.0997  1.91
+## 4     4  20.1    0.626  14.0   3.68     0.0974  2.12
+## 5     5  19.7    0.636  13.7   3.95     0.0955  2.19
+## 6     6  19.6    0.637  13.6   4.00     0.0959  2.13
 ## # … with 4 more rows</code></pre>
 <p>In what setting will a parametric approach outperform a non-parametric approach such as KNN? The parametric approach will outperform the non-parametric approach if the parametric form that has been selected is close to the true form of <span class="math inline">\(f\)</span>.</p>
 <p>Let’s take our ozone example and compare KNN to linear regression. The linear model produces an <span class="math inline">\(R^2\)</span> of <code>0.57</code>, compared to KNN’s <code>0.64</code>. Is KNN’s lack of interpretability worth the <code>0.07</code> gain in <span class="math inline">\(R^2\)</span>? Probably not.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> split into training / test and compare KNN vs Linear</span></code></pre>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb68-1" data-line-number="1"><span class="co"># </span><span class="al">TODO</span><span class="co"> split into training / test and compare KNN vs Linear</span></a></code></pre></div>
 <p>Interestingly, the plot below demonstrates a shortcoming of linear regression as well, and the value of domain knowledge in approaching modeling. <code>ozone</code> values should have a minimum value of <code>0</code>, and yet, our linear regression model predicts negative values for certain observations. One good thing of the KNN approach is that, due to its nature of averaging out observations, it’s impossible for it to run into the same scenario.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> clean plot</span>
-knn_results <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(Rsquared <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(Rsquared))</code></pre>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb69-1" data-line-number="1"><span class="co"># </span><span class="al">TODO</span><span class="co"> clean plot</span></a>
+<a class="sourceLine" id="cb69-2" data-line-number="2">knn_results <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(Rsquared <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(Rsquared))</a></code></pre></div>
 <pre><code>## # A tibble: 1 x 7
 ##       k  RMSE Rsquared   MAE RMSESD RsquaredSD MAESD
 ##   &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
-## 1     8  19.4    0.674  13.6   4.13     0.0814  2.08</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">lm_airquality &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_airquality, ozone <span class="op">~</span><span class="st"> </span>temp <span class="op">+</span><span class="st"> </span>wind)
-
-lm_airquality <span class="op">%&gt;%</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">glance</span>()</code></pre>
+## 1     7  19.4    0.643  13.4   4.21      0.100  2.17</code></pre>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb71-1" data-line-number="1">lm_airquality &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_airquality, ozone <span class="op">~</span><span class="st"> </span>temp <span class="op">+</span><span class="st"> </span>wind)</a>
+<a class="sourceLine" id="cb71-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb71-3" data-line-number="3">lm_airquality <span class="op">%&gt;%</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">glance</span>()</a></code></pre></div>
 <pre><code>## # A tibble: 1 x 11
 ##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
 ##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 ## 1     0.569         0.561  21.9      74.5 2.31e-21     3  -521. 1050. 1061.
 ## # … with 2 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">tidy_airquality <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">gather_predictions</span>(knn_airquality, lm_airquality) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ozone, <span class="dt">y =</span> pred, <span class="dt">colour =</span> model)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_abline</span>()</code></pre>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb73-1" data-line-number="1">tidy_airquality <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb73-2" data-line-number="2"><span class="st">  </span><span class="kw">gather_predictions</span>(knn_airquality, lm_airquality) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb73-3" data-line-number="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ozone, <span class="dt">y =</span> pred, <span class="dt">colour =</span> model)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb73-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb73-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_abline</span>()</a></code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-47-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>When the relationship is truly linear, it is common for a linear regression to outperform KNN. However, as the relationship grows more non-linear, KNN might end up as a better approach. KNN being nonparametric doesn’t make any assumptions about the true form of <span class="math inline">\(f(x)\)</span>, and will often outperform (not always) linear regression in non-linear scenarios.</p>
 <p>When does KNN exhibit poor performance? This happens when the number of predictors grows. In a <span class="math inline">\(p=1\)</span> setting with 100 observtions, KNN can probably accurately estimate <span class="math inline">\(f(X)\)</span>. If we increase it to <span class="math inline">\(p=20\)</span>, we run in to the <em>curse of dimensionality</em>. As <span class="math inline">\(p\)</span> increases, the <span class="math inline">\(K\)</span> observations that are nearest to a given test observation <span class="math inline">\(x_0\)</span> may be very far away from <span class="math inline">\(x_0\)</span> in <span class="math inline">\(p\)</span>-dimensional space. This will lead to a poor KNN fit. As a rule of thumb, <strong>parametric methods tend to outperform non-parametric approaches when there is a small number of observations per predictor.</strong></p>
@@ -1254,30 +1265,29 @@ lm_airquality <span class="op">%&gt;%</span><span class="st"> </span>broom<span 
 <div id="lab-linear-regression" class="section level2">
 <h2><span class="header-section-number">3.4</span> Lab: Linear Regression</h2>
 <p>Use <code>library()</code> to load libraries.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(MASS, <span class="dt">exclude =</span> <span class="st">&quot;select&quot;</span>)
-<span class="kw">library</span>(ISLR)</code></pre>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb74-1" data-line-number="1"><span class="kw">library</span>(MASS, <span class="dt">exclude =</span> <span class="st">&quot;select&quot;</span>)</a>
+<a class="sourceLine" id="cb74-2" data-line-number="2"><span class="kw">library</span>(ISLR)</a></code></pre></div>
 <p>We will be running a linear regression on <code>MASS::Boston</code> dataset.</p>
 <p>First thing to do is convert to a tibble, which provides data types, reasonable printing methods, and tidy structure.</p>
-<pre class="sourceCode r"><code class="sourceCode r">boston &lt;-<span class="st"> </span>MASS<span class="op">::</span>Boston <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>()
-boston</code></pre>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb75-1" data-line-number="1">boston &lt;-<span class="st"> </span>MASS<span class="op">::</span>Boston <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>()</a>
+<a class="sourceLine" id="cb75-2" data-line-number="2">boston</a></code></pre></div>
 <pre><code>## # A tibble: 506 x 14
-##      crim    zn indus  chas   nox    rm   age   dis   rad   tax ptratio
-##     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;   &lt;dbl&gt;
-## 1 0.00632    18  2.31     0 0.538  6.58  65.2  4.09     1   296    15.3
-## 2 0.0273      0  7.07     0 0.469  6.42  78.9  4.97     2   242    17.8
-## 3 0.0273      0  7.07     0 0.469  7.18  61.1  4.97     2   242    17.8
-## 4 0.0324      0  2.18     0 0.458  7.00  45.8  6.06     3   222    18.7
-## 5 0.0690      0  2.18     0 0.458  7.15  54.2  6.06     3   222    18.7
-## 6 0.0298      0  2.18     0 0.458  6.43  58.7  6.06     3   222    18.7
-## # … with 500 more rows, and 3 more variables: black &lt;dbl&gt;, lstat &lt;dbl&gt;,
-## #   medv &lt;dbl&gt;</code></pre>
+##      crim    zn indus  chas   nox    rm   age   dis   rad   tax ptratio black
+##     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;
+## 1 0.00632    18  2.31     0 0.538  6.58  65.2  4.09     1   296    15.3  397.
+## 2 0.0273      0  7.07     0 0.469  6.42  78.9  4.97     2   242    17.8  397.
+## 3 0.0273      0  7.07     0 0.469  7.18  61.1  4.97     2   242    17.8  393.
+## 4 0.0324      0  2.18     0 0.458  7.00  45.8  6.06     3   222    18.7  395.
+## 5 0.0690      0  2.18     0 0.458  7.15  54.2  6.06     3   222    18.7  397.
+## 6 0.0298      0  2.18     0 0.458  6.43  58.7  6.06     3   222    18.7  394.
+## # … with 500 more rows, and 2 more variables: lstat &lt;dbl&gt;, medv &lt;dbl&gt;</code></pre>
 <p>We are interested in predicting <code>medv</code> (median house value) using 13 predictors, such as <code>rm</code> (number of rooms per house), <code>age</code> (average age of houses), and <code>lstat</code>(percent of households with low socioeconomic status).</p>
 <div id="fitting-a-linear-regression" class="section level3">
 <h3><span class="header-section-number">3.4.1</span> Fitting a linear regression</h3>
 <p>We will use the <code>lm</code> function to fit a simple linear regression, which takes the form <code>lm(data = data, y ~ x)</code>.</p>
-<pre class="sourceCode r"><code class="sourceCode r">boston_lm &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> boston, medv <span class="op">~</span><span class="st"> </span>lstat)</code></pre>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb77-1" data-line-number="1">boston_lm &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> boston, medv <span class="op">~</span><span class="st"> </span>lstat)</a></code></pre></div>
 <p>Printing <code>boston_lm</code> provides some basic information about the model.</p>
-<pre class="sourceCode r"><code class="sourceCode r">boston_lm</code></pre>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb78-1" data-line-number="1">boston_lm</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = medv ~ lstat, data = boston)
@@ -1287,15 +1297,15 @@ boston</code></pre>
 ##       34.55        -0.95</code></pre>
 <p>If we want to work with data surrounding the model, compare it to other models, or reference components of it, we need to use the <a href="https://cran.r-project.org/web/packages/broom/vignettes/broom.html"><code>broom</code></a> package.</p>
 <p><code>broom::tidy</code> converts the model into a data.frame representation.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(broom)
-broom<span class="op">::</span><span class="kw">tidy</span>(boston_lm)</code></pre>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb80-1" data-line-number="1"><span class="kw">library</span>(broom)</a>
+<a class="sourceLine" id="cb80-2" data-line-number="2">broom<span class="op">::</span><span class="kw">tidy</span>(boston_lm)</a></code></pre></div>
 <pre><code>## # A tibble: 2 x 5
 ##   term        estimate std.error statistic   p.value
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
 ## 1 (Intercept)   34.6      0.563       61.4 3.74e-236
 ## 2 lstat         -0.950    0.0387     -24.5 5.08e- 88</code></pre>
 <p><code>broom::glance</code> will provide a summary in data.frame form.</p>
-<pre class="sourceCode r"><code class="sourceCode r">broom<span class="op">::</span><span class="kw">glance</span>(boston_lm)</code></pre>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb82-1" data-line-number="1">broom<span class="op">::</span><span class="kw">glance</span>(boston_lm)</a></code></pre></div>
 <pre><code>## # A tibble: 1 x 11
 ##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
 ##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
@@ -1304,30 +1314,30 @@ broom<span class="op">::</span><span class="kw">tidy</span>(boston_lm)</code></p
 <p><code>broom</code> is powerful for easy output, accessing elements of a model, and comparing multiple models.</p>
 <p>This is where ISLR misses the mark. It shows <code>attach()</code>, which we discussed as a bad idea in Chapter 1, and only offers the base R methods on inspecting a model object. It goes into inspecting model elements via the use of <code>names()</code>, <code>coef()</code>, and more, which provide much less utility than <code>broom</code>.</p>
 <p>To get confidence interval of coefficients, we can use <code>conf.int</code> argument in <code>broom::tidy</code>.</p>
-<pre class="sourceCode r"><code class="sourceCode r">broom<span class="op">::</span><span class="kw">tidy</span>(boston_lm, <span class="dt">conf.int =</span> <span class="ot">TRUE</span>, <span class="dt">conf.level =</span> <span class="fl">0.95</span>)</code></pre>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb84-1" data-line-number="1">broom<span class="op">::</span><span class="kw">tidy</span>(boston_lm, <span class="dt">conf.int =</span> <span class="ot">TRUE</span>, <span class="dt">conf.level =</span> <span class="fl">0.95</span>)</a></code></pre></div>
 <pre><code>## # A tibble: 2 x 7
 ##   term        estimate std.error statistic   p.value conf.low conf.high
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
 ## 1 (Intercept)   34.6      0.563       61.4 3.74e-236    33.4     35.7  
 ## 2 lstat         -0.950    0.0387     -24.5 5.08e- 88    -1.03    -0.874</code></pre>
 <p>We can use <code>modelr::add_predictions()</code> or <code>broom::augment()</code> to add predictions and confidence intervals for our model.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> decide on best practices for adding predictions; development effort on `modelr`</span></code></pre>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb86-1" data-line-number="1"><span class="co"># </span><span class="al">TODO</span><span class="co"> decide on best practices for adding predictions; development effort on `modelr`</span></a></code></pre></div>
 <p><code>modelr::add_predictions()</code> adds a <code>pred</code> column to each observation.</p>
-<pre class="sourceCode r"><code class="sourceCode r">boston <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">add_predictions</span>(boston_lm)</code></pre>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb87-1" data-line-number="1">boston <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb87-2" data-line-number="2"><span class="st">  </span><span class="kw">add_predictions</span>(boston_lm)</a></code></pre></div>
 <pre><code>## # A tibble: 506 x 15
-##      crim    zn indus  chas   nox    rm   age   dis   rad   tax ptratio
-##     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;   &lt;dbl&gt;
-## 1 0.00632    18  2.31     0 0.538  6.58  65.2  4.09     1   296    15.3
-## 2 0.0273      0  7.07     0 0.469  6.42  78.9  4.97     2   242    17.8
-## 3 0.0273      0  7.07     0 0.469  7.18  61.1  4.97     2   242    17.8
-## 4 0.0324      0  2.18     0 0.458  7.00  45.8  6.06     3   222    18.7
-## 5 0.0690      0  2.18     0 0.458  7.15  54.2  6.06     3   222    18.7
-## 6 0.0298      0  2.18     0 0.458  6.43  58.7  6.06     3   222    18.7
-## # … with 500 more rows, and 4 more variables: black &lt;dbl&gt;, lstat &lt;dbl&gt;,
-## #   medv &lt;dbl&gt;, pred &lt;dbl&gt;</code></pre>
+##      crim    zn indus  chas   nox    rm   age   dis   rad   tax ptratio black
+##     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;
+## 1 0.00632    18  2.31     0 0.538  6.58  65.2  4.09     1   296    15.3  397.
+## 2 0.0273      0  7.07     0 0.469  6.42  78.9  4.97     2   242    17.8  397.
+## 3 0.0273      0  7.07     0 0.469  7.18  61.1  4.97     2   242    17.8  393.
+## 4 0.0324      0  2.18     0 0.458  7.00  45.8  6.06     3   222    18.7  395.
+## 5 0.0690      0  2.18     0 0.458  7.15  54.2  6.06     3   222    18.7  397.
+## 6 0.0298      0  2.18     0 0.458  6.43  58.7  6.06     3   222    18.7  394.
+## # … with 500 more rows, and 3 more variables: lstat &lt;dbl&gt;, medv &lt;dbl&gt;,
+## #   pred &lt;dbl&gt;</code></pre>
 <p><code>broom::augment()</code> adds fitted values as well as standard errors and residuals.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">augment</span>(boston_lm)</code></pre>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb89-1" data-line-number="1"><span class="kw">augment</span>(boston_lm)</a></code></pre></div>
 <pre><code>## # A tibble: 506 x 9
 ##    medv lstat .fitted .se.fit .resid    .hat .sigma   .cooksd .std.resid
 ##   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
@@ -1339,15 +1349,15 @@ broom<span class="op">::</span><span class="kw">tidy</span>(boston_lm)</code></p
 ## 6  28.7  5.21    29.6   0.399 -0.904 0.00413   6.22 0.0000440     -0.146
 ## # … with 500 more rows</code></pre>
 <p>We can use the data from <code>augment()</code> to plot our regression with <code>95%</code> confidence intervals for our predicted values.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">augment</span>(boston_lm) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> lstat)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> medv), <span class="dt">pch=</span><span class="dv">21</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> .fitted)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_ribbon</span>(<span class="kw">aes</span>(<span class="dt">ymin =</span> .fitted <span class="op">-</span><span class="st"> </span><span class="fl">1.96</span> <span class="op">*</span><span class="st"> </span>.se.fit, <span class="dt">ymax =</span> .fitted <span class="op">+</span><span class="st"> </span><span class="fl">1.96</span> <span class="op">*</span><span class="st"> </span>.se.fit), <span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">theme_minimal</span>()</code></pre>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb91-1" data-line-number="1"><span class="kw">augment</span>(boston_lm) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb91-2" data-line-number="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> lstat)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb91-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> medv), <span class="dt">pch=</span><span class="dv">21</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb91-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> .fitted)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb91-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_ribbon</span>(<span class="kw">aes</span>(<span class="dt">ymin =</span> .fitted <span class="op">-</span><span class="st"> </span><span class="fl">1.96</span> <span class="op">*</span><span class="st"> </span>.se.fit, <span class="dt">ymax =</span> .fitted <span class="op">+</span><span class="st"> </span><span class="fl">1.96</span> <span class="op">*</span><span class="st"> </span>.se.fit), <span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb91-6" data-line-number="6"><span class="st">  </span><span class="kw">theme_minimal</span>()</a></code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-58-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>The fit is decent, but there appears to be some non-linearity in the data.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(boston_lm)</code></pre>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb92-1" data-line-number="1"><span class="kw">plot</span>(boston_lm)</a></code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-59-1.png" width="576" style="display: block; margin: auto;" /><img src="tidy_islr_files/figure-html/unnamed-chunk-59-2.png" width="576" style="display: block; margin: auto;" /><img src="tidy_islr_files/figure-html/unnamed-chunk-59-3.png" width="576" style="display: block; margin: auto;" /><img src="tidy_islr_files/figure-html/unnamed-chunk-59-4.png" width="576" style="display: block; margin: auto;" /></p>
 <p>Let’s plot some diagnostics surrounding our model.</p>
 <div id="diagnostic-plots" class="section level4">
@@ -1359,15 +1369,15 @@ broom<span class="op">::</span><span class="kw">tidy</span>(boston_lm)</code></p
 <p>For more context, these class notes from <a href="http://www-stat.wharton.upenn.edu/~waterman/Teaching/701f99/Class04/class04.pdf">Wharton Statistics Department</a> are helpful.</p>
 <p><code>augment</code> calculates standardized residuals, but not student. We will add a column to calculate it, as shown in this example doc from <a href="https://twitter.com/jrnld">Jeffrey Arnold</a>, [Outliers and Robust Regression] (<a href="https://uw-pols503.github.io/2016/outliers_robust_regression.html" class="uri">https://uw-pols503.github.io/2016/outliers_robust_regression.html</a>).</p>
 <p>In this case, the two types of residuals are virtually the same. I added green points of the standardized residual for comparison. I also scaled the size of points by their leverage (<code>.cooksd</code> column). Finally, I shaded the boundary area between <code>-3</code> and <code>3</code> for the studentized residual. This is a rule of thumb for outlier detection, but observations with magnitude greater than <code>3</code> warrant a model inspection. These could be errors in recording of the data or evidence that the model assumptions are not appropriate.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">augment</span>(boston_lm) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="co"># calculate student residual</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">.student.resid =</span> .resid <span class="op">/</span><span class="st"> </span>.sigma <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>.hat)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> lstat, <span class="dt">y =</span> .student.resid)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> .std.resid, <span class="dt">size=</span>.cooksd), <span class="dt">colour =</span> <span class="st">&quot;khaki2&quot;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="dv">2</span><span class="op">/</span><span class="dv">3</span>, <span class="kw">aes</span>(<span class="dt">size =</span> .cooksd), <span class="dt">colour =</span> <span class="st">&quot;dodgerblue4&quot;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">size =</span> <span class="fl">1.5</span>, <span class="dt">colour =</span> <span class="st">&quot;grey&quot;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_ribbon</span>(<span class="kw">aes</span>(<span class="dt">ymin =</span> <span class="dv">-3</span>, <span class="dt">ymax =</span> <span class="dv">3</span>),  <span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">4</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">theme_minimal</span>()</code></pre>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb93-1" data-line-number="1"><span class="kw">augment</span>(boston_lm) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb93-2" data-line-number="2"><span class="st">  </span><span class="co"># calculate student residual</span></a>
+<a class="sourceLine" id="cb93-3" data-line-number="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">.student.resid =</span> .resid <span class="op">/</span><span class="st"> </span>.sigma <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>.hat)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb93-4" data-line-number="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> lstat, <span class="dt">y =</span> .student.resid)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb93-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> .std.resid, <span class="dt">size=</span>.cooksd), <span class="dt">colour =</span> <span class="st">&quot;khaki2&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb93-6" data-line-number="6"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="dv">2</span><span class="op">/</span><span class="dv">3</span>, <span class="kw">aes</span>(<span class="dt">size =</span> .cooksd), <span class="dt">colour =</span> <span class="st">&quot;dodgerblue4&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb93-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">size =</span> <span class="fl">1.5</span>, <span class="dt">colour =</span> <span class="st">&quot;grey&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb93-8" data-line-number="8"><span class="st">  </span><span class="kw">geom_ribbon</span>(<span class="kw">aes</span>(<span class="dt">ymin =</span> <span class="dv">-3</span>, <span class="dt">ymax =</span> <span class="dv">3</span>),  <span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">4</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb93-9" data-line-number="9"><span class="st">  </span><span class="kw">theme_minimal</span>()</a></code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-60-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>This plot shows a fan-shape for the residuals, which adds evidence of non-linearity in the relationship. We also see high-leverage points on both ends of the x-axis, which significantly drag our regression line. Several points are outside of our outlier zone. All of these above add evidence that our simple linear regression is not appropriate for this dataset.</p>
 </div>
@@ -1375,9 +1385,9 @@ broom<span class="op">::</span><span class="kw">tidy</span>(boston_lm)</code></p
 <div id="multiple-linear-regression-1" class="section level3">
 <h3><span class="header-section-number">3.4.2</span> Multiple Linear Regression</h3>
 <p>Let’s fit a model with all the predictor variables.</p>
-<pre class="sourceCode r"><code class="sourceCode r">boston_mlm &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> boston, medv <span class="op">~</span><span class="st"> </span>.)
-broom<span class="op">::</span><span class="kw">tidy</span>(boston_mlm, <span class="dt">conf.int =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(p.value))</code></pre>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb94-1" data-line-number="1">boston_mlm &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> boston, medv <span class="op">~</span><span class="st"> </span>.)</a>
+<a class="sourceLine" id="cb94-2" data-line-number="2">broom<span class="op">::</span><span class="kw">tidy</span>(boston_mlm, <span class="dt">conf.int =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb94-3" data-line-number="3"><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(p.value))</a></code></pre></div>
 <pre><code>## # A tibble: 14 x 7
 ##   term   estimate std.error statistic  p.value conf.low conf.high
 ##   &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
@@ -1389,14 +1399,14 @@ broom<span class="op">::</span><span class="kw">tidy</span>(boston_mlm, <span cl
 ## 6 zn     0.0464     0.0137     3.38   0.000778   0.0194   0.0734 
 ## # … with 8 more rows</code></pre>
 <p>How does the model perform?</p>
-<pre class="sourceCode r"><code class="sourceCode r">broom<span class="op">::</span><span class="kw">glance</span>(boston_mlm)</code></pre>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb96-1" data-line-number="1">broom<span class="op">::</span><span class="kw">glance</span>(boston_mlm)</a></code></pre></div>
 <pre><code>## # A tibble: 1 x 11
-##   r.squared adj.r.squared sigma statistic   p.value    df logLik   AIC
-##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt;
-## 1     0.741         0.734  4.75      108. 6.72e-135    14 -1499. 3028.
-## # … with 3 more variables: BIC &lt;dbl&gt;, deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
+##   r.squared adj.r.squared sigma statistic   p.value    df logLik   AIC   BIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     0.741         0.734  4.75      108. 6.72e-135    14 -1499. 3028. 3091.
+## # … with 2 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
 <p>The VIF for each predictor is mostly low.</p>
-<pre class="sourceCode r"><code class="sourceCode r">car<span class="op">::</span><span class="kw">vif</span>(boston_mlm) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>(<span class="dt">rownames =</span> <span class="st">&quot;variable&quot;</span>)</code></pre>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb98-1" data-line-number="1">car<span class="op">::</span><span class="kw">vif</span>(boston_mlm) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>(<span class="dt">rownames =</span> <span class="st">&quot;variable&quot;</span>)</a></code></pre></div>
 <pre><code>## # A tibble: 13 x 2
 ##   variable value
 ##   &lt;chr&gt;    &lt;dbl&gt;
@@ -1408,31 +1418,31 @@ broom<span class="op">::</span><span class="kw">tidy</span>(boston_mlm, <span cl
 ## 6 rm        1.93
 ## # … with 7 more rows</code></pre>
 <p>To remove predictors, such as those with high p-values, we modify the <code>lm()</code> call. Let’s remove age, which has a p-value of 0.95.</p>
-<pre class="sourceCode r"><code class="sourceCode r">boston_mlm &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> boston, medv <span class="op">~</span><span class="st"> </span>. <span class="op">-</span><span class="st"> </span>age)
-broom<span class="op">::</span><span class="kw">glance</span>(boston_mlm)</code></pre>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb100-1" data-line-number="1">boston_mlm &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> boston, medv <span class="op">~</span><span class="st"> </span>. <span class="op">-</span><span class="st"> </span>age)</a>
+<a class="sourceLine" id="cb100-2" data-line-number="2">broom<span class="op">::</span><span class="kw">glance</span>(boston_mlm)</a></code></pre></div>
 <pre><code>## # A tibble: 1 x 11
-##   r.squared adj.r.squared sigma statistic   p.value    df logLik   AIC
-##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt;
-## 1     0.741         0.734  4.74      117. 6.08e-136    13 -1499. 3026.
-## # … with 3 more variables: BIC &lt;dbl&gt;, deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
+##   r.squared adj.r.squared sigma statistic   p.value    df logLik   AIC   BIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     0.741         0.734  4.74      117. 6.08e-136    13 -1499. 3026. 3085.
+## # … with 2 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
 <p>We could also incorporate a <code>dplyr::select()</code> call in the <code>data</code> argument for a more readable solution.</p>
-<pre class="sourceCode r"><code class="sourceCode r">boston_mlm &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> boston <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>age), medv <span class="op">~</span><span class="st"> </span>.)</code></pre>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb102-1" data-line-number="1">boston_mlm &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> boston <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>age), medv <span class="op">~</span><span class="st"> </span>.)</a></code></pre></div>
 </div>
 <div id="interaction-terms" class="section level3">
 <h3><span class="header-section-number">3.4.3</span> Interaction Terms</h3>
 <p>We can incorporate interaction terms in <code>lm()</code> using the <code>term1:term2</code> syntax.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">lm</span>(<span class="dt">data =</span> boston, medv <span class="op">~</span><span class="st"> </span>lstat <span class="op">+</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>lstat<span class="op">:</span>age)
-<span class="co"># equivalent</span>
-<span class="kw">lm</span>(<span class="dt">data =</span> boston, medv <span class="op">~</span><span class="st"> </span>lstat<span class="op">*</span>age)</code></pre>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb103-1" data-line-number="1"><span class="kw">lm</span>(<span class="dt">data =</span> boston, medv <span class="op">~</span><span class="st"> </span>lstat <span class="op">+</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>lstat<span class="op">:</span>age)</a>
+<a class="sourceLine" id="cb103-2" data-line-number="2"><span class="co"># equivalent</span></a>
+<a class="sourceLine" id="cb103-3" data-line-number="3"><span class="kw">lm</span>(<span class="dt">data =</span> boston, medv <span class="op">~</span><span class="st"> </span>lstat<span class="op">*</span>age)</a></code></pre></div>
 </div>
 <div id="non-linear-transformations-of-the-predictors" class="section level3">
 <h3><span class="header-section-number">3.4.4</span> Non-linear Transformations of the Predictors</h3>
 <p><code>lm()</code> can also accomodate non-linear transformations of the predictors.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> is this best way</span>
-lm_boston_squared &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> boston, medv <span class="op">~</span><span class="st"> </span>lstat <span class="op">+</span><span class="st"> </span><span class="kw">I</span>(lstat<span class="op">^</span><span class="dv">2</span>))
-lm_boston &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> boston, medv <span class="op">~</span><span class="st"> </span>lstat)</code></pre>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb104-1" data-line-number="1"><span class="co"># </span><span class="al">TODO</span><span class="co"> is this best way</span></a>
+<a class="sourceLine" id="cb104-2" data-line-number="2">lm_boston_squared &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> boston, medv <span class="op">~</span><span class="st"> </span>lstat <span class="op">+</span><span class="st"> </span><span class="kw">I</span>(lstat<span class="op">^</span><span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb104-3" data-line-number="3">lm_boston &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> boston, medv <span class="op">~</span><span class="st"> </span>lstat)</a></code></pre></div>
 <p>We can use <code>anova()</code> with <code>broom::tidy()</code> to measure if it fits better than linear fit.</p>
-<pre class="sourceCode r"><code class="sourceCode r">broom<span class="op">::</span><span class="kw">tidy</span>(<span class="kw">anova</span>(lm_boston, lm_boston_squared))</code></pre>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb105-1" data-line-number="1">broom<span class="op">::</span><span class="kw">tidy</span>(<span class="kw">anova</span>(lm_boston, lm_boston_squared))</a></code></pre></div>
 <pre><code>## # A tibble: 2 x 6
 ##   res.df    rss    df sumsq statistic   p.value
 ##    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
@@ -1443,7 +1453,7 @@ lm_boston &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="
 </div>
 <div id="exercises-1" class="section level2">
 <h2><span class="header-section-number">3.5</span> Exercises</h2>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># </span><span class="al">TODO</span><span class="co"> exercises</span></code></pre>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb107-1" data-line-number="1"><span class="co"># </span><span class="al">TODO</span><span class="co"> exercises</span></a></code></pre></div>
 
 </div>
 </div>
@@ -1458,11 +1468,13 @@ lm_boston &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -1470,12 +1482,11 @@ gitbook.start({
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -1487,6 +1498,10 @@ gitbook.start({
 "text": null
 },
 "history": {
+"link": null,
+"text": null
+},
+"view": {
 "link": null,
 "text": null
 },
@@ -1505,8 +1520,9 @@ gitbook.start({
     script.type = "text/javascript";
     var src = "true";
     if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(src))
-      src = src.replace(/^https?:/, '');
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
     script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
