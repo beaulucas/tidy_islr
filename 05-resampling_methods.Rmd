@@ -46,7 +46,7 @@ The scope of rsample is to provide the basic building blocks for creating and an
 
 ```{r}
 auto <- ISLR::Auto %>% as_tibble()
-split_auto <- initial_split(auto, prop = 1/2)
+split_auto <- initial_split(auto, prop = 1 / 2)
 train_auto <- training(split_auto)
 test_auto <- testing(split_auto)
 ```
@@ -63,35 +63,39 @@ Now let's fit various regression models on the `train_auto` dataset. We will rep
 # TODO fix this with purrr and clean up
 # copied from https://uc-r.github.io/resampling_methods
 
-df_mse <- tibble(sample = vector("integer", 100), 
-                 degree = vector("integer", 100), 
-                 mse = vector("double", 100))
+df_mse <- tibble(
+  sample = vector("integer", 100),
+  degree = vector("integer", 100),
+  mse = vector("double", 100)
+)
 counter <- 1
 
-for(i in 1:10) {
+for (i in 1:10) {
   # random sample
   set.seed(i)
-  split_auto <- initial_split(auto, prop = 1/2)
+  split_auto <- initial_split(auto, prop = 1 / 2)
   train_auto <- training(split_auto)
   test_auto <- testing(split_auto)
-  
+
   # modeling
-  for(j in 1:10) {
+  for (j in 1:10) {
     lm.fit <- linear_reg() %>%
-      fit(data = train_auto,
-          formula = mpg ~ poly(horsepower, j))
+      fit(
+        data = train_auto,
+        formula = mpg ~ poly(horsepower, j)
+      )
     lm_preds <- predict(lm.fit, new_data = test_auto)
-    
+
     # calculate mse
     mse <- test_auto %>%
       bind_cols(lm_preds) %>%
-      summarise(mse = mean((.pred - mpg) ^ 2)) %>%
+      summarise(mse = mean((.pred - mpg)^2)) %>%
       pull()
-    
+
     # add degree & mse values to tibble
     df_mse[counter, 2] <- j
     df_mse[counter, 3] <- mse
-    
+
     # add sample identifier
     df_mse[counter, 1] <- i
     counter <- counter + 1
@@ -104,7 +108,7 @@ for(i in 1:10) {
 ggplot(df_mse, aes(x = degree, y = mse, color = factor(sample))) +
   geom_line(show.legend = FALSE) +
   geom_point(show.legend = FALSE) +
-  #scale_x_continuous(breaks = scales::pretty_breaks())
+  # scale_x_continuous(breaks = scales::pretty_breaks())
   ylim(c(10, 30))
 ```
 
@@ -188,15 +192,19 @@ First, we generate two-dimensional data with classes exhibiting visual, but not 
 
 ```{r}
 set.seed(10)
-sim_sep <- tibble(x = rnorm(5000, mean = 10),
-              y = rnorm(5000, mean = 20),
-              class=rep(c(-0, 1), c(2500, 2500)))
+sim_sep <- tibble(
+  x = rnorm(5000, mean = 10),
+  y = rnorm(5000, mean = 20),
+  class = rep(c(-0, 1), c(2500, 2500))
+)
 # add some separation
 sim_sep <- sim_sep %>%
-  mutate(y = if_else(class == 1, y + runif(1, 1, 3), y),
-         class = as.factor(class))
+  mutate(
+    y = if_else(class == 1, y + runif(1, 1, 3), y),
+    class = as.factor(class)
+  )
 sim_sep %>%
-  ggplot(aes(x=x,y=y,colour=class)) + geom_point()
+  ggplot(aes(x = x, y = y, colour = class)) + geom_point()
 ```
 
 Now let's fit logistic regression models of varying flexibilities.
@@ -210,14 +218,14 @@ $$
 We will use this extension to fit logistic regression models from degrees `1` through `4`.
 
 ```{r}
-split_sim <- initial_split(sim_sep, prop = 3/4)
+split_sim <- initial_split(sim_sep, prop = 3 / 4)
 train_sim <- training(split_sim)
 test_sim <- testing(split_sim)
 
-# TODO loop 
+# TODO loop
 logi_sim <- logistic_reg(mode = "classification") %>%
   fit(train_sim, formula = class ~ x + y)
-logi_sim_exp2 <-logistic_reg(mode = "classification") %>%
+logi_sim_exp2 <- logistic_reg(mode = "classification") %>%
   fit(train_sim, formula = class ~ poly(x, 2) + poly(y, 2))
 logi_sim_exp3 <- logistic_reg(mode = "classification") %>%
   fit(train_sim, formula = class ~ poly(x, 3) + poly(y, 3))
@@ -230,16 +238,16 @@ Let's get the test error rate for each model.
 ```{r, eval = FALSE}
 # TODO loop
 fit <- test_sim %>%
-  bind_cols(predict(logi_sim, new_data=.)) %>%
+  bind_cols(predict(logi_sim, new_data = .)) %>%
   metrics(class, .pred_class)
 fit_exp2 <- test_sim %>%
-  bind_cols(predict(logi_sim_exp2, new_data=.)) %>%
+  bind_cols(predict(logi_sim_exp2, new_data = .)) %>%
   metrics(class, .pred_class)
 fit_exp3 <- test_sim %>%
-  bind_cols(predict(logi_sim_exp3, new_data=.)) %>%
+  bind_cols(predict(logi_sim_exp3, new_data = .)) %>%
   metrics(class, .pred_class)
 fit_exp4 <- test_sim %>%
-  bind_cols(predict(logi_sim_exp4, new_data=.)) %>%
+  bind_cols(predict(logi_sim_exp4, new_data = .)) %>%
   metrics(class, .pred_class)
 
 bind_rows(list(lin = fit, quad = fit_exp2, cubic = fit_exp3, quadric = fit_exp4), .id = "id") %>%
@@ -250,20 +258,104 @@ The $k$-fold CV follows the true test error rate closer than the training error 
 
 ## The Bootstrap
 
-The bootstrap is used to quantify the uncertainty associated with a given estimator or statistical learning method.
+The bootstrap is used to quantify the uncertainty associated with a given estimator or statistical learning method. An example of this would be estimating the standard errors of the coefficient of a linear regression fit. This isn't the best example, since with inear regression, standard error is easy to achieve without the bootstrap. The value of the bootstrap lies in its ability to be applied to a wide range of statistical learning methods, particularly those methods in which a measure of variability is difficult to obtain.
+
+Suppose we wish to determine the best investment allocation under a simple model. Let's say we have to financial assets, that yield returns of random quantities $X$ and $Y$. We will invest a fraction of our money $\alpha$ in $X$, and the remaining $1 - \alpha$ in $Y$. We wish to choose $\alpha$ to minimize the total risk, or variance, of our investment. In other words, we want to minimize $Var(\alpha X + (1 - \alpha)Y)$.
+
+One can show that the value that minimizes risk is
+
+$$
+\alpha=\frac{\sigma_{Y}^{2}-\sigma_{X Y}}{\sigma_{X}^{2}+\sigma_{Y}^{2}-2 \sigma_{X Y}}
+$$
+
+In reality, these quantities are unknown. Let's imagine we have access to a dataset containing pairs of previous returns of $X$ and $Y$. We can use these previous returns to estimate these variance quantities.
+
+Let's simulate the data and see how our estimation performs.
+
+```{r}
+samples <- 400
+var_x <- 1
+var_y <- 1.25
+cov_xy <- 0.5
+alpha <- (var_y - cov_xy) /
+              (var_x ^ 2 + var_y ^ 2 - 2*cov_xy)
+data <- MASS::mvrnorm(
+  n = samples,
+  mu = c(0, 0),
+  Sigma = matrix(c(var_x, cov_xy, cov_xy, var_y), nrow = 2),
+  empirical = TRUE
+)
+
+x_return <- data[, 1]
+y_return <- data[, 2] 
+returns <- tibble(x_return, y_return)
+returns <- returns %>%
+  # random four bins
+  mutate(sample = runif(n = nrow(returns)),
+         bin = ntile(sample, 4)) 
+```
+
+We created four simulated sets of `100` pairs of returns for $X$ and $Y$. Let's estimate $\alpha$ for each set and see how it compares to the true value.
+
+```{r}
+ggplot(returns, aes(x = x_return, y = y_return)) +
+  geom_point() +
+  facet_wrap(~bin)
+```
 
 
+```{r}
+# get alpha estimate for each set
+# calculate var(x), var(y), and cov(x, y) for each bin
+returns %>%
+  group_by(bin) %>%
+  summarise(var_x = var(x_return),
+            var_y = var(y_return),
+            cov_xy = cov(x_return, y_return),
+            alpha = (var_y - cov_xy) /
+              (var_x ^ 2 + var_y ^ 2 - 2*cov_xy))
+```
 
+Our $\alpha$ estimates vary arround the true value of `r alpha`.
 
+Let's simulate `100` paired observations `1000` times and see how our estimate for $\alpha$ converges.
 
+```{r}
+# TODO increase to 1000, simulate, compare
+```
 
+This gives us a very good idea of the accuracy of $\hat\alpha$. So, for a random sample of the population, we would expect $\hat\alpha$ to differ from $alpha$ by approximately the standard error.
 
+In reality, we often cannot generate new samples from the population. The boostrap approach allows us to use a computer to emulate the process of obtaining new samples so that we can estimate the variability of $\hat\alpha$ without generating new samples. Rather than generating new independent samples, we obtain distinct data sets through repeatedly sampling observations from the original data set.
 
+The bootstrap approach is as follows. Imagine we have a data set $Z$ which contains $n = 3$ observations. We randomly select $n$ observations from the data set, with replacement, to produce a bootstrap data set, $Z^{*1}$. We can use $Z^{*1}$ to produce a new boostrap estimate for $\alpha$, which we call $\hat\alpha^{*1}$. This procedure is repeated $B$ times for some large value of $B$, in order to produce $B$ different bootstrap data sets, $Z^{*1}, Z^{*2},..., Z^{*B}$, and $B$ corresponding $\alpha$ estimates, $\hat\alpha^{*1}, \hat\alpha^{*2}, ..., \hat\alpha^{*B}$.
 
+We can compute the standard error of these bootstrap estimates using the formula
 
+$$
+\operatorname{SE}_{B}(\hat{\alpha})=\sqrt{\frac{1}{B-1} \sum_{r=1}^{B}\left(\hat{\alpha}^{* r}-\frac{1}{B} \sum_{r^{\prime}=1}^{B} \hat{\alpha}^{* r^{\prime}}\right)^{2}}
+$$
 
+This serves as an estimate of the standard error of $\alpha$ estimated from the original dataset.
 
+Let's use the boostrap approach to generate `1,000` distinct samples from a single data set, and compare it to our simulated approach.
 
+```{r}
+# TODO tidymodels boostrap, simulate, histogram
+```
 
+Note how close the distribution of the bootstrap estimates are to the simulated data sets.
 
+The bootstrap approach can be used to effectively estimate the variability associated with $\hat\alpha$.
 
+## Lab
+
+### The Validation Set Approach
+
+### LOOCV
+
+### $k$-Fold Cross-Validation
+
+### The Bootstrap
+
+## Exercises
