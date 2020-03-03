@@ -1,0 +1,75 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Linear Model Selection And Regularization
+
+-----
+
+```{r}
+library(tidyverse)
+library(knitr)
+library(skimr)
+library(ISLR)
+library(tidymodels)
+library(leaps) # best subset selection
+```
+
+Before moving on to the non-linear world in further chapters, let's discuss in some ways in which the simple linear model can be improved, by replacing plain least squares fitting with some alternative fitting procedures.
+
+Why should we explore alternative fitting procedures? We will see that alternative fitting procedures can yield better prediction accuracy and model interpretability.
+
+* *Prediction Accuracy*: Provided the relationship between the response and its predictors is approximately linear, then least squares estimates will have low bias. If $n >> p$, meaning that the number of observations $n$ is much larger than the number of predictors $p$, then the least squares estimates tend to also have low variance. As $p$ approaches $n$, there can be a lot of variability in the least squares fit, which could result in overfitting and poor predictions on future observations. If $p$ > $n$, there is no longer a unique least squares coefficient estimate; the method doesn't work. By *constraining* or *shrinking* the estimated coefficients, we can significantly reduce the variance at the cost of a negligible increase in bias.
+
+* *Model Interpretability*: It is common for predictor variables used in a multiple regression model to not be associated with the response. Including these *irrelevant* variables leads to unnecessary complexity in the resulting model. If we could remove these variables by setting their coefficients equal to zero, we can obtain a simpler, more interpretable model. The chance of least squares yielding a zero coefficient is quite low. We will explore some approaches for *feature selection*.
+
+We will discuss three important classes of methods:
+
+1. *Subset selection.* This approach involves identifying a subset of the $p$ predictors that we believe to be related to the response. 
+2. *Shrinkage.* This approach involves fitting a model of all $p$ predictors, but shrinking (also known as regularizing) the coefficients of some predictors towards zero. This can also result in variable selection when coefficients are shrunk towards exactly zero.
+3. *Dimension Reduction*. This approach involes projecting the $p$ predictors into a $M$-dimensional subspace, where $M < p$. This is achieved by computing $M$ different *linear combinations*, or *projections*, of the variables. Then, we use these $M$ projections as predictors.
+
+## Subset Selection
+
+### Best Subset Selection
+
+We fit a separate least squares regression for each possible combination of the $p$ predictors. That is, we fit all $p$ models that contain exactly one predictor, all $\binom{p}{2}$ that contain exactly two predictors, and so forth. Once we fit all of them, we identify the one that is best.
+
+Here are the steps:
+
+1. Let $M_0$ denote the *null model* of no predictors. This is simply the sample mean.
+2. For $k = 1,2,...p$:
+  a) Fit all $\binom{p}{k}$ models that contain exactly $k$ predictors.
+  b) Pick the best among these $\binom{p}{k}$ models via largest $R^2$.
+3. Select a single best model from $M_0,...,M_p$ using cross-validation, $C_p$ (AIC), BIC, or adjusted $R^2$.
+
+Once we complete step 2, we reduce the problem from one of $2^p$ possible models to one of $p+1$ possible models. To complete step 3, we can't use a metric such as $R^2$ anymore. Remember that $R^2$ increases monotonically as the number of features included in the models increases. Therefore, we need to pick the model with the lowest estimated *test* error.
+
+```{r}
+credit <- ISLR::Credit %>% as_tibble() %>% janitor::clean_names()
+regfit_full = regsubsets(balance ~., data = credit)
+reg_summary <- summary(regfit_full)
+plot(reg_summary$rsq, xlab = "Number of Predictors", ylab = "RSquared", type = "l")
+```
+
+As said above, $R^2$ will always increase as add more predictors. In this case, it ramps up through three predictors before flattening out. We could apply the same idea to other types of models such as logistic regression. Instead of ordering by $R^2$, we could sort by *deviance*, a measure that plays the role of $R^2$ for a broader class of models. Deviance is negative two times the maximized log-likelihood; the smaller the deviance, the better the fit.
+
+One problem with best subset selection is the computational cost. Fitting $2^p$ possible model quickly grows prohibitively expensive.
+
+```{r}
+cpu_cost <- tibble(preds = seq(1,50))
+cpu_cost <- cpu_cost %>% mutate(time = 2^preds/1000000)
+ggplot(cpu_cost, aes(x = preds, y = time)) +
+  geom_point() +
+  scale_y_log10(label=scales::comma)
+```
+
+In this made-up example, fitting best subset selection for `20` predictors would take less than ten seconds, which is reasonable. At `40` predictors, that number is arround `100,000` seconds, more than a full day. Given that a large number of predictors, sometimes in the thousands, is a common occurrence, we need to explore more computationaly efficient alternatives.
+
+## Stepwise Selection
+
+
+
+

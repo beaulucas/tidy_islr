@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>A Tidy Introduction To Statistical Learning</title>
-  <meta name="description" content="A Tidy Introduction To Statistical Learning" />
+  <title>Chapter 6 Linear Model Selection And Regularization | A Tidy Introduction To Statistical Learning</title>
+  <meta name="description" content="Chapter 6 Linear Model Selection And Regularization | A Tidy Introduction To Statistical Learning" />
   <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="A Tidy Introduction To Statistical Learning" />
+  <meta property="og:title" content="Chapter 6 Linear Model Selection And Regularization | A Tidy Introduction To Statistical Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="A Tidy Introduction To Statistical Learning" />
+  <meta name="twitter:title" content="Chapter 6 Linear Model Selection And Regularization | A Tidy Introduction To Statistical Learning" />
   
   
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
+<link rel="prev" href="resampling-methods.html"/>
 
-<link rel="next" href="intro.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -252,24 +252,73 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">A Tidy Introduction To Statistical Learning</h1>
-<p class="author"><em>Beau Lucas</em></p>
-<p class="date"><em>2020-03-03</em></p>
+<div id="linear-model-selection-and-regularization" class="section level1">
+<h1><span class="header-section-number">Chapter 6</span> Linear Model Selection And Regularization</h1>
+<hr />
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb189-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb189-2" data-line-number="2"><span class="kw">library</span>(knitr)</a>
+<a class="sourceLine" id="cb189-3" data-line-number="3"><span class="kw">library</span>(skimr)</a>
+<a class="sourceLine" id="cb189-4" data-line-number="4"><span class="kw">library</span>(ISLR)</a>
+<a class="sourceLine" id="cb189-5" data-line-number="5"><span class="kw">library</span>(tidymodels)</a>
+<a class="sourceLine" id="cb189-6" data-line-number="6"><span class="kw">library</span>(leaps) <span class="co"># best subset selection</span></a></code></pre></div>
+<p>Before moving on to the non-linear world in further chapters, let’s discuss in some ways in which the simple linear model can be improved, by replacing plain least squares fitting with some alternative fitting procedures.</p>
+<p>Why should we explore alternative fitting procedures? We will see that alternative fitting procedures can yield better prediction accuracy and model interpretability.</p>
+<ul>
+<li><p><em>Prediction Accuracy</em>: Provided the relationship between the response and its predictors is approximately linear, then least squares estimates will have low bias. If <span class="math inline">\(n &gt;&gt; p\)</span>, meaning that the number of observations <span class="math inline">\(n\)</span> is much larger than the number of predictors <span class="math inline">\(p\)</span>, then the least squares estimates tend to also have low variance. As <span class="math inline">\(p\)</span> approaches <span class="math inline">\(n\)</span>, there can be a lot of variability in the least squares fit, which could result in overfitting and poor predictions on future observations. If <span class="math inline">\(p\)</span> &gt; <span class="math inline">\(n\)</span>, there is no longer a unique least squares coefficient estimate; the method doesn’t work. By <em>constraining</em> or <em>shrinking</em> the estimated coefficients, we can significantly reduce the variance at the cost of a negligible increase in bias.</p></li>
+<li><p><em>Model Interpretability</em>: It is common for predictor variables used in a multiple regression model to not be associated with the response. Including these <em>irrelevant</em> variables leads to unnecessary complexity in the resulting model. If we could remove these variables by setting their coefficients equal to zero, we can obtain a simpler, more interpretable model. The chance of least squares yielding a zero coefficient is quite low. We will explore some approaches for <em>feature selection</em>.</p></li>
+</ul>
+<p>We will discuss three important classes of methods:</p>
+<ol style="list-style-type: decimal">
+<li><em>Subset selection.</em> This approach involves identifying a subset of the <span class="math inline">\(p\)</span> predictors that we believe to be related to the response.</li>
+<li><em>Shrinkage.</em> This approach involves fitting a model of all <span class="math inline">\(p\)</span> predictors, but shrinking (also known as regularizing) the coefficients of some predictors towards zero. This can also result in variable selection when coefficients are shrunk towards exactly zero.</li>
+<li><em>Dimension Reduction</em>. This approach involes projecting the <span class="math inline">\(p\)</span> predictors into a <span class="math inline">\(M\)</span>-dimensional subspace, where <span class="math inline">\(M &lt; p\)</span>. This is achieved by computing <span class="math inline">\(M\)</span> different <em>linear combinations</em>, or <em>projections</em>, of the variables. Then, we use these <span class="math inline">\(M\)</span> projections as predictors.</li>
+</ol>
+<div id="subset-selection" class="section level2">
+<h2><span class="header-section-number">6.1</span> Subset Selection</h2>
+<div id="best-subset-selection" class="section level3">
+<h3><span class="header-section-number">6.1.1</span> Best Subset Selection</h3>
+<p>We fit a separate least squares regression for each possible combination of the <span class="math inline">\(p\)</span> predictors. That is, we fit all <span class="math inline">\(p\)</span> models that contain exactly one predictor, all <span class="math inline">\(\binom{p}{2}\)</span> that contain exactly two predictors, and so forth. Once we fit all of them, we identify the one that is best.</p>
+<p>Here are the steps:</p>
+<ol style="list-style-type: decimal">
+<li>Let <span class="math inline">\(M_0\)</span> denote the <em>null model</em> of no predictors. This is simply the sample mean.</li>
+<li>For <span class="math inline">\(k = 1,2,...p\)</span>:</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>Fit all <span class="math inline">\(\binom{p}{k}\)</span> models that contain exactly <span class="math inline">\(k\)</span> predictors.</li>
+<li>Pick the best among these <span class="math inline">\(\binom{p}{k}\)</span> models via largest <span class="math inline">\(R^2\)</span>.</li>
+</ol>
+<ol start="3" style="list-style-type: decimal">
+<li>Select a single best model from <span class="math inline">\(M_0,...,M_p\)</span> using cross-validation, <span class="math inline">\(C_p\)</span> (AIC), BIC, or adjusted <span class="math inline">\(R^2\)</span>.</li>
+</ol>
+<p>Once we complete step 2, we reduce the problem from one of <span class="math inline">\(2^p\)</span> possible models to one of <span class="math inline">\(p+1\)</span> possible models. To complete step 3, we can’t use a metric such as <span class="math inline">\(R^2\)</span> anymore. Remember that <span class="math inline">\(R^2\)</span> increases monotonically as the number of features included in the models increases. Therefore, we need to pick the model with the lowest estimated <em>test</em> error.</p>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb190-1" data-line-number="1">credit &lt;-<span class="st"> </span>ISLR<span class="op">::</span>Credit <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span>janitor<span class="op">::</span><span class="kw">clean_names</span>()</a>
+<a class="sourceLine" id="cb190-2" data-line-number="2">regfit_full =<span class="st"> </span><span class="kw">regsubsets</span>(balance <span class="op">~</span>., <span class="dt">data =</span> credit)</a>
+<a class="sourceLine" id="cb190-3" data-line-number="3">reg_summary &lt;-<span class="st"> </span><span class="kw">summary</span>(regfit_full)</a>
+<a class="sourceLine" id="cb190-4" data-line-number="4"><span class="kw">plot</span>(reg_summary<span class="op">$</span>rsq, <span class="dt">xlab =</span> <span class="st">&quot;Number of Predictors&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;RSquared&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>)</a></code></pre></div>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-129-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>As said above, <span class="math inline">\(R^2\)</span> will always increase as add more predictors. In this case, it ramps up through three predictors before flattening out. We could apply the same idea to other types of models such as logistic regression. Instead of ordering by <span class="math inline">\(R^2\)</span>, we could sort by <em>deviance</em>, a measure that plays the role of <span class="math inline">\(R^2\)</span> for a broader class of models. Deviance is negative two times the maximized log-likelihood; the smaller the deviance, the better the fit.</p>
+<p>One problem with best subset selection is the computational cost. Fitting <span class="math inline">\(2^p\)</span> possible model quickly grows prohibitively expensive.</p>
+<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb191-1" data-line-number="1">cpu_cost &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">preds =</span> <span class="kw">seq</span>(<span class="dv">1</span>,<span class="dv">50</span>))</a>
+<a class="sourceLine" id="cb191-2" data-line-number="2">cpu_cost &lt;-<span class="st"> </span>cpu_cost <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">time =</span> <span class="dv">2</span><span class="op">^</span>preds<span class="op">/</span><span class="dv">1000000</span>)</a>
+<a class="sourceLine" id="cb191-3" data-line-number="3"><span class="kw">ggplot</span>(cpu_cost, <span class="kw">aes</span>(<span class="dt">x =</span> preds, <span class="dt">y =</span> time)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb191-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb191-5" data-line-number="5"><span class="st">  </span><span class="kw">scale_y_log10</span>(<span class="dt">label=</span>scales<span class="op">::</span>comma)</a></code></pre></div>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-130-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>In this made-up example, fitting best subset selection for <code>20</code> predictors would take less than ten seconds, which is reasonable. At <code>40</code> predictors, that number is arround <code>100,000</code> seconds, more than a full day. Given that a large number of predictors, sometimes in the thousands, is a common occurrence, we need to explore more computationaly efficient alternatives.</p>
 </div>
-<div id="preface" class="section level1 unnumbered">
-<h1>Preface</h1>
-<p>This book will serve as a source of notes and exercise solutions for <em>An Introduction to Statistical Learning</em>. My approach will be centered around the <code>tidyverse</code>. This is not a replacement for the book, which should be read front to back by all machine learning enthusiasts.</p>
-<p>Chapter names will line up, and certain subheadings will also match. Sometimes my notes will contain text lifted straight from the book without modification. This is not an attempt to plagiarize or claim their writing as my own. My goal is for this bookdown project to be a quick stop for machine learning enthusiasts to reference high-level ideas from ISLR in a modern media format.</p>
+</div>
+<div id="stepwise-selection" class="section level2">
+<h2><span class="header-section-number">6.2</span> Stepwise Selection</h2>
 
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
+<a href="resampling-methods.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
-<a href="intro.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

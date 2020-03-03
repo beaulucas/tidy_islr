@@ -24,7 +24,7 @@
 <meta name="author" content="Beau Lucas" />
 
 
-<meta name="date" content="2020-02-09" />
+<meta name="date" content="2020-03-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -225,6 +225,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.3.4" data-path="resampling-methods.html"><a href="resampling-methods.html#the-bootstrap-1"><i class="fa fa-check"></i><b>5.3.4</b> The Bootstrap</a></li>
 </ul></li>
 <li class="chapter" data-level="5.4" data-path="resampling-methods.html"><a href="resampling-methods.html#exercises-3"><i class="fa fa-check"></i><b>5.4</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="linear-model-selection-and-regularization.html"><a href="linear-model-selection-and-regularization.html"><i class="fa fa-check"></i><b>6</b> Linear Model Selection And Regularization</a><ul>
+<li class="chapter" data-level="6.1" data-path="linear-model-selection-and-regularization.html"><a href="linear-model-selection-and-regularization.html#subset-selection"><i class="fa fa-check"></i><b>6.1</b> Subset Selection</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="linear-model-selection-and-regularization.html"><a href="linear-model-selection-and-regularization.html#best-subset-selection"><i class="fa fa-check"></i><b>6.1.1</b> Best Subset Selection</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="linear-model-selection-and-regularization.html"><a href="linear-model-selection-and-regularization.html#stepwise-selection"><i class="fa fa-check"></i><b>6.2</b> Stepwise Selection</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/beaulucas/tidy_islr" target="blank">GitHub Repository</a></li>
@@ -1233,12 +1239,12 @@ education
 <pre><code>## # A tibble: 10 x 7
 ##       k  RMSE Rsquared   MAE RMSESD RsquaredSD MAESD
 ##   &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
-## 1     1  23.6    0.558  15.8   3.10     0.0794  1.86
-## 2     2  22.7    0.586  15.5   3.23     0.0852  2.11
-## 3     3  21.7    0.616  15.1   3.61     0.0773  2.24
-## 4     4  21.3    0.624  15.2   4.05     0.0918  2.30
-## 5     5  21.1    0.635  14.9   4.44     0.104   2.34
-## 6     6  21.3    0.627  14.9   4.80     0.111   2.41
+## 1     1  22.5    0.568  15.3   3.16     0.0847  1.94
+## 2     2  21.7    0.598  14.9   2.79     0.0743  1.80
+## 3     3  20.6    0.629  14.4   2.83     0.0647  1.64
+## 4     4  19.7    0.660  13.9   3.04     0.0651  1.51
+## 5     5  19.7    0.658  13.9   3.05     0.0603  1.31
+## 6     6  19.5    0.664  13.7   3.27     0.0629  1.55
 ## # … with 4 more rows</code></pre>
 <p>In what setting will a parametric approach outperform a non-parametric approach such as KNN? The parametric approach will outperform the non-parametric approach if the parametric form that has been selected is close to the true form of <span class="math inline">\(f\)</span>.</p>
 <p>Let’s take our ozone example and compare KNN to linear regression. The linear model produces an <span class="math inline">\(R^2\)</span> of <code>0.57</code>, compared to KNN’s <code>0.64</code>. Is KNN’s lack of interpretability worth the <code>0.07</code> gain in <span class="math inline">\(R^2\)</span>? Probably not.</p>
@@ -1249,7 +1255,7 @@ education
 <pre><code>## # A tibble: 1 x 7
 ##       k  RMSE Rsquared   MAE RMSESD RsquaredSD MAESD
 ##   &lt;int&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
-## 1     5  21.1    0.635  14.9   4.44      0.104  2.34</code></pre>
+## 1     9  18.7    0.685  13.2   4.05     0.0809  1.83</code></pre>
 <div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb71-1" data-line-number="1">lm_airquality &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> tidy_airquality, ozone <span class="op">~</span><span class="st"> </span>temp <span class="op">+</span><span class="st"> </span>wind)</a>
 <a class="sourceLine" id="cb71-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb71-3" data-line-number="3">lm_airquality <span class="op">%&gt;%</span><span class="st"> </span>broom<span class="op">::</span><span class="kw">glance</span>()</a></code></pre></div>
