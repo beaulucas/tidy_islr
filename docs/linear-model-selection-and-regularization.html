@@ -24,7 +24,7 @@
 <meta name="author" content="Beau Lucas" />
 
 
-<meta name="date" content="2020-03-03" />
+<meta name="date" content="2020-03-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -230,7 +230,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.1" data-path="linear-model-selection-and-regularization.html"><a href="linear-model-selection-and-regularization.html#subset-selection"><i class="fa fa-check"></i><b>6.1</b> Subset Selection</a><ul>
 <li class="chapter" data-level="6.1.1" data-path="linear-model-selection-and-regularization.html"><a href="linear-model-selection-and-regularization.html#best-subset-selection"><i class="fa fa-check"></i><b>6.1.1</b> Best Subset Selection</a></li>
 </ul></li>
-<li class="chapter" data-level="6.2" data-path="linear-model-selection-and-regularization.html"><a href="linear-model-selection-and-regularization.html#stepwise-selection"><i class="fa fa-check"></i><b>6.2</b> Stepwise Selection</a></li>
+<li class="chapter" data-level="6.2" data-path="linear-model-selection-and-regularization.html"><a href="linear-model-selection-and-regularization.html#stepwise-selection"><i class="fa fa-check"></i><b>6.2</b> Stepwise Selection</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="linear-model-selection-and-regularization.html"><a href="linear-model-selection-and-regularization.html#forward-stepwise-selection"><i class="fa fa-check"></i><b>6.2.1</b> Forward Stepwise Selection</a></li>
+<li class="chapter" data-level="6.2.2" data-path="linear-model-selection-and-regularization.html"><a href="linear-model-selection-and-regularization.html#backward-stepwise-selection"><i class="fa fa-check"></i><b>6.2.2</b> Backward Stepwise Selection</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="linear-model-selection-and-regularization.html"><a href="linear-model-selection-and-regularization.html#choosing-the-optimal-model"><i class="fa fa-check"></i><b>6.3</b> Choosing the Optimal Model</a><ul>
+<li class="chapter" data-level="6.3.1" data-path="linear-model-selection-and-regularization.html"><a href="linear-model-selection-and-regularization.html#c_p-aic-bic-and-adjusted-r2."><i class="fa fa-check"></i><b>6.3.1</b> <span class="math inline">\(C_p\)</span>, AIC, BIC, and Adjusted <span class="math inline">\(R^2\)</span>.</a></li>
+<li class="chapter" data-level="6.3.2" data-path="linear-model-selection-and-regularization.html"><a href="linear-model-selection-and-regularization.html#validation-and-cross-validation"><i class="fa fa-check"></i><b>6.3.2</b> Validation and Cross-Validation</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="linear-model-selection-and-regularization.html"><a href="linear-model-selection-and-regularization.html#shrinkage-methods"><i class="fa fa-check"></i><b>6.4</b> Shrinkage Methods</a><ul>
+<li class="chapter" data-level="6.4.1" data-path="linear-model-selection-and-regularization.html"><a href="linear-model-selection-and-regularization.html#ridge-regression"><i class="fa fa-check"></i><b>6.4.1</b> Ridge Regression</a></li>
+<li class="chapter" data-level="6.4.2" data-path="linear-model-selection-and-regularization.html"><a href="linear-model-selection-and-regularization.html#the-lasso"><i class="fa fa-check"></i><b>6.4.2</b> The Lasso</a></li>
+</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/beaulucas/tidy_islr" target="blank">GitHub Repository</a></li>
@@ -260,7 +271,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb189-3" data-line-number="3"><span class="kw">library</span>(skimr)</a>
 <a class="sourceLine" id="cb189-4" data-line-number="4"><span class="kw">library</span>(ISLR)</a>
 <a class="sourceLine" id="cb189-5" data-line-number="5"><span class="kw">library</span>(tidymodels)</a>
-<a class="sourceLine" id="cb189-6" data-line-number="6"><span class="kw">library</span>(leaps) <span class="co"># best subset selection</span></a></code></pre></div>
+<a class="sourceLine" id="cb189-6" data-line-number="6"><span class="kw">library</span>(workflows)</a>
+<a class="sourceLine" id="cb189-7" data-line-number="7"><span class="kw">library</span>(tune)</a>
+<a class="sourceLine" id="cb189-8" data-line-number="8"><span class="kw">library</span>(leaps) <span class="co"># best subset selection</span></a></code></pre></div>
 <p>Before moving on to the non-linear world in further chapters, let’s discuss in some ways in which the simple linear model can be improved, by replacing plain least squares fitting with some alternative fitting procedures.</p>
 <p>Why should we explore alternative fitting procedures? We will see that alternative fitting procedures can yield better prediction accuracy and model interpretability.</p>
 <ul>
@@ -291,10 +304,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Select a single best model from <span class="math inline">\(M_0,...,M_p\)</span> using cross-validation, <span class="math inline">\(C_p\)</span> (AIC), BIC, or adjusted <span class="math inline">\(R^2\)</span>.</li>
 </ol>
 <p>Once we complete step 2, we reduce the problem from one of <span class="math inline">\(2^p\)</span> possible models to one of <span class="math inline">\(p+1\)</span> possible models. To complete step 3, we can’t use a metric such as <span class="math inline">\(R^2\)</span> anymore. Remember that <span class="math inline">\(R^2\)</span> increases monotonically as the number of features included in the models increases. Therefore, we need to pick the model with the lowest estimated <em>test</em> error.</p>
-<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb190-1" data-line-number="1">credit &lt;-<span class="st"> </span>ISLR<span class="op">::</span>Credit <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span>janitor<span class="op">::</span><span class="kw">clean_names</span>()</a>
-<a class="sourceLine" id="cb190-2" data-line-number="2">regfit_full =<span class="st"> </span><span class="kw">regsubsets</span>(balance <span class="op">~</span>., <span class="dt">data =</span> credit)</a>
-<a class="sourceLine" id="cb190-3" data-line-number="3">reg_summary &lt;-<span class="st"> </span><span class="kw">summary</span>(regfit_full)</a>
-<a class="sourceLine" id="cb190-4" data-line-number="4"><span class="kw">plot</span>(reg_summary<span class="op">$</span>rsq, <span class="dt">xlab =</span> <span class="st">&quot;Number of Predictors&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;RSquared&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb190-1" data-line-number="1">credit &lt;-<span class="st"> </span>ISLR<span class="op">::</span>Credit <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span>janitor<span class="op">::</span><span class="kw">clean_names</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb190-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>id)</a>
+<a class="sourceLine" id="cb190-3" data-line-number="3">regfit_full =<span class="st"> </span><span class="kw">regsubsets</span>(balance <span class="op">~</span>., <span class="dt">data =</span> credit)</a>
+<a class="sourceLine" id="cb190-4" data-line-number="4">reg_summary &lt;-<span class="st"> </span><span class="kw">summary</span>(regfit_full)</a>
+<a class="sourceLine" id="cb190-5" data-line-number="5"><span class="kw">plot</span>(reg_summary<span class="op">$</span>rsq, <span class="dt">xlab =</span> <span class="st">&quot;Number of Predictors&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;RSquared&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>)</a></code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-129-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>As said above, <span class="math inline">\(R^2\)</span> will always increase as add more predictors. In this case, it ramps up through three predictors before flattening out. We could apply the same idea to other types of models such as logistic regression. Instead of ordering by <span class="math inline">\(R^2\)</span>, we could sort by <em>deviance</em>, a measure that plays the role of <span class="math inline">\(R^2\)</span> for a broader class of models. Deviance is negative two times the maximized log-likelihood; the smaller the deviance, the better the fit.</p>
 <p>One problem with best subset selection is the computational cost. Fitting <span class="math inline">\(2^p\)</span> possible model quickly grows prohibitively expensive.</p>
@@ -304,12 +318,222 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb191-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb191-5" data-line-number="5"><span class="st">  </span><span class="kw">scale_y_log10</span>(<span class="dt">label=</span>scales<span class="op">::</span>comma)</a></code></pre></div>
 <p><img src="tidy_islr_files/figure-html/unnamed-chunk-130-1.png" width="576" style="display: block; margin: auto;" /></p>
-<p>In this made-up example, fitting best subset selection for <code>20</code> predictors would take less than ten seconds, which is reasonable. At <code>40</code> predictors, that number is arround <code>100,000</code> seconds, more than a full day. Given that a large number of predictors, sometimes in the thousands, is a common occurrence, we need to explore more computationaly efficient alternatives.</p>
+<p>In this made-up example, fitting best subset selection for <code>20</code> predictors would take less than ten seconds, which is reasonable. At <code>40</code> predictors, that number is arround <code>100,000</code> seconds, more than a full day. Since it is common for a dataset to contain hundreds, if not thousands, of predictors, we need to explore more computationaly efficient alternatives.</p>
 </div>
 </div>
 <div id="stepwise-selection" class="section level2">
 <h2><span class="header-section-number">6.2</span> Stepwise Selection</h2>
+<p>Due to computational costs, best subset selection cannot be applied with very large <span class="math inline">\(p\)</span>. There are also statistical problems when <span class="math inline">\(p\)</span> is large. The larger the search space, the higher chance of finding models that look good on the training data. An enormous search space can lead to overfitting and high variance of the coefficient estimates.</p>
+<p>For both of these reasons, <em>stepwise</em> methods, which explore a more restricted set of models, are attractive alternatives.</p>
+<div id="forward-stepwise-selection" class="section level3">
+<h3><span class="header-section-number">6.2.1</span> Forward Stepwise Selection</h3>
+<p><em>Forward stepwise selection</em> is a computationally efficient alternative to best subset selection. It begins with a model containing no predictors, and then adds predictors one-at-a-time, until all of the predictors are in the model. At each step, the variable that gives the greatest <em>additional</em> improvement to the fit is added to the model.</p>
+<p>Here are the steps:</p>
+<ol style="list-style-type: decimal">
+<li>Let <span class="math inline">\(M_0\)</span> denote the <em>null model</em> of no predictors. This is simply the sample mean.</li>
+<li>For <span class="math inline">\(k = 0,1,...p-1\)</span>:</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>Consider all <span class="math inline">\(p-k\)</span> models that augment the predictors in <span class="math inline">\(M_k\)</span> with one additional predictors.</li>
+<li>Choose the <em>best</em> among these <span class="math inline">\(p - k\)</span> models, and call it <span class="math inline">\(M_{k+1}\)</span>. <em>Best</em> is defined as having the highest <span class="math inline">\(R^2\)</span>.</li>
+</ol>
+<ol start="3" style="list-style-type: decimal">
+<li>Select a single best model from <span class="math inline">\(M_0,...,M_p\)</span> using cross-validation, <span class="math inline">\(C_p\)</span> (AIC), BIC, or adjusted <span class="math inline">\(R^2\)</span>.</li>
+</ol>
+<p>Forward stepwise selection fits <span class="math inline">\(1+p(p+1)/2\)</span> models, which we can approximate to <span class="math inline">\(p^2\)</span>. Computationally, this scales much better as <span class="math inline">\(p\)</span> grows.</p>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb192-1" data-line-number="1">cpu_cost &lt;-<span class="st"> </span>cpu_cost <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">time_fss =</span> preds<span class="op">^</span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb192-2" data-line-number="2"><span class="kw">ggplot</span>(cpu_cost, <span class="kw">aes</span>(<span class="dt">x =</span> preds)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb192-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y=</span>time)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb192-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y=</span>time_fss)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb192-5" data-line-number="5"><span class="st">  </span><span class="kw">scale_y_log10</span>(<span class="dt">labels=</span>scales<span class="op">::</span>comma)</a></code></pre></div>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-131-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>Choosing the best model of those that augment <span class="math inline">\(M_k\)</span> with one additional predictor is simple. We can simply used the <span class="math inline">\(R^2\)</span> value. Step 3, in which we have to evaluate which model among our selected models is best, requires using a method that can estimate test error.</p>
+<p>The trade-off of being computationally cheap compared to best subset selection is that it will not always find the best model out of the <span class="math inline">\(2^p\)</span> possible models. Imagine a dataset containing <span class="math inline">\(p=3\)</span> predictors. The best possible one-variable model contains <span class="math inline">\(X_1\)</span>, and the best possible two-variable model contains <span class="math inline">\(X_2\)</span> and <span class="math inline">\(X_3\)</span>. Forward stepwise selection will never produce the ideal two-variable model, since it will always fit <span class="math inline">\(X_1\)</span> to the one-variable model. Thus, <span class="math inline">\(M_2\)</span> will always contain <span class="math inline">\(X_1\)</span>.</p>
+</div>
+<div id="backward-stepwise-selection" class="section level3">
+<h3><span class="header-section-number">6.2.2</span> Backward Stepwise Selection</h3>
+<p><em>Backward stepwise selection</em> is similar to forward stepwise selection, but starts with the full least squares model containing all <span class="math inline">\(p\)</span> predictors. It then iteratively removes the least useful predictor, one-at-a-time.</p>
+<p>Here are the steps:</p>
+<ol style="list-style-type: decimal">
+<li>Let <span class="math inline">\(M_0\)</span> denote the <em>full model</em> of all <span class="math inline">\(p\)</span> predictors.</li>
+<li>For <span class="math inline">\(k = p, p-1,...,1\)</span>:</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>Consider all <span class="math inline">\(k\)</span> models that contain all but one of the predictors in <span class="math inline">\(M_k\)</span>, for a total of <span class="math inline">\(k-1\)</span> predictors.</li>
+<li>Choose the <em>best</em> among these <span class="math inline">\(k\)</span> models, and call it <span class="math inline">\(M_{k-1}\)</span>. <em>Best</em> is defined as having the highest <span class="math inline">\(R^2\)</span>.</li>
+</ol>
+<ol start="3" style="list-style-type: decimal">
+<li>Select a single best model from <span class="math inline">\(M_0,...,M_p\)</span> using cross-validation, <span class="math inline">\(C_p\)</span> (AIC), BIC, or adjusted <span class="math inline">\(R^2\)</span>.</li>
+</ol>
+<p>Like forward stepwise selection, we search through approximately <span class="math inline">\(p^2\)</span> models. Also like forward stepwise selection, we are not guaranteed to yield the best model containing a subset of the <span class="math inline">\(p\)</span> predictors. Backward stepwise selection requires <span class="math inline">\(n\)</span> to be larger than <span class="math inline">\(p\)</span> in order to fit the full model.</p>
+<div id="hybrid-approaches" class="section level4">
+<h4><span class="header-section-number">6.2.2.1</span> Hybrid Approaches</h4>
+<p>Another alternative is a hybrid approach. Variables can be added to the model sequentially, as in forward selection. However, after adding each new variable, the method may also remove any variables that no longer provide an improvement in model fit. Such an approach attempts to mimic best subset selection while retaining the computational advantages of forward and backward stepwise selection.</p>
+</div>
+</div>
+</div>
+<div id="choosing-the-optimal-model" class="section level2">
+<h2><span class="header-section-number">6.3</span> Choosing the Optimal Model</h2>
+<div id="c_p-aic-bic-and-adjusted-r2." class="section level3">
+<h3><span class="header-section-number">6.3.1</span> <span class="math inline">\(C_p\)</span>, AIC, BIC, and Adjusted <span class="math inline">\(R^2\)</span>.</h3>
+<p>In general, the training set <span class="math inline">\(MSE\)</span> is an underestimate of the test <span class="math inline">\(MSE\)</span>. When we fit a model to the training data using least squares, we specifically estimate the regression coefficients such that the training RSS is as small as possible. Training error will always decrease as we add more variables to the model, but the test error may not. Therefore, we cannot use metrics such as <span class="math inline">\(R^2\)</span> to select from models containing different numbers of variables.</p>
+<p>We do have a number of techniques for <em>adjusting</em> the training error. We will now consider four such approaches: <span class="math inline">\(C_p\)</span>, <em>Akaike information criterion (AIC)</em>, <em>Bayesian information criterion (BIC)</em>, and <em>adjusted</em> <span class="math inline">\(R^2\)</span>.</p>
+<p>For a fitted least squares model containing <span class="math inline">\(d\)</span> predictors, the <span class="math inline">\(C_p\)</span> estimate of test MSE is computed using the equation</p>
+<p><span class="math display">\[
+C_{p}=\frac{1}{n}\left(\mathrm{RSS}+2 d \hat{\sigma}^{2}\right)
+\]</span></p>
+<p>where <span class="math inline">\(\hat\sigma^2\)</span> is an estimate of the variance of the error <span class="math inline">\(\epsilon\)</span> associated with each response measurement. Typically, <span class="math inline">\(\hat\sigma^2\)</span> is estimated using the full model with all predictors. The <span class="math inline">\(C_p\)</span> statistic essentially adds a penalty of <span class="math inline">\(2d\hat\sigma^2\)</span> to the training RSS in order to adjust for the fact that the training error tends to underestimate the test error. The more predictors, the higher the penalty.</p>
+<p>The AIC criterion is defined for a large class of models fit by maximum likelihood. In the case of the model with Gaussian errors, maximum likelihood and least squares are the same thing.</p>
+<p><span class="math display">\[
+AIC=\frac{1}{n\hat\sigma^2}\left(\mathrm{RSS}+2 d \hat{\sigma}^{2}\right)
+\]</span></p>
+<p>For least squares, <span class="math inline">\(AIC\)</span> and <span class="math inline">\(C_P\)</span> are proportional to eachother.</p>
+<p>BIC looks similar but can place a higher penalty on models with many variables.</p>
+<p><span class="math display">\[
+BIC=\frac{1}{n\hat\sigma^2}\left(\mathrm{RSS}+log(n){\sigma}^{2}\right)
+\]</span></p>
+<p><span class="math inline">\(BIC\)</span> replaces the <span class="math inline">\(2d\hat\sigma^2\)</span> used by <span class="math inline">\(C_p\)</span> with a <span class="math inline">\(log(n)\hat\sigma^2\)</span>. Since <span class="math inline">\(log(n) &gt; 2\)</span> for any <span class="math inline">\(n &gt; 7\)</span>, <span class="math inline">\(BIC\)</span> places a heavier penalty on models with many variables and tends to select smaller models than <span class="math inline">\(C_p\)</span>.</p>
+<p>Adjusted <span class="math inline">\(R^2\)</span> is another approach for selecting among a set of models. Remember that <span class="math inline">\(R^2\)</span> is defined as <span class="math inline">\(1 - RSS/TSS\)</span>. Since <span class="math inline">\(RSS\)</span> can only decrease as more variables are added to the model, <span class="math inline">\(R^2\)</span> always increases as more variables are added. For a least squares model with <span class="math inline">\(d\)</span> variables, adjusted <span class="math inline">\(R^2\)</span> is calculated as</p>
+<p>$$
+Adjusted R^2=1-</p>
+<p>$$</p>
+<p>Maximizing the adjusted <span class="math inline">\(R^2\)</span> is equivalent to minimizing the numerator, <span class="math inline">\(RSS/(n-d-1)\)</span>. The idea behind adjusted <span class="math inline">\(R^2\)</span> is that additional noise variables will increase <span class="math inline">\(RSS\)</span> but also increase <span class="math inline">\(d\)</span>, which can ultimately increase <span class="math inline">\(RSS/(n-d-1)\)</span>. Adjusted <span class="math inline">\(R^2\)</span> pays a price for the inclusion of unnecessary variables in the model.</p>
+<p><span class="math inline">\(C_p\)</span>, AIC, and BIC all have rigorous theoretical justifications that are beyond the scope of this book. AIC, BIC, and <span class="math inline">\(C_p\)</span> can also be defined for more general types of models.</p>
+</div>
+<div id="validation-and-cross-validation" class="section level3">
+<h3><span class="header-section-number">6.3.2</span> Validation and Cross-Validation</h3>
+<p>We can directly estimate the test error using the validation set and cross-validation methods.</p>
+<p>This procedure has an advantage over AIC, BIC, adjusted <span class="math inline">\(R^2\)</span> and <span class="math inline">\(C_p\)</span> in that it provides a direct estimate of the test error and makes fewer assumptions about the underlying model. It can also be used in cases in which it is hard to estimate <span class="math inline">\(\sigma^2\)</span> and/or the number of degrees of freedom is not known.</p>
+<p>Cross-validation has become a more attractive approach as computing power has increased.</p>
+<p>Let’s use cross-validation to determine the best of the <span class="math inline">\(d\)</span>-variable models for the <code>Credit</code> dataset.</p>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb193-1" data-line-number="1"><span class="co"># </span><span class="al">TODO</span><span class="co"> solve this</span></a>
+<a class="sourceLine" id="cb193-2" data-line-number="2"><span class="co"># bic from forward selection</span></a>
+<a class="sourceLine" id="cb193-3" data-line-number="3">forward_fit &lt;-<span class="st"> </span><span class="kw">regsubsets</span>(<span class="dt">data =</span> credit, balance <span class="op">~</span><span class="st"> </span>., <span class="dt">nbest=</span><span class="dv">1</span>, <span class="dt">nvmax=</span><span class="dv">8</span>, <span class="dt">method=</span><span class="st">&quot;forward&quot;</span>)</a>
+<a class="sourceLine" id="cb193-4" data-line-number="4">forward_summary &lt;-<span class="st"> </span><span class="kw">summary</span>(forward_fit)</a>
+<a class="sourceLine" id="cb193-5" data-line-number="5">forward_tibble &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">preds =</span> <span class="kw">seq</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(forward_summary<span class="op">$</span>bic)),</a>
+<a class="sourceLine" id="cb193-6" data-line-number="6">                         <span class="dt">bic =</span> forward_summary<span class="op">$</span>bic)</a>
+<a class="sourceLine" id="cb193-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb193-8" data-line-number="8"><span class="co"># validation with 3/4 training set</span></a>
+<a class="sourceLine" id="cb193-9" data-line-number="9">credit_split &lt;-<span class="st"> </span><span class="kw">initial_split</span>(credit, <span class="dt">prop =</span> <span class="dv">3</span><span class="op">/</span><span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb193-10" data-line-number="10">credit_training &lt;-<span class="st"> </span><span class="kw">training</span>(credit_split)</a>
+<a class="sourceLine" id="cb193-11" data-line-number="11">credit_test &lt;-<span class="st"> </span><span class="kw">testing</span>(credit_split)</a>
+<a class="sourceLine" id="cb193-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb193-13" data-line-number="13"><span class="co">## find best model from null to full</span></a>
+<a class="sourceLine" id="cb193-14" data-line-number="14"><span class="co"># 10 pred cols </span></a>
+<a class="sourceLine" id="cb193-15" data-line-number="15"><span class="co"># </span><span class="al">TODO</span><span class="co"> tidy way?</span></a>
+<a class="sourceLine" id="cb193-16" data-line-number="16">num_preds &lt;-<span class="st"> </span><span class="kw">ncol</span>(credit <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>balance))</a>
+<a class="sourceLine" id="cb193-17" data-line-number="17"><span class="co"># cross-validation with k=10</span></a>
+<a class="sourceLine" id="cb193-18" data-line-number="18"><span class="co">#lm(data = credit, balance ~ credit[seq(1,num_preds)])</span></a></code></pre></div>
+</div>
+</div>
+<div id="shrinkage-methods" class="section level2">
+<h2><span class="header-section-number">6.4</span> Shrinkage Methods</h2>
+<p>The subset methods above involve fitting a least squares model that contains a subset of the predictors. We can also fit a model containing all <span class="math inline">\(p\)</span> predictors that <em>constraints</em>, or <em>regularizes</em>, the coefficient estimates. Shrinking the coefficient estimates can significantly reduce their variance. The two best-known techniques are <em>ridge regression</em> and the <em>lasso</em>.</p>
+<div id="ridge-regression" class="section level3">
+<h3><span class="header-section-number">6.4.1</span> Ridge Regression</h3>
+<p>Ridge regression is very similar to least squares, except we are minimizing the coefficients by a different quantity.</p>
+<p><span class="math display">\[
+\sum_{i=1}^{n}\left(y_{i}-\beta_{0}-\sum_{j=1}^{p} \beta_{j} x_{i j}\right)^{2}+\lambda \sum_{j=1}^{p} \beta_{j}^{2}=\mathrm{RSS}+\lambda \sum_{j=1}^{p} \beta_{j}^{2}
+\]</span></p>
+<p>Where <span class="math inline">\(\lambda\)</span> is a <em>tuning parameter</em> to be determined separately. Similar to least squares, we seek coefficient estimates that make RSS small. However, we’re adding a second term, <span class="math inline">\(\lambda \sum_{j=1}^{p} \beta_{j}^{2}\)</span>, called a <em>shrinkage penalty</em>. This shrinkage penalty is small when <span class="math inline">\(\beta_1,...,\beta_p\)</span> are close to zero, and thus has the effect of <em>shrinking</em> the estimates of <span class="math inline">\(\beta_j\)</span> towards zero. The penalty, <span class="math inline">\(\beta_{j}^{2}\)</span>, is also known as an L2 penalty. <span class="math inline">\(\lambda\)</span> controls the relative impact of these two terms (at <span class="math inline">\(\lambda=0\)</span>, this is the original least squares estimate). Ridge regression will produce a different set of coefficient estimates for each value of <span class="math inline">\(\lambda\)</span>. Selecting a good value of <span class="math inline">\(\lambda\)</span> is crtical.</p>
+<p>Notice the shrinkage is applied not to the intercept <span class="math inline">\(\beta_0\)</span>. If the variables have been centered to have mean zero before ridge regression is performed, then the estimated intercept will take the value of the sample mean.</p>
+<div id="an-application-to-the-credit-data" class="section level4">
+<h4><span class="header-section-number">6.4.1.1</span> An Application to the Credit Data</h4>
+<p>Let’s test out ridge regression on our credit data set.</p>
+<p>We again split into training/test splits.</p>
+<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb194-1" data-line-number="1"><span class="co"># </span><span class="al">TODO</span><span class="co"> Find better example set</span></a>
+<a class="sourceLine" id="cb194-2" data-line-number="2"><span class="co"># validation with 3/4 training set</span></a>
+<a class="sourceLine" id="cb194-3" data-line-number="3">credit_split &lt;-<span class="st"> </span><span class="kw">initial_split</span>(credit, <span class="dt">prop =</span> <span class="dv">3</span><span class="op">/</span><span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb194-4" data-line-number="4">credit_train &lt;-<span class="st"> </span><span class="kw">training</span>(credit_split)</a>
+<a class="sourceLine" id="cb194-5" data-line-number="5">credit_test &lt;-<span class="st"> </span><span class="kw">testing</span>(credit_split)</a></code></pre></div>
+<p>Next, let’s specify a recipe in tidymodels. I want to remove zero-variance predictors as well as normalize numeric predictors (this is important when regularization is involved). At this moment, <code>ridge_rec</code> hasn’t performed any calculations. We need to <code>prep()</code> it to do so.</p>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb195-1" data-line-number="1"><span class="co"># ridge recipe</span></a>
+<a class="sourceLine" id="cb195-2" data-line-number="2">ridge_rec &lt;-<span class="st"> </span><span class="kw">recipe</span>(balance <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> credit_train) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb195-3" data-line-number="3"><span class="st">  </span><span class="kw">step_zv</span>(<span class="kw">all_numeric</span>(), <span class="op">-</span><span class="kw">all_outcomes</span>()) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># remove zero variance predictors</span></a>
+<a class="sourceLine" id="cb195-4" data-line-number="4"><span class="st">  </span><span class="kw">step_normalize</span>(<span class="kw">all_numeric</span>(), <span class="op">-</span><span class="kw">all_outcomes</span>()) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb195-5" data-line-number="5"><span class="st">  </span><span class="kw">step_dummy</span>(<span class="kw">all_nominal</span>())</a>
+<a class="sourceLine" id="cb195-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb195-7" data-line-number="7">ridge_prep &lt;-<span class="st"> </span>ridge_rec <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb195-8" data-line-number="8"><span class="st">  </span><span class="kw">prep</span>(<span class="dt">strings_as_factors =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<p>Now we can specify and fit our model. To specify L2 regularization used in ridge regression, we need to set <code>mixture = 0</code>. Our lambda value (<code>penalty</code>) is undecided, so we plug in a placeholder for now.</p>
+<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb196-1" data-line-number="1">ridge_spec &lt;-<span class="st"> </span><span class="kw">linear_reg</span>(<span class="dt">penalty =</span> <span class="kw">tune</span>(), <span class="dt">mixture =</span> <span class="dv">0</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># mixture = 0 meaning no L1 penalty </span></a>
+<a class="sourceLine" id="cb196-2" data-line-number="2"><span class="st">  </span><span class="kw">set_engine</span>(<span class="st">&quot;glmnet&quot;</span>)</a>
+<a class="sourceLine" id="cb196-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb196-4" data-line-number="4">wf &lt;-<span class="st"> </span><span class="kw">workflow</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb196-5" data-line-number="5"><span class="st">  </span><span class="kw">add_recipe</span>(ridge_rec)</a>
+<a class="sourceLine" id="cb196-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb196-7" data-line-number="7">ridge_fit &lt;-<span class="st"> </span>wf <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb196-8" data-line-number="8"><span class="st">  </span><span class="kw">add_model</span>(ridge_spec) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb196-9" data-line-number="9"><span class="st">  </span><span class="kw">fit</span>(<span class="dt">data =</span> credit_train)</a>
+<a class="sourceLine" id="cb196-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb196-11" data-line-number="11"><span class="co"># workflow</span></a>
+<a class="sourceLine" id="cb196-12" data-line-number="12">ridge_fit <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb196-13" data-line-number="13"><span class="st">  </span><span class="kw">pull_workflow_fit</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb196-14" data-line-number="14"><span class="st">  </span><span class="kw">tidy</span>()</a></code></pre></div>
+<pre><code>## # A tibble: 1,200 x 5
+##   term         step  estimate  lambda dev.ratio
+##   &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)     1  5.21e+ 2 400049.  3.60e-36
+## 2 income          1  2.19e-34 400049.  3.60e-36
+## 3 limit           1  4.04e-34 400049.  3.60e-36
+## 4 rating          1  4.05e-34 400049.  3.60e-36
+## 5 cards           1  5.77e-35 400049.  3.60e-36
+## 6 age             1 -6.15e-38 400049.  3.60e-36
+## # … with 1,194 more rows</code></pre>
+<div id="tuning-lambda" class="section level5">
+<h5><span class="header-section-number">6.4.1.1.1</span> Tuning Lambda</h5>
+<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb198-1" data-line-number="1"><span class="co"># </span><span class="al">TODO</span><span class="co"> clean up</span></a>
+<a class="sourceLine" id="cb198-2" data-line-number="2"><span class="kw">library</span>(tune)</a>
+<a class="sourceLine" id="cb198-3" data-line-number="3"><span class="kw">set.seed</span>(<span class="dv">40</span>)</a>
+<a class="sourceLine" id="cb198-4" data-line-number="4">credit_boot &lt;-<span class="st"> </span><span class="kw">bootstraps</span>(credit_train)</a>
+<a class="sourceLine" id="cb198-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb198-6" data-line-number="6">tune_spec &lt;-<span class="st"> </span><span class="kw">linear_reg</span>(<span class="dt">penalty =</span> <span class="kw">tune</span>(), <span class="dt">mixture =</span> <span class="dv">0</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb198-7" data-line-number="7"><span class="st">  </span><span class="kw">set_engine</span>(<span class="st">&quot;glmnet&quot;</span>)</a>
+<a class="sourceLine" id="cb198-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb198-9" data-line-number="9">lambda_grid &lt;-<span class="st"> </span><span class="kw">grid_regular</span>(<span class="kw">range_set</span>(<span class="kw">penalty</span>(), <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>,<span class="dv">2</span>)), <span class="dt">levels =</span> <span class="dv">20</span>)</a>
+<a class="sourceLine" id="cb198-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb198-11" data-line-number="11">doParallel<span class="op">::</span><span class="kw">registerDoParallel</span>()</a>
+<a class="sourceLine" id="cb198-12" data-line-number="12"><span class="kw">set.seed</span>(<span class="dv">40</span>)</a>
+<a class="sourceLine" id="cb198-13" data-line-number="13">ridge_grid &lt;-<span class="st"> </span><span class="kw">tune_grid</span>(</a>
+<a class="sourceLine" id="cb198-14" data-line-number="14">  wf <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">add_model</span>(tune_spec),</a>
+<a class="sourceLine" id="cb198-15" data-line-number="15">  <span class="dt">resamples =</span> credit_boot,</a>
+<a class="sourceLine" id="cb198-16" data-line-number="16">  <span class="dt">grid =</span> lambda_grid</a>
+<a class="sourceLine" id="cb198-17" data-line-number="17">)</a>
+<a class="sourceLine" id="cb198-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb198-19" data-line-number="19">ridge_grid <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb198-20" data-line-number="20"><span class="st">  </span><span class="kw">collect_metrics</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb198-21" data-line-number="21"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> penalty, <span class="dt">y =</span> mean, <span class="dt">colour =</span> .metric)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb198-22" data-line-number="22"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>.metric, <span class="dt">scales=</span><span class="st">&quot;free&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb198-23" data-line-number="23"><span class="st">  </span><span class="kw">geom_line</span>()</a></code></pre></div>
+<p><img src="tidy_islr_files/figure-html/unnamed-chunk-136-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p><code>penalty = 0</code> is the original least squares fit. As lambda increases, the coefficients are being shrunk towards zero and we approach the <em>null model</em>. At this point, the decrease in variance (always predicting the sample mean) isn’t worth the increase in bias, and <code>rmse</code> begins to shoot up. Ridge regression doesn’t help our credit data set much.</p>
+<p>It’s important to note that standard least squares is <em>scale equivariant</em>, multiplying <span class="math inline">\(X_j\)</span> by a constant <span class="math inline">\(c\)</span> simply scales the least squares coefficient estimates by <span class="math inline">\(1/c\)</span>. In ridge regression, in which the penalty involves summing up <em>all</em> the coefficients (<span class="math inline">\(\lambda \sum_{j=1}^{p} \beta_{j}^{2}\)</span>), scale plays a big role. A predictor with a scale much larger than others can significantly affect the ridge regression. That is why it’s important to <em>standardize</em> the predictors prior to applying ridge regression.</p>
+</div>
+</div>
+<div id="why-does-ridge-regression-improve-over-least-squares" class="section level4">
+<h4><span class="header-section-number">6.4.1.2</span> Why Does Ridge Regression Improve Over Least Squares?</h4>
+<p>We again go back to the <em>bias-variance tradeoff</em>. As <span class="math inline">\(\lambda\)</span> increases and coefficients are shrunk, the flexibility of the fit decreases, leading to reduced variance but increased bias. If <span class="math inline">\(\lambda\)</span> gets too large and coefficients are shrunk further, they tend to be underestimated, and the variance reduction slows down while the bias increase speeds up.</p>
+<p>When <span class="math inline">\(n\)</span> is close to <span class="math inline">\(p\)</span>, the least squares estimate will be extremely variable. Ridge regression works best when the least squares estimates have high variance.</p>
+<p>Computationally, ridge regression is much faster than best subset selection, which searches through <span class="math inline">\(2^p\)</span> models. In contrast, ridge regression fits a single model for each <span class="math inline">\(\lambda\)</span> value it checks.</p>
+</div>
+</div>
+<div id="the-lasso" class="section level3">
+<h3><span class="header-section-number">6.4.2</span> The Lasso</h3>
+<p>One disadvantage of ridge regression is that it never fully shrinks coefficients towards zero. This may not be a problem for prediction accuracy, but could certainly affect model interpretability.</p>
+<p>If we want to build a <em>sparse</em> model involving fewer predictors, then we need to explore a different shrinkage method.</p>
+<p>The <em>lasso</em> is an alternative to ridge regression. The lasso coefficients, <span class="math inline">\(\hat\beta_{j}^{L}\)</span>, minimize the quantity</p>
+<p><span class="math display">\[
+\sum_{i=1}^{n}\left(y_{i}-\beta_{0}-\sum_{j=1}^{p} \beta_{j} x_{i j}\right)^{2}+\lambda \sum_{j=1}^{p} |\beta_{j}|=\mathrm{RSS}+\lambda \sum_{j=1}^{p} |\beta_{j}|
+\]</span></p>
+<p>The only difference between this and the ridge regression is the penalty coefficient. The lasso uses an L1 penalty instead of an L2 penalty.</p>
+<p>The lasso also shrinks the coefficients towards zero. But due to the L1 penalty, the lasso can force some coefficients to be <em>exactly</em> zero when <span class="math inline">\(\lambda\)</span> is sufficiently large. The lasso thus has the ability to perform <em>variable selection</em>, producing <em>sparse</em> models which involve a subset of the original predictors.</p>
+<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb199-1" data-line-number="1"><span class="co"># </span><span class="al">TODO</span><span class="co"> coefficient plot of lasso</span></a></code></pre></div>
+<p>Another way to think of the penalties is to imagine it as a constraint, or budget. We can think of ridge regression and lasso as fitting least squares with an additional <em>constraint</em> component, defined by the L1/L2 regularization. The sum of the squared coefficients (L2) or the sum of the magnitude of the coefficients (L1) can only be so large.</p>
+<div id="the-variable-selection-property-of-the-lasso" class="section level4">
+<h4><span class="header-section-number">6.4.2.1</span> The Variable Selection Property of The Lasso</h4>
 
+</div>
+</div>
 </div>
 </div>
             </section>
